@@ -15,13 +15,13 @@ from otbase.exporter.compliance_report import ComplianceReportGenerator
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="otbase",
-        description="OT-BASE: Operational Technology Asset Management & Cybersecurity Platform"
+        prog="shank",
+        description="SHANK: SCADA & Hardware Asset Network Knowledge (Blade Fleet OT Platform)"
     )
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # Command: start
-    start_parser = subparsers.add_parser("start", help="Start the OT-BASE Asset Center Web Dashboard")
+    start_parser = subparsers.add_parser("start", help="Start the SHANK Web Console")
     start_parser.add_argument("--host", default=settings.host, help=f"Bind host (default: {settings.host})")
     start_parser.add_argument("--port", type=int, default=settings.port, help=f"Port (default: {settings.port})")
     start_parser.add_argument("--reload", action="store_true", help="Enable auto-reload")
@@ -55,7 +55,8 @@ def main():
         host = getattr(args, "host", settings.host)
         port = getattr(args, "port", settings.port)
         print(f"\n==================================================================")
-        print(f"  OT-BASE Asset Center starting on http://{host}:{port}")
+        print(f"  🗡️ SHANK: SCADA & Hardware Asset Network Knowledge")
+        print(f"  Blade Fleet Platform | Console starting on http://{host}:{port}")
         print(f"  Active Facility: {repo.current_facility}")
         print(f"  Total Assets Loaded: {len(repo.assets)}")
         print(f"==================================================================\n")

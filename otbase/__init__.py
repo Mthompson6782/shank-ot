@@ -1,6 +1,6 @@
 """
-OT-BASE: Operational Technology Asset Management & Cybersecurity Platform
-High-Fidelity Clone inspired by Langner OT-BASE for ICS/SCADA Environments.
+SHANK: SCADA & Hardware Asset Network Knowledge
+Blade Fleet Platform for OT/ICS Asset Management, Backplane Discovery & Cybersecurity.
 """
 
 __version__ = "1.0.0"

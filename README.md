@@ -1,16 +1,21 @@
-# OT-BASE: Operational Technology Asset Management & Cybersecurity Platform
+# 🗡️ SHANK: SCADA & Hardware Asset Network Knowledge
 
+[![Blade Fleet](https://img.shields.io/badge/BLADE_FLEET-SHANK-DC2626?style=flat-square)](https://github.com/Mthompson6782/ot-base)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com)
 [![ISA/IEC 62443](https://img.shields.io/badge/Compliance-ISA%2FIEC%2062443-orange.svg)](https://www.isa.org/standards-and-publications/isa-standards/isa-standards-committees/isa62443)
 [![NIST SP 800-82r3](https://img.shields.io/badge/Framework-NIST%20SP%20800--82r3-red.svg)](https://csrc.nist.gov/pubs/sp/800/82/r3/final)
 
-**OT-BASE** is a high-fidelity, open architecture Operational Technology (OT) and Industrial Control System (ICS/SCADA) asset management and cybersecurity platform inspired by **Langner OT-BASE** (created by Ralph Langner).
+**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is a high-fidelity, open architecture Operational Technology (OT) and Industrial Control System (ICS/SCADA) asset management and cybersecurity platform inspired by **Langner OT-BASE** (created by Ralph Langner).
 
-Traditional IT asset management tools (Lansweeper, ServiceNow, Qualys, Tenable) assume that an asset is a single IP address with an agent installed on a standard OS. In cyber-physical industrial facilities, this assumption fails catastrophically:
-- A single IP address often conceals an entire multi-slot **PLC Backplane / Chassis** (such as a Rockwell ControlLogix 1756 or Siemens S7-1500) housing independent power supplies, CPUs, communication cards, I/O modules, and motion/safety controllers—each with its own catalog number, hardware revision, serial number, and firmware version.
-- Aggressive IT port scans or uncoordinated ping sweeps can freeze fragile industrial controllers, trip plant safety systems, and cause physical damage.
-- IT CVSS scores fail to capture industrial realities. A vulnerability in an isolated Level 1 safety controller whose physical memory key switch is locked to `RUN` presents vastly different real-world risk than an exposed service in the Industrial DMZ.
+As part of the **Blade Fleet** (standing alongside **HALBERD** for threat emulation and real-time defense), **SHANK** serves as the fleet's silent, surgical asset intelligence engine:
+- **S** – **S**CADA (Ingests Inductive Automation Ignition Gateway `.gwbk` backups and Tag providers)
+- **H** – **H**ardware (Deep chassis backplane slot modeling: Rockwell ControlLogix 1756, Siemens S7-1500)
+- **A** – **A**sset (Hardware/Software Bill of Materials: HBOM & SBOM generation)
+- **N** – **N**etwork (Purdue Enterprise Reference Architecture, ISA/IEC 62443 zones, conduits & violation audits)
+- **K** – **K**nowledge (Contextual OT risk scoring, ICS-CERT advisories, EOL/EOS obsolescence lifecycle)
+
+Traditional IT scanners treat an asset as a single IP and often crash delicate PLCs with noisy port sweeps. **SHANK** operates silently, non-intrusively, and pierces directly into the exact physical slot, module catalog number, and firmware revision.
 
 ---
 

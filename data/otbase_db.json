@@ -254,13 +254,13 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T20:11:47.081776Z",
-      "last_seen": "2026-09-06T20:11:47.081779Z",
+      "first_discovered": "2026-09-06T21:36:45.425764Z",
+      "last_seen": "2026-09-06T21:36:45.425768Z",
       "configuration_hash": null,
       "active_cves": [
-        "CVE-2021-22681",
+        "CVE-2022-1159",
         "CVE-2020-6967",
-        "CVE-2022-1159"
+        "CVE-2021-22681"
       ],
       "ot_risk_score": 6.8,
       "lifecycle_state": "Active",
@@ -309,12 +309,12 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-06T20:11:47.081801Z",
-      "last_seen": "2026-09-06T20:11:47.081802Z",
+      "first_discovered": "2026-09-06T21:36:45.425789Z",
+      "last_seen": "2026-09-06T21:36:45.425790Z",
       "configuration_hash": null,
       "active_cves": [
-        "CVE-2021-22681",
-        "CVE-2022-1159"
+        "CVE-2022-1159",
+        "CVE-2021-22681"
       ],
       "ot_risk_score": 10.0,
       "lifecycle_state": "Active",
@@ -354,8 +354,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T20:11:47.081815Z",
-      "last_seen": "2026-09-06T20:11:47.081815Z",
+      "first_discovered": "2026-09-06T21:36:45.425801Z",
+      "last_seen": "2026-09-06T21:36:45.425802Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.9,
@@ -405,8 +405,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T20:11:47.081828Z",
-      "last_seen": "2026-09-06T20:11:47.081829Z",
+      "first_discovered": "2026-09-06T21:36:45.425816Z",
+      "last_seen": "2026-09-06T21:36:45.425817Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.1,
@@ -447,8 +447,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T20:11:47.081839Z",
-      "last_seen": "2026-09-06T20:11:47.081840Z",
+      "first_discovered": "2026-09-06T21:36:45.425828Z",
+      "last_seen": "2026-09-06T21:36:45.425828Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.7,
@@ -498,8 +498,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T20:11:47.081852Z",
-      "last_seen": "2026-09-06T20:11:47.081853Z",
+      "first_discovered": "2026-09-06T21:36:45.425841Z",
+      "last_seen": "2026-09-06T21:36:45.425842Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.3,
@@ -549,8 +549,8 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-06T20:11:47.081867Z",
-      "last_seen": "2026-09-06T20:11:47.081867Z",
+      "first_discovered": "2026-09-06T21:36:45.425856Z",
+      "last_seen": "2026-09-06T21:36:45.425857Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.9,
@@ -600,8 +600,8 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-06T20:11:47.081881Z",
-      "last_seen": "2026-09-06T20:11:47.081881Z",
+      "first_discovered": "2026-09-06T21:36:45.425870Z",
+      "last_seen": "2026-09-06T21:36:45.425870Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.0,
@@ -927,7 +927,7 @@
   "applied_compensating_controls": {
     "wt-plc-01": [
       {
-        "id": "ctrl-e8578b",
+        "id": "ctrl-c99fbf",
         "control_type": "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
         "name": "DPI Firewall Filter",
         "description": "Block unauthorized CIP memory writes",

@@ -8,7 +8,7 @@ DEFAULT_DATA_DIR = PROJECT_DIR / "data"
 DEFAULT_STATIC_DIR = BASE_DIR / "web" / "static"
 
 class Settings(BaseModel):
-    app_name: str = "OT-BASE Asset Center"
+    app_name: str = "SHANK: SCADA & Hardware Asset Network Knowledge"
     app_version: str = "1.0.0"
     debug: bool = False
     host: str = os.getenv("OTBASE_HOST", "0.0.0.0")

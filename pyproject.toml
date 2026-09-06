@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "otbase"
+name = "shank-ot"
 version = "1.0.0"
-description = "High-Fidelity Clone of Langner OT-BASE: OT Asset Management & Cybersecurity for ICS/SCADA"
+description = "SHANK: SCADA & Hardware Asset Network Knowledge (Blade Fleet OT Platform)"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -16,6 +16,7 @@ dependencies = [
 ]
 
 [project.scripts]
+shank = "otbase.cli:main"
 otbase = "otbase.cli:main"
 
 [tool.pytest.ini_options]

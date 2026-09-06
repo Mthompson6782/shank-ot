@@ -25,8 +25,8 @@ from otbase.exporter.hbom_sbom import HBOMExporter
 from otbase.exporter.compliance_report import ComplianceReportGenerator
 
 app = FastAPI(
-    title="OT-BASE Asset Center API",
-    description="Operational Technology Asset Management & Cybersecurity Platform API",
+    title="SHANK: SCADA & Hardware Asset Network Knowledge",
+    description="Blade Fleet Operational Technology Asset Management & Cybersecurity API",
     version=settings.app_version
 )
 
