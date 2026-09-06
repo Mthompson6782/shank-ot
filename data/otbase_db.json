@@ -1,0 +1,940 @@
+{
+  "current_facility": "Municipal Water Treatment Facility",
+  "assets": [
+    {
+      "id": "wt-plc-01",
+      "tag_name": "PLC-01-MAIN",
+      "display_name": "Water Treatment Main Intake & Filtration PLC",
+      "vendor": "Rockwell Automation",
+      "model": "ControlLogix 5580",
+      "catalog_number": "1756-L83E",
+      "serial_number": "SN-CLX-L83E-9018",
+      "hardware_revision": "B",
+      "firmware_version": "33.011",
+      "os_name": "Rockwell Firmware OS",
+      "os_version": "33.011",
+      "device_type": "PLC (Programmable Logic Controller)",
+      "purdue_level": "Level 1 - Basic Control (PLCs/RTUs)",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Raw Water Intake & Filtration",
+      "production_line": "Intake Train A",
+      "workcell": "Filter Bed Control",
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "RUN (Hardware Memory Protected)",
+      "chassis": {
+        "model": "1756-A10 10-Slot ControlLogix Chassis",
+        "serial_number": "CH-NA-902188",
+        "total_slots": 10,
+        "modules": [
+          {
+            "slot": 0,
+            "name": "1756-PA72 Power Supply",
+            "catalog_number": "1756-PA72",
+            "serial_number": "0x28A14F90",
+            "hardware_revision": "B",
+            "firmware_version": "N/A",
+            "vendor": "Rockwell Automation",
+            "module_type": "Power Supply",
+            "status_leds": [
+              {
+                "name": "POWER",
+                "state": "green"
+              },
+              {
+                "name": "OK",
+                "state": "green"
+              }
+            ],
+            "description": "ControlLogix 85-265V AC Power Supply (10 A @ 5V DC)",
+            "cve_count": 0,
+            "cves": []
+          },
+          {
+            "slot": 1,
+            "name": "1756-L83E ControlLogix 5580 Controller",
+            "catalog_number": "1756-L83E",
+            "serial_number": "0x4B9E2101",
+            "hardware_revision": "B",
+            "firmware_version": "33.011",
+            "vendor": "Rockwell Automation",
+            "module_type": "Controller / CPU",
+            "status_leds": [
+              {
+                "name": "RUN",
+                "state": "green"
+              },
+              {
+                "name": "FORCE",
+                "state": "off"
+              },
+              {
+                "name": "SD",
+                "state": "green"
+              },
+              {
+                "name": "OK",
+                "state": "green"
+              },
+              {
+                "name": "NET",
+                "state": "flashing-green"
+              }
+            ],
+            "description": "High-performance controller with 10MB user memory & Gigabit onboard Ethernet",
+            "cve_count": 2,
+            "cves": [
+              "CVE-2022-1159",
+              "CVE-2021-22681"
+            ]
+          },
+          {
+            "slot": 2,
+            "name": "1756-EN2T EtherNet/IP Bridge",
+            "catalog_number": "1756-EN2T",
+            "serial_number": "0x118C55A4",
+            "hardware_revision": "C",
+            "firmware_version": "5.028",
+            "vendor": "Rockwell Automation",
+            "module_type": "Communication Adapter",
+            "status_leds": [
+              {
+                "name": "LINK1",
+                "state": "green"
+              },
+              {
+                "name": "LINK2",
+                "state": "off"
+              },
+              {
+                "name": "NET",
+                "state": "green"
+              },
+              {
+                "name": "OK",
+                "state": "green"
+              }
+            ],
+            "description": "Dual-port 10/100 Mbps EtherNet/IP communications interface module",
+            "cve_count": 1,
+            "cves": [
+              "CVE-2020-6967"
+            ]
+          },
+          {
+            "slot": 3,
+            "name": "1756-IB16 Digital Input Module",
+            "catalog_number": "1756-IB16",
+            "serial_number": "0x992B104A",
+            "hardware_revision": "D",
+            "firmware_version": "3.002",
+            "vendor": "Rockwell Automation",
+            "module_type": "Digital / Discrete Input",
+            "status_leds": [
+              {
+                "name": "OK",
+                "state": "green"
+              },
+              {
+                "name": "I/O",
+                "state": "green"
+              }
+            ],
+            "description": "16-Point 24V DC Sink/Source Isolated Input Module",
+            "cve_count": 0,
+            "cves": []
+          },
+          {
+            "slot": 4,
+            "name": "1756-OB16E Digital Output Module",
+            "catalog_number": "1756-OB16E",
+            "serial_number": "0x992B108B",
+            "hardware_revision": "D",
+            "firmware_version": "3.001",
+            "vendor": "Rockwell Automation",
+            "module_type": "Digital / Discrete Output",
+            "status_leds": [
+              {
+                "name": "OK",
+                "state": "green"
+              },
+              {
+                "name": "FUSE",
+                "state": "off"
+              }
+            ],
+            "description": "16-Point 24V DC Electronically Protected Output Module",
+            "cve_count": 0,
+            "cves": []
+          },
+          {
+            "slot": 5,
+            "name": "1756-IF8 Analog Input Module",
+            "catalog_number": "1756-IF8",
+            "serial_number": "0x884D2001",
+            "hardware_revision": "B",
+            "firmware_version": "2.001",
+            "vendor": "Rockwell Automation",
+            "module_type": "Analog Input",
+            "status_leds": [
+              {
+                "name": "OK",
+                "state": "green"
+              },
+              {
+                "name": "CAL",
+                "state": "off"
+              }
+            ],
+            "description": "8-Point Voltage/Current Analog Input Module (4-20mA / 0-10V)",
+            "cve_count": 0,
+            "cves": []
+          },
+          {
+            "slot": 6,
+            "name": "1756-OF4 Analog Output Module",
+            "catalog_number": "1756-OF4",
+            "serial_number": "0x884D209F",
+            "hardware_revision": "A",
+            "firmware_version": "1.005",
+            "vendor": "Rockwell Automation",
+            "module_type": "Analog Output",
+            "status_leds": [
+              {
+                "name": "OK",
+                "state": "green"
+              }
+            ],
+            "description": "4-Point Isolated Voltage/Current Analog Output Module",
+            "cve_count": 0,
+            "cves": []
+          },
+          {
+            "slot": 7,
+            "name": "1756-SYNCH SynchLink Module",
+            "catalog_number": "1756-SYNCH",
+            "serial_number": "0x771A9002",
+            "hardware_revision": "B",
+            "firmware_version": "2.010",
+            "vendor": "Rockwell Automation",
+            "module_type": "Motion / Specialty Module",
+            "status_leds": [
+              {
+                "name": "RUN",
+                "state": "green"
+              },
+              {
+                "name": "SYNC",
+                "state": "green"
+              }
+            ],
+            "description": "Fiber-optic time synchronization and high-speed peer-to-peer data broadcast",
+            "cve_count": 0,
+            "cves": []
+          }
+        ]
+      },
+      "network_interfaces": [
+        {
+          "name": "1756-EN2T Port A",
+          "mac_address": "00:1D:9C:C4:55:01",
+          "ip_address": "192.168.10.10",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.10.1",
+          "vlan": 10,
+          "is_management": false
+        },
+        {
+          "name": "1756-L83E Onboard GigE",
+          "mac_address": "00:1D:9C:F1:83:02",
+          "ip_address": "192.168.10.11",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.10.1",
+          "vlan": 10,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [],
+      "first_discovered": "2026-09-06T18:04:57.215856Z",
+      "last_seen": "2026-09-06T18:04:57.215859Z",
+      "configuration_hash": null,
+      "active_cves": [
+        "CVE-2020-6967",
+        "CVE-2021-22681",
+        "CVE-2022-1159"
+      ],
+      "ot_risk_score": 6.8,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Controls primary flocculation and rapid sand filter backwash cycles."
+    },
+    {
+      "id": "wt-plc-02",
+      "tag_name": "PLC-02-CHEM",
+      "display_name": "Chemical Dosing & Chlorination Controller",
+      "vendor": "Rockwell Automation",
+      "model": "CompactLogix 5380",
+      "catalog_number": "5069-L320ERM",
+      "serial_number": "SN-CMPX-5069-781",
+      "hardware_revision": "A",
+      "firmware_version": "32.012",
+      "os_name": "CompactLogix Embedded RTOS",
+      "os_version": "32.012",
+      "device_type": "PLC (Programmable Logic Controller)",
+      "purdue_level": "Level 1 - Basic Control (PLCs/RTUs)",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Chemical Feed Building",
+      "production_line": "Chlorine Gas & Alum Feed",
+      "workcell": "Disinfection Header",
+      "criticality": "Safety Critical (SIL 2/3 / SIS)",
+      "key_switch": "RUN (Hardware Memory Protected)",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "EtherNet/IP Dual-Port",
+          "mac_address": "00:1D:9C:88:22:19",
+          "ip_address": "192.168.10.20",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.10.1",
+          "vlan": 10,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [
+        {
+          "name": "RS-485 Modbus Link",
+          "interface_type": "RS-485",
+          "protocol": "Modbus RTU",
+          "baud_rate": 9600,
+          "parity": "None",
+          "stop_bits": 1
+        }
+      ],
+      "first_discovered": "2026-09-06T18:04:57.215885Z",
+      "last_seen": "2026-09-06T18:04:57.215886Z",
+      "configuration_hash": null,
+      "active_cves": [
+        "CVE-2021-22681",
+        "CVE-2022-1159"
+      ],
+      "ot_risk_score": 10.0,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Regulates sodium hypochlorite and coagulant pumps. Physical key locked in cabinet."
+    },
+    {
+      "id": "wt-hmi-01",
+      "tag_name": "HMI-01-OP",
+      "display_name": "Main Control Room Operator Station",
+      "vendor": "AVEVA / Wonderware",
+      "model": "InTouch 2020 R2",
+      "catalog_number": "WND-IT-2020",
+      "serial_number": "LIC-WW-89201-US",
+      "hardware_revision": "N/A",
+      "firmware_version": "N/A",
+      "os_name": "Windows 10 Enterprise LTSC 2019",
+      "os_version": "1809 (Build 17763)",
+      "device_type": "HMI (Human Machine Interface)",
+      "purdue_level": "Level 2 - Supervisory / HMIs",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Central Control Room",
+      "production_line": "All Trains",
+      "workcell": "Operator Desk A",
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "Intel I219-LM NIC",
+          "mac_address": "00:50:56:A2:3B:11",
+          "ip_address": "192.168.20.15",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.20.1",
+          "vlan": 20,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [],
+      "first_discovered": "2026-09-06T18:04:57.215901Z",
+      "last_seen": "2026-09-06T18:04:57.215901Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 1.9,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Primary operational HMI graphic display and alarm annunciator."
+    },
+    {
+      "id": "wt-ews-01",
+      "tag_name": "EWS-01-ENG",
+      "display_name": "Lead Automation Engineering Workstation",
+      "vendor": "Rockwell Automation",
+      "model": "Studio 5000 Professional v33",
+      "catalog_number": "EWS-RACK-DELL",
+      "serial_number": "SN-DELL-PREC-3640",
+      "hardware_revision": "N/A",
+      "firmware_version": "v33.00",
+      "os_name": "Windows 10 Pro 64-bit",
+      "os_version": "21H2",
+      "device_type": "Engineering Workstation (EWS)",
+      "purdue_level": "Level 3 - Operations & Historians",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Engineering Office",
+      "production_line": "Automation Maintenance",
+      "workcell": "Programmer Bench",
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "OT Plant NIC",
+          "mac_address": "00:50:56:88:C1:22",
+          "ip_address": "192.168.30.50",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.30.1",
+          "vlan": 30,
+          "is_management": false
+        },
+        {
+          "name": "Direct Control NIC (DUAL HOMED BREACH)",
+          "mac_address": "00:50:56:88:C1:23",
+          "ip_address": "192.168.10.99",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.10.1",
+          "vlan": 10,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [],
+      "first_discovered": "2026-09-06T18:04:57.215918Z",
+      "last_seen": "2026-09-06T18:04:57.215919Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 2.1,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Engineering workstation used for PLC logic changes, Studio 5000, and firmware flash tools."
+    },
+    {
+      "id": "wt-hist-01",
+      "tag_name": "HIST-01-SRV",
+      "display_name": "Site Operations Data Historian Server",
+      "vendor": "Rockwell Automation",
+      "model": "FactoryTalk Historian SE",
+      "catalog_number": "9701-VWSTPR01",
+      "serial_number": "SN-FT-HIST-9011",
+      "hardware_revision": "N/A",
+      "firmware_version": "7.00.00",
+      "os_name": "Windows Server 2019 Standard",
+      "os_version": "1809 (Build 17763)",
+      "device_type": "Data Historian",
+      "purdue_level": "Level 3 - Operations & Historians",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Server Room Rack 1",
+      "production_line": "Plant-Wide Telemetry",
+      "workcell": "Historian Node",
+      "criticality": "Medium (Secondary Unit)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "Historian Internal NIC",
+          "mac_address": "00:50:56:11:44:AA",
+          "ip_address": "192.168.30.100",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.30.1",
+          "vlan": 30,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [],
+      "first_discovered": "2026-09-06T18:04:57.215932Z",
+      "last_seen": "2026-09-06T18:04:57.215932Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 1.7,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Aggregates 1-second process telemetry for water quality regulatory compliance reporting."
+    },
+    {
+      "id": "wt-idmz-gw",
+      "tag_name": "IDMZ-SEC-GW01",
+      "display_name": "Industrial DMZ Security Firewall & Jump Host Gateway",
+      "vendor": "Phoenix Contact",
+      "model": "FL mGuard RS4000 TX/TX",
+      "catalog_number": "2989983",
+      "serial_number": "SN-PHX-MG-8812",
+      "hardware_revision": "Rev 3",
+      "firmware_version": "8.8.1",
+      "os_name": "mGuard Secure OS",
+      "os_version": "8.8.1",
+      "device_type": "Industrial Security Appliance / Firewall",
+      "purdue_level": "Level 3.5 - Industrial DMZ (IDMZ)",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "DMZ Border Enclosure",
+      "production_line": "Perimeter",
+      "workcell": "IDMZ Security Cluster",
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "External IT Port (Level 4)",
+          "mac_address": "00:A0:45:11:22:33",
+          "ip_address": "10.100.5.1",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "10.100.5.254",
+          "vlan": 100,
+          "is_management": false
+        },
+        {
+          "name": "Internal OT Port (Level 3)",
+          "mac_address": "00:A0:45:11:22:34",
+          "ip_address": "192.168.30.1",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.30.1",
+          "vlan": 30,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [],
+      "first_discovered": "2026-09-06T18:04:57.215947Z",
+      "last_seen": "2026-09-06T18:04:57.215947Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 2.3,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Stateful packet inspection firewall enforcing strict ISA/IEC 62443 zone boundaries."
+    },
+    {
+      "id": "wt-sw-01",
+      "tag_name": "SW-01-IND",
+      "display_name": "Plant Floor Core Managed Industrial Switch",
+      "vendor": "Cisco Systems",
+      "model": "Catalyst IE-3400 Heavy Duty",
+      "catalog_number": "IE-3400-8T2S-E",
+      "serial_number": "FOC2419U091",
+      "hardware_revision": "V02",
+      "firmware_version": "17.9.2a",
+      "os_name": "Cisco IOS-XE",
+      "os_version": "17.9.2a",
+      "device_type": "Industrial Managed Switch",
+      "purdue_level": "Level 2 - Supervisory / HMIs",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Control Room Network Rack",
+      "production_line": "Plant Backbone",
+      "workcell": "Switching Core",
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "Vlan1 Management",
+          "mac_address": "00:2A:6A:99:88:10",
+          "ip_address": "192.168.20.2",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.20.1",
+          "vlan": 20,
+          "is_management": true
+        }
+      ],
+      "serial_ports": [
+        {
+          "name": "Console RJ45",
+          "interface_type": "RS-232",
+          "protocol": "CLI",
+          "baud_rate": 9600,
+          "parity": "None",
+          "stop_bits": 1
+        }
+      ],
+      "first_discovered": "2026-09-06T18:04:57.215964Z",
+      "last_seen": "2026-09-06T18:04:57.215965Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 1.9,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Industrial Ethernet switch handling PROFINET, EtherNet/IP, and SCADA VLAN traffic."
+    },
+    {
+      "id": "wt-field-01",
+      "tag_name": "FIT-101-RAW",
+      "display_name": "Raw Water Influent Magnetic Flowmeter",
+      "vendor": "Endress+Hauser",
+      "model": "Proline Promag W 400",
+      "catalog_number": "5W4B80-AA",
+      "serial_number": "SN-EH-991204-CH",
+      "hardware_revision": "1.02",
+      "firmware_version": "02.01.00",
+      "os_name": "Embedded Microcontroller",
+      "os_version": "2.1",
+      "device_type": "Field Sensor / Transmitter / Actuator",
+      "purdue_level": "Level 0 - Process / Field",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Intake Vault 1",
+      "production_line": "Influent Header",
+      "workcell": "Pipeline Measurement",
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "EtherNet/IP Interface",
+          "mac_address": "00:07:60:55:12:89",
+          "ip_address": "192.168.10.150",
+          "subnet_mask": "255.255.255.0",
+          "gateway": "192.168.10.1",
+          "vlan": 10,
+          "is_management": false
+        }
+      ],
+      "serial_ports": [
+        {
+          "name": "HART FSK Port",
+          "interface_type": "Current Loop",
+          "protocol": "HART 7.0",
+          "baud_rate": 1200,
+          "parity": "None",
+          "stop_bits": 1
+        }
+      ],
+      "first_discovered": "2026-09-06T18:04:57.215979Z",
+      "last_seen": "2026-09-06T18:04:57.215980Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 2.0,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": "Transmits real-time mega-gallons/day (MGD) influent flow to PLC-01-MAIN."
+    }
+  ],
+  "zones": [
+    {
+      "id": "zone-wt-l0",
+      "name": "Zone 0: Raw Water Physical Sensors & Actuators",
+      "purdue_level": "Level 0 - Process / Field",
+      "facility": "Municipal Water Treatment Facility",
+      "description": "Physical flowmeters, pressure transmitters, dosing pump drives",
+      "color": "#64748b",
+      "asset_ids": [
+        "wt-field-01"
+      ]
+    },
+    {
+      "id": "zone-wt-l1",
+      "name": "Zone 1: Basic Process Control System (BPCS)",
+      "purdue_level": "Level 1 - Basic Control (PLCs/RTUs)",
+      "facility": "Municipal Water Treatment Facility",
+      "description": "Deterministic PLC controllers executing realtime ladder logic",
+      "color": "#0284c7",
+      "asset_ids": [
+        "wt-plc-01",
+        "wt-plc-02"
+      ]
+    },
+    {
+      "id": "zone-wt-l2",
+      "name": "Zone 2: Supervisory & Operator Control",
+      "purdue_level": "Level 2 - Supervisory / HMIs",
+      "facility": "Municipal Water Treatment Facility",
+      "description": "Operator stations, industrial core switches, and alarm consoles",
+      "color": "#059669",
+      "asset_ids": [
+        "wt-hmi-01",
+        "wt-sw-01"
+      ]
+    },
+    {
+      "id": "zone-wt-l3",
+      "name": "Zone 3: Site Operations & Engineering",
+      "purdue_level": "Level 3 - Operations & Historians",
+      "facility": "Municipal Water Treatment Facility",
+      "description": "Engineering workstations, plant historians, domain controllers",
+      "color": "#d97706",
+      "asset_ids": [
+        "wt-ews-01",
+        "wt-hist-01"
+      ]
+    },
+    {
+      "id": "zone-wt-l35",
+      "name": "Zone 3.5: Industrial DMZ (IDMZ)",
+      "purdue_level": "Level 3.5 - Industrial DMZ (IDMZ)",
+      "facility": "Municipal Water Treatment Facility",
+      "description": "Perimeter security firewalls, jump hosts, and proxied conduits",
+      "color": "#dc2626",
+      "asset_ids": [
+        "wt-idmz-gw"
+      ]
+    }
+  ],
+  "conduits": [
+    {
+      "id": "cnd-wt-01",
+      "name": "Conduit C1: Supervisory Polling (Level 2 -> Level 1)",
+      "from_zone_id": "zone-wt-l2",
+      "to_zone_id": "zone-wt-l1",
+      "allowed_protocols": [
+        "EtherNet/IP (CIP)",
+        "Modbus TCP"
+      ],
+      "ports": [
+        44818,
+        502
+      ],
+      "is_inspected": true,
+      "inspection_device": "FL mGuard DPI Firewall",
+      "is_encrypted": false,
+      "status": "Active"
+    },
+    {
+      "id": "cnd-wt-02",
+      "name": "Conduit C2: Historian Ingestion (Level 3 -> Level 2)",
+      "from_zone_id": "zone-wt-l3",
+      "to_zone_id": "zone-wt-l2",
+      "allowed_protocols": [
+        "OPC UA",
+        "HTTPS"
+      ],
+      "ports": [
+        4840,
+        443
+      ],
+      "is_inspected": true,
+      "inspection_device": "Internal Zone Gateway",
+      "is_encrypted": true,
+      "status": "Active"
+    },
+    {
+      "id": "cnd-wt-03",
+      "name": "Conduit C3: Direct EWS to Field Conduit (UNINSPECTED VIOLATION)",
+      "from_zone_id": "zone-wt-l3",
+      "to_zone_id": "zone-wt-l1",
+      "allowed_protocols": [
+        "CIP Studio 5000 Programming",
+        "SNMP",
+        "HTTP"
+      ],
+      "ports": [
+        44818,
+        161,
+        80
+      ],
+      "is_inspected": false,
+      "inspection_device": null,
+      "is_encrypted": false,
+      "status": "Active"
+    },
+    {
+      "id": "cnd-wt-04",
+      "name": "Conduit C4: IDMZ Jump Box Access (Level 3.5 -> Level 3)",
+      "from_zone_id": "zone-wt-l35",
+      "to_zone_id": "zone-wt-l3",
+      "allowed_protocols": [
+        "RDP over TLS",
+        "SSH"
+      ],
+      "ports": [
+        3389,
+        22
+      ],
+      "is_inspected": true,
+      "inspection_device": "FL mGuard Jump Host Proxy",
+      "is_encrypted": true,
+      "status": "Active"
+    }
+  ],
+  "violations": [
+    {
+      "id": "viol-wt-01",
+      "violation_type": "Dual-Homed Host Bridging Level 3 and Level 1",
+      "severity": "Critical",
+      "title": "Dual-Homed Host Bridging Level 3 and Level 1 Directly",
+      "description": "Engineering Workstation EWS-01-ENG has two network interfaces: one on the Level 3 engineering network (192.168.30.50) and a second physical adapter connected directly into the Level 1 PLC subnet (192.168.10.99), completely bypassing Level 2 supervisory firewalls.",
+      "affected_asset_ids": [
+        "wt-ews-01",
+        "wt-plc-01"
+      ],
+      "affected_conduit_id": "cnd-wt-03",
+      "standard_reference": "ISA/IEC 62443-3-3 SR 5.2 / NIST SP 800-82r3 Section 5.3",
+      "remediation": "Remove the secondary physical Ethernet interface from EWS-01-ENG. Require all engineering programming sessions to traverse a strictly brokered and authenticated jump host in Level 3.5."
+    },
+    {
+      "id": "viol-wt-02",
+      "violation_type": "Safety-Critical PLC Key Switch Left in REMOTE Position",
+      "severity": "High",
+      "title": "Critical Intake PLC Key Switch Left in REMOTE Position",
+      "description": "Primary controller PLC-01-MAIN has its physical hardware key switch positioned in 'REMOTE RUN' (REM). This allows unauthenticated network users with CIP access to upload modified ladder logic, download program changes, or force I/O without physical plant access.",
+      "affected_asset_ids": [
+        "wt-plc-01"
+      ],
+      "affected_conduit_id": null,
+      "standard_reference": "CISA Cross-Sector CPG 2.I / IEC 62443-4-2 CR 1.1",
+      "remediation": "Instruct control room shift technician to rotate the physical chassis key switch to 'RUN' (hardware memory write protect). Store the physical key in a locked master lockbox."
+    },
+    {
+      "id": "viol-wt-03",
+      "violation_type": "Uninspected Cross-Zone Industrial Conduit",
+      "severity": "Medium",
+      "title": "Uninspected Cleartext HTTP Admin Enabled on Core Industrial Switch",
+      "description": "Core switch SW-01-IND has an active HTTP server on TCP port 80 enabled for web management across the supervisory zone without TLS encryption.",
+      "affected_asset_ids": [
+        "wt-sw-01"
+      ],
+      "affected_conduit_id": null,
+      "standard_reference": "ISA/IEC 62443-4-2 CR 4.3 (Data Confidentiality)",
+      "remediation": "Disable HTTP web administration via switch CLI: `no ip http server` and enforce SSHv2 / HTTPS-only management with strong ciphers."
+    }
+  ],
+  "advisories": [
+    {
+      "advisory_id": "ICSA-22-104-01",
+      "cve_id": "CVE-2022-1159",
+      "title": "Rockwell Automation Logix Controllers CIP User Program Modification",
+      "vendor": "Rockwell Automation",
+      "affected_models": [
+        "ControlLogix 5580",
+        "CompactLogix 5380",
+        "1756-L83E",
+        "1756-L85E"
+      ],
+      "affected_firmware_pattern": "^(3[0-3]\\..*)$",
+      "cvss_base_score": 8.8,
+      "severity": "High",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+      "cwe_id": "CWE-284 (Improper Access Control)",
+      "description": "A vulnerability exists in Logix 5580 controllers that allows an authenticated attacker to alter executable user ladder logic code without triggering an unauthorized program change alert.",
+      "remediation": "Upgrade to firmware version 34.011 or later. If upgrading is delayed, rotate the physical controller key switch to RUN mode to physically disable program modifications.",
+      "recommended_compensating_controls": [
+        "Physical Key Switch Locked to RUN",
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter"
+      ],
+      "published_date": "2022-04-14"
+    },
+    {
+      "advisory_id": "ICSA-21-056-03",
+      "cve_id": "CVE-2021-22681",
+      "title": "Rockwell Automation Logix Controllers Unauthenticated CIP Authentication Bypass",
+      "vendor": "Rockwell Automation",
+      "affected_models": [
+        "ControlLogix 5580",
+        "CompactLogix 5380",
+        "GuardLogix 5580"
+      ],
+      "affected_firmware_pattern": "^(3[0-2]\\..*|33\\.01[0-2])$",
+      "cvss_base_score": 10.0,
+      "severity": "Critical",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+      "cwe_id": "CWE-306 (Missing Authentication for Critical Function)",
+      "description": "The secret cryptographic signing key used to authenticate CIP connections was extracted, allowing attackers to forge trusted communication and upload malicious controller code.",
+      "remediation": "Deploy CIP Security (TLS/DTLS) with FactoryTalk Policy Manager, or restrict port 44818 at industrial firewall boundaries.",
+      "recommended_compensating_controls": [
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
+        "Dedicated Isolated VLAN / OT Port Security",
+        "Physical Key Switch Locked to RUN"
+      ],
+      "published_date": "2021-02-25"
+    },
+    {
+      "advisory_id": "ICSA-20-254-01",
+      "cve_id": "CVE-2020-15782",
+      "title": "Siemens SIMATIC S7-1200 / S7-1500 Memory Protection Bypass",
+      "vendor": "Siemens",
+      "affected_models": [
+        "CPU 1518-4 PN/DP",
+        "S7-1500",
+        "S7-1200"
+      ],
+      "affected_firmware_pattern": "^(2\\.[0-8]\\..*)$",
+      "cvss_base_score": 8.1,
+      "severity": "High",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+      "cwe_id": "CWE-119 (Memory Buffer Errors)",
+      "description": "A memory protection bypass allows an attacker with write access to copy arbitrary code into protected CPU memory areas and execute native machine code on the PLC.",
+      "remediation": "Update S7-1500 CPU firmware to V2.9.2 or later. Implement access protection passwords in TIA Portal.",
+      "recommended_compensating_controls": [
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
+        "Physical Key Switch Locked to RUN"
+      ],
+      "published_date": "2020-09-10"
+    },
+    {
+      "advisory_id": "ICSA-20-168-01",
+      "cve_id": "CVE-2020-11896",
+      "title": "Treck TCP/IP Stack Ripple20 Remote Code Execution in Embedded Devices",
+      "vendor": "Schweitzer Engineering Laboratories",
+      "affected_models": [
+        "SEL-3530 Real-Time Automation Controller (RTAC)"
+      ],
+      "affected_firmware_pattern": "^(R14[0-9].*)$",
+      "cvss_base_score": 9.8,
+      "severity": "Critical",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "cwe_id": "CWE-122 (Heap-based Buffer Overflow)",
+      "description": "Improper handling of incoming IPv4 packet fragments allows an unauthenticated network adversary to trigger remote code execution or fatal device reboot.",
+      "remediation": "Upgrade SEL RTAC firmware to version R150 or later. Block malformed IP fragments at perimeter firewalls.",
+      "recommended_compensating_controls": [
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
+        "Unidirectional Data Diode Isolation"
+      ],
+      "published_date": "2020-06-16"
+    },
+    {
+      "advisory_id": "ICSA-22-298-01",
+      "cve_id": "CVE-2022-38465",
+      "title": "Siemens SIMATIC S7-1500 & SIPROTEC Global Cryptographic Key Extraction",
+      "vendor": "Siemens",
+      "affected_models": [
+        "SIPROTEC 5 7UT85",
+        "CPU 1518-4 PN/DP"
+      ],
+      "affected_firmware_pattern": "^(V08\\.[0-8].*|2\\.[0-8]\\..*)$",
+      "cvss_base_score": 9.3,
+      "severity": "Critical",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+      "cwe_id": "CWE-321 (Use of Hard-coded Cryptographic Key)",
+      "description": "Researchers extracted the internal symmetric hardware key protecting Siemens communications, enabling decryption and spoofing of firmware packets.",
+      "remediation": "Apply Siemens DIGSI V09 update which transitions to individual TLS device certificates.",
+      "recommended_compensating_controls": [
+        "Dedicated Isolated VLAN / OT Port Security",
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter"
+      ],
+      "published_date": "2022-10-25"
+    },
+    {
+      "advisory_id": "ICSA-20-042-02",
+      "cve_id": "CVE-2020-6967",
+      "title": "Rockwell Automation 1756-EN2T Ethernet Communication Module Denial of Service",
+      "vendor": "Rockwell Automation",
+      "affected_models": [
+        "1756-EN2T"
+      ],
+      "affected_firmware_pattern": "^(5\\.0[0-2][0-9])$",
+      "cvss_base_score": 7.5,
+      "severity": "High",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "cwe_id": "CWE-400 (Uncontrolled Resource Consumption)",
+      "description": "Specially crafted CIP requests to the 1756-EN2T bridge cause the communication stack to lock up, severing all HMI and SCADA polling to the PLC rack.",
+      "remediation": "Update 1756-EN2T firmware to version 5.030 or later.",
+      "recommended_compensating_controls": [
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter"
+      ],
+      "published_date": "2020-02-11"
+    }
+  ],
+  "applied_compensating_controls": {
+    "wt-plc-01": [
+      {
+        "id": "ctrl-c05ddd",
+        "control_type": "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
+        "name": "DPI Firewall Filter",
+        "description": "Block unauthorized CIP memory writes",
+        "risk_reduction_pct": 35.0,
+        "is_active": true,
+        "justification": "Testing compensating control via API"
+      }
+    ]
+  }
+}

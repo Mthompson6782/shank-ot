@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OT-BASE Asset Center | Industrial Cybersecurity & Asset Management</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- Top Navbar -->
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-icon">⚡</div>
+            <div>
+                <span class="brand-title">OT-BASE</span>
+                <span class="brand-badge">ASSET CENTER</span>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <div class="facility-select-wrapper">
+                <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">FACILITY:</span>
+                <select id="facility-select" class="facility-select">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="triggerPassiveProbe()">
+                🔍 Passive Probe Sweep
+            </button>
+            <button class="btn btn-secondary" onclick="exportHBOM('json')">
+                📥 Export HBOM
+            </button>
+        </div>
+    </header>
+
+    <!-- Sub-Navbar / Tabs -->
+    <nav class="tab-bar">
+        <button class="tab-btn active" data-tab="tab-dashboard">📊 Executive Dashboard</button>
+        <button class="tab-btn" data-tab="tab-assets">🗂️ Asset Inventory</button>
+        <button class="tab-btn" data-tab="tab-chassis">🎛️ Rack & Chassis Explorer</button>
+        <button class="tab-btn" data-tab="tab-topology">🌐 Purdue Network & Conduits</button>
+        <button class="tab-btn" data-tab="tab-vulns">🛡️ Vulnerability Center</button>
+        <button class="tab-btn" data-tab="tab-lifecycle">⏳ Hardware Lifecycle (EOL)</button>
+        <button class="tab-btn" data-tab="tab-ingest">📥 Ingestion & Discovery Lab</button>
+        <button class="tab-btn" data-tab="tab-compliance">📋 Compliance & Audit</button>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container">
+
+        <!-- ================================================================ -->
+        <!-- 1. EXECUTIVE DASHBOARD                                           -->
+        <!-- ================================================================ -->
+        <section id="tab-dashboard" class="tab-pane active">
+            <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <h2 style="font-size:1.25rem;font-weight:700;" id="dash-facility-name">Municipal Water Treatment Facility</h2>
+                    <p style="font-size:0.8rem;color:var(--text-secondary);">Real-time OT cybersecurity posture, hardware inventory, and Purdue segmentation metrics.</p>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card kpi-cyan">
+                    <span class="kpi-label">Total OT Assets</span>
+                    <span class="kpi-value" id="kpi-total-assets">0</span>
+                    <span class="kpi-sub">PLCs, RTUs, HMIs & Switches</span>
+                </div>
+                <div class="kpi-card kpi-danger">
+                    <span class="kpi-label">Avg OT Risk Score</span>
+                    <span class="kpi-value" id="kpi-avg-risk">0.0</span>
+                    <span class="kpi-sub">Langner Contextual Formula</span>
+                </div>
+                <div class="kpi-card kpi-warning">
+                    <span class="kpi-label">Active CVEs</span>
+                    <span class="kpi-value" id="kpi-total-cves">0</span>
+                    <span class="kpi-sub">ICS-CERT Matched Advisories</span>
+                </div>
+                <div class="kpi-card kpi-danger">
+                    <span class="kpi-label">Purdue Violations</span>
+                    <span class="kpi-value" id="kpi-violations">0</span>
+                    <span class="kpi-sub">Cross-Zone / Dual-Homed</span>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <span class="kpi-label">EOL / EOS Hardware</span>
+                    <span class="kpi-value" id="kpi-eol">0</span>
+                    <span class="kpi-sub">Obsolescence Criticality</span>
+                </div>
+                <div class="kpi-card kpi-success">
+                    <span class="kpi-label">IEC 62443 Posture</span>
+                    <span class="kpi-value" id="kpi-compliance">0%</span>
+                    <span class="kpi-sub">Overall Compliance Score</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Visual Grids -->
+            <div class="dashboard-grid">
+                <!-- Top Riskiest Assets -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🚨 Top Riskiest Operational Assets</div>
+                        <span class="badge badge-red">Prioritized by Physical Impact</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Asset Tag</th>
+                                    <th>Device Name</th>
+                                    <th>Purdue Level</th>
+                                    <th>Vendor</th>
+                                    <th>OT Risk</th>
+                                    <th>Active CVEs</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-risky-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Distribution Bars -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Purdue Level Distribution</div>
+                        </div>
+                        <div id="purdue-bars"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">CVE Severity Breakdown</div>
+                        </div>
+                        <div id="vuln-bars"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 2. ASSET INVENTORY                                               -->
+        <!-- ================================================================ -->
+        <section id="tab-assets" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🗂️ Plant Asset Inventory & Configuration Baseline</div>
+                    <button class="btn btn-secondary" onclick="exportHBOM('csv')">Export CSV</button>
+                </div>
+
+                <div class="controls-bar">
+                    <input type="text" id="asset-search-input" class="search-input" placeholder="Search tag, model, vendor, IP..." onkeyup="filterAssets()">
+                    <select id="asset-purdue-filter" class="filter-select" onchange="filterAssets()">
+                        <option value="">All Purdue Levels</option>
+                        <option value="Level 0">Level 0 (Field)</option>
+                        <option value="Level 1">Level 1 (Direct Control / PLCs)</option>
+                        <option value="Level 2">Level 2 (Supervisory / HMIs)</option>
+                        <option value="Level 3">Level 3 (Operations / Historian)</option>
+                        <option value="Level 3.5">Level 3.5 (IDMZ)</option>
+                    </select>
+                    <select id="asset-vendor-filter" class="filter-select" onchange="filterAssets()">
+                        <option value="">All Vendors</option>
+                        <option value="Rockwell">Rockwell Automation</option>
+                        <option value="Siemens">Siemens</option>
+                        <option value="Schweitzer">SEL</option>
+                        <option value="Yokogawa">Yokogawa</option>
+                        <option value="Schneider">Schneider / Triconex</option>
+                        <option value="Cisco">Cisco Systems</option>
+                    </select>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tag Name</th>
+                                <th>Display Name</th>
+                                <th>Level</th>
+                                <th>Vendor</th>
+                                <th>Model</th>
+                                <th>Firmware</th>
+                                <th>Primary IP</th>
+                                <th>Key Switch</th>
+                                <th>OT Risk</th>
+                                <th>Rack Chassis</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assets-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 3. RACK & CHASSIS BACKPLANE EXPLORER (SIGNATURE OT-BASE FEATURE) -->
+        <!-- ================================================================ -->
+        <section id="tab-chassis" class="tab-pane">
+            <div id="chassis-content">
+                <!-- Populated dynamically with interactive slot cards & LED lights -->
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 4. PURDUE NETWORK & CONDUITS                                     -->
+        <!-- ================================================================ -->
+        <section id="tab-topology" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🌐 Purdue Model Architecture & ISA/IEC 62443 Conduits</div>
+                    <span class="badge badge-cyan">Automated Segmentation Audit</span>
+                </div>
+                <div id="topology-view">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 5. VULNERABILITY CENTER                                          -->
+        <!-- ================================================================ -->
+        <section id="tab-vulns" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">🛡️ ICS Vulnerability & Advisory Correlation Center</div>
+                    <span class="badge badge-amber">Contextual OT Risk Calculator</span>
+                </div>
+                <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">
+                    Matches hardware models and firmware revisions against ICS-CERT advisories. Apply compensating controls to physically discount risk when firmware cannot be patched without plant outages.
+                </p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Advisory / CVE</th>
+                                <th>Affected Asset / Slot</th>
+                                <th>Vulnerability Title</th>
+                                <th>CVSS Base</th>
+                                <th>OT Risk Score</th>
+                                <th>Compensating Controls</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vulns-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 6. HARDWARE LIFECYCLE (EOL/EOS)                                  -->
+        <!-- ================================================================ -->
+        <section id="tab-lifecycle" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">⏳ Hardware Obsolescence & End-of-Life (EOL / EOS) Management</div>
+                </div>
+                <div class="table-wrapper" style="margin-bottom:1.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset Tag</th>
+                                <th>Vendor</th>
+                                <th>Model</th>
+                                <th>Firmware</th>
+                                <th>Lifecycle State</th>
+                                <th>Urgency</th>
+                                <th>Replacement Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lifecycle-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-title" style="margin-bottom:0.75rem;">Vendor Hardware Milestone Catalog</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hardware Line</th>
+                                <th>Vendor</th>
+                                <th>Release Year</th>
+                                <th>End-of-Life (EOL)</th>
+                                <th>End-of-Support (EOS)</th>
+                                <th>Current State</th>
+                                <th>Modern Replacement</th>
+                            </tr>
+                        </thead>
+                        <tbody id="milestones-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 7. INGESTION & DISCOVERY LAB                                     -->
+        <!-- ================================================================ -->
+        <section id="tab-ingest" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📥 OT Asset Discovery & Configuration Ingestion Lab</div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                    <div>
+                        <h3 style="font-size:0.95rem;margin-bottom:0.75rem;">File Upload (Studio 5000 .L5X, Siemens .aml, CSV, JSON)</h3>
+                        <div id="file-dropzone" class="dropzone">
+                            <div class="dropzone-icon">📁</div>
+                            <div style="font-weight:700;font-size:0.95rem;color:#f8fafc;">Drop PLC backup or asset spreadsheet here</div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.35rem;">Supports Rockwell Studio 5000 (.L5X), Siemens AutomationML (.aml), CSV & JSON</div>
+                            <input type="file" id="file-input" style="display:none;" accept=".L5X,.l5x,.aml,.csv,.json">
+                        </div>
+
+                        <div style="margin-top:1rem;display:flex;gap:0.75rem;">
+                            <button class="btn btn-secondary" onclick="loadSampleL5X()">
+                                🧪 Load Sample Rockwell L5X Project
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size:0.95rem;margin-bottom:0.75rem;">Non-Intrusive Passive Network Discovery</h3>
+                        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">
+                            Listen safely to industrial network broadcasts (CIP ListIdentity, S7comm SZL, Modbus FC43, PROFINET DCP) without dangerous IT TCP port sweeps that can fault sensitive controllers.
+                        </p>
+                        <button class="btn btn-primary" onclick="triggerPassiveProbe()" style="padding:0.75rem 1.25rem;font-size:0.9rem;">
+                            🚀 Trigger Safe Passive Discovery Sweep
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 8. COMPLIANCE & AUDIT                                            -->
+        <!-- ================================================================ -->
+        <section id="tab-compliance" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📋 Operational Technology Cybersecurity Compliance Audit</div>
+                    <div>
+                        <a href="/api/export/compliance?format=markdown" target="_blank" class="btn btn-secondary">Download Markdown Audit</a>
+                    </div>
+                </div>
+
+                <div class="kpi-grid" style="margin-bottom:1.5rem;">
+                    <div class="kpi-card kpi-success">
+                        <span class="kpi-label">Overall Compliance</span>
+                        <span class="kpi-value" id="comp-overall-score">0%</span>
+                        <span class="kpi-sub">Composite Posture</span>
+                    </div>
+                    <div class="kpi-card kpi-cyan">
+                        <span class="kpi-label">ISA/IEC 62443</span>
+                        <span class="kpi-value" id="comp-iec-score">0%</span>
+                        <span class="kpi-sub">Zone & Use Control (FR2/FR5)</span>
+                    </div>
+                    <div class="kpi-card kpi-purple">
+                        <span class="kpi-label">NIST SP 800-82r3</span>
+                        <span class="kpi-value" id="comp-nist-score">0%</span>
+                        <span class="kpi-sub">Flaw Remediation & Defenses</span>
+                    </div>
+                </div>
+
+                <div style="background-color:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:8px;padding:1rem;margin-bottom:1.5rem;">
+                    <strong style="color:#38bdf8;">Executive Summary:</strong>
+                    <p id="comp-summary" style="font-size:0.85rem;color:var(--text-secondary);margin-top:0.35rem;"></p>
+                </div>
+
+                <div class="card-title" style="margin-bottom:0.75rem;">Requirement-Level Scorecard</div>
+                <div id="compliance-reqs-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Compensating Control Modal -->
+    <div id="compensate-modal" class="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="card-title">Apply Compensating Control</div>
+                <button class="close-btn" onclick="closeCompensateModal()">&times;</button>
+            </div>
+            <div style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">
+                Target Advisory: <strong id="modal-cve-id" style="color:#f87171;"></strong>
+            </div>
+            <input type="hidden" id="modal-asset-id">
+
+            <div class="form-group">
+                <label class="form-label">Compensating Control Type</label>
+                <select id="modal-control-type" class="form-control">
+                    <option value="Physical Key Switch Locked to RUN">Physical Key Switch Locked to RUN (Hardware Memory Write-Protect)</option>
+                    <option value="Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter">Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter</option>
+                    <option value="Unidirectional Data Diode Isolation">Unidirectional Data Diode Isolation</option>
+                    <option value="Dedicated Isolated VLAN / OT Port Security">Dedicated Isolated VLAN / OT Port Security</option>
+                    <option value="Read-Only Industrial Protocol Gateway">Read-Only Industrial Protocol Gateway</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Engineering Justification</label>
+                <textarea id="modal-justification" class="form-control" rows="3" placeholder="Document why this compensating control mitigates the risk without patching..."></textarea>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
+                <button class="btn btn-secondary" onclick="closeCompensateModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitCompensatingControl()">Apply Control & Recalculate Risk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
