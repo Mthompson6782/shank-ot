@@ -72,6 +72,7 @@ $$\text{OT Risk Score} = \min\left(10.0, \frac{\text{Base CVSS} \times \text{Pur
 - Generates urgency ratings and modernization upgrade paths (e.g. migrating legacy Siemens S7-400H to S7-1500R/H).
 
 ### 5. Ingestion Lab & Non-Intrusive Discovery
+- **Inductive Automation Ignition Parser**: Ingests Gateway Backups (`.gwbk` SQLite database) and Tag JSON exports. Extracts the entire PLC/RTU device connection table (Logix, Siemens, Modbus, DNP3), hostnames, IPs, slot mappings, and parses tag semantics to infer process criticality (safety loops, chemical feeds, boilers).
 - **Rockwell Studio 5000 `.L5X` Parser**: Extracts complete controller configurations, chassis backplanes, slot numbers, and catalog revisions.
 - **Siemens TIA Portal `.aml` (AutomationML) Parser**: Ingests S7 hardware configuration trees.
 - **Bulk CSV / JSON Importer**: Normalizes external asset spreadsheets.
