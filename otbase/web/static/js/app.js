@@ -703,6 +703,49 @@ function loadSampleL5X() {
     handleFileUpload(file);
 }
 
+function loadSampleIgnitionTags() {
+    const sampleTags = {
+        "name": "IgnitionDefaultProvider",
+        "tagType": "Provider",
+        "tags": [
+            {
+                "name": "WaterTreatment",
+                "tagType": "Folder",
+                "tags": [
+                    {
+                        "name": "IntakePump_Flow_GPM",
+                        "tagType": "AtomicTag",
+                        "dataType": "Float4",
+                        "valueSource": "opc",
+                        "opcServer": "Ignition OPC UA Server",
+                        "opcItemPath": "ns=1;s=[Intake_ControlLogix_PLC]Program:Intake.FlowRate"
+                    },
+                    {
+                        "name": "ChlorineGas_Feed_PPM",
+                        "tagType": "AtomicTag",
+                        "dataType": "Float4",
+                        "valueSource": "opc",
+                        "opcServer": "Ignition OPC UA Server",
+                        "opcItemPath": "ns=1;s=[Chemical_CompactLogix_PLC]Program:Dosing.ChlorineFeedRate"
+                    },
+                    {
+                        "name": "Boiler_EmergencyShutdown_Trip",
+                        "tagType": "AtomicTag",
+                        "dataType": "Boolean",
+                        "valueSource": "opc",
+                        "opcServer": "Ignition OPC UA Server",
+                        "opcItemPath": "ns=1;s=[Boiler_Safety_SIS]Program:Safety.ESD_TripActive"
+                    }
+                ]
+            }
+        ]
+    };
+
+    const blob = new Blob([JSON.stringify(sampleTags, null, 2)], { type: "application/json" });
+    const file = new File([blob], "Ignition_Tags_Export.json", { type: "application/json" });
+    handleFileUpload(file);
+}
+
 // ============================================================================
 // 8. COMPLIANCE & EXPORTS
 // ============================================================================

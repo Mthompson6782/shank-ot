@@ -19,6 +19,7 @@ from otbase.engine.lifecycle_analyzer import LifecycleAnalyzer
 from otbase.discovery.parsers.rockwell_l5x import RockwellL5XParser
 from otbase.discovery.parsers.siemens_aml import SiemensAMLParser
 from otbase.discovery.parsers.generic_csv import GenericAssetParser
+from otbase.discovery.parsers.ignition_parser import IgnitionParser
 from otbase.discovery.probe_simulator import OTProbeSimulator
 from otbase.exporter.hbom_sbom import HBOMExporter
 from otbase.exporter.compliance_report import ComplianceReportGenerator
@@ -341,18 +342,39 @@ async def upload_file(
 
     inferred_type = file_type
     if inferred_type == "auto":
-        if filename.endswith(".L5X") or filename.endswith(".l5x") or "RSLogix5000Content" in text_content:
+        if filename.lower().endswith(".gwbk"):
+            inferred_type = "gwbk"
+        elif filename.endswith(".L5X") or filename.endswith(".l5x") or "RSLogix5000Content" in text_content:
             inferred_type = "l5x"
         elif filename.endswith(".aml") or "CAEXFile" in text_content or "AutomationML" in text_content:
             inferred_type = "aml"
         elif filename.endswith(".csv"):
             inferred_type = "csv"
         elif filename.endswith(".json"):
-            inferred_type = "json"
+            if "opcItemPath" in text_content or "tagType" in text_content or "opcServer" in text_content:
+                inferred_type = "ignition_tags"
+            else:
+                inferred_type = "json"
 
     added_assets = []
     try:
-        if inferred_type == "l5x":
+        if inferred_type == "gwbk":
+            assets, conduits = IgnitionParser.parse_gwbk_bytes(content, facility=repo.current_facility)
+            for a in assets:
+                repo.save_asset(a)
+                added_assets.append(a.tag_name)
+            for c in conduits:
+                repo.conduits[c.id] = c
+            repo.save_to_disk()
+        elif inferred_type == "ignition_tags":
+            assets, conduits = IgnitionParser.parse_tag_json(text_content, facility=repo.current_facility)
+            for a in assets:
+                repo.save_asset(a)
+                added_assets.append(a.tag_name)
+            for c in conduits:
+                repo.conduits[c.id] = c
+            repo.save_to_disk()
+        elif inferred_type == "l5x":
             asset = RockwellL5XParser.parse_string(text_content, facility=repo.current_facility)
             repo.save_asset(asset)
             added_assets.append(asset.tag_name)
