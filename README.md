@@ -1,6 +1,6 @@
 # 🗡️ SHANK: SCADA & Hardware Asset Network Knowledge
 
-[![Blade Fleet](https://img.shields.io/badge/BLADE_FLEET-SHANK-DC2626?style=flat-square)](https://github.com/Mthompson6782/ot-base)
+[![Blade Fleet](https://img.shields.io/badge/BLADE_FLEET-SHANK-DC2626?style=flat-square)](https://github.com/Mthompson6782/shank-ot)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com)
 [![ISA/IEC 62443](https://img.shields.io/badge/Compliance-ISA%2FIEC%2062443-orange.svg)](https://www.isa.org/standards-and-publications/isa-standards/isa-standards-committees/isa62443)
