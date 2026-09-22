@@ -1,4 +1,5 @@
 # 🗡️ SHANK: SCADA & Hardware Asset Network Knowledge
+## *The Open-Architecture OTbase Clone for Industrial Control Systems (ICS)*
 
 [![Blade Fleet](https://img.shields.io/badge/BLADE_FLEET-SHANK-DC2626?style=flat-square)](https://github.com/Mthompson6782/shank-ot)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -6,86 +7,85 @@
 [![ISA/IEC 62443](https://img.shields.io/badge/Compliance-ISA%2FIEC%2062443-orange.svg)](https://www.isa.org/standards-and-publications/isa-standards/isa-standards-committees/isa62443)
 [![NIST SP 800-82r3](https://img.shields.io/badge/Framework-NIST%20SP%20800--82r3-red.svg)](https://csrc.nist.gov/pubs/sp/800/82/r3/final)
 
-**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is a high-fidelity, open architecture Operational Technology (OT) and Industrial Control System (ICS/SCADA) asset management and cybersecurity platform inspired by **Langner OT-BASE** (created by Ralph Langner).
+**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is an industrial-grade, open-architecture operational technology (OT) asset management, network context reconstruction, and cyber-physical security platform cloned from the design specifications of **Langner's OTbase**.
 
-As part of the **Blade Fleet** (standing alongside **HALBERD** for threat emulation and real-time defense), **SHANK** serves as the fleet's silent, surgical asset intelligence engine:
-- **S** – **S**CADA (Ingests Inductive Automation Ignition Gateway `.gwbk` backups and Tag providers)
-- **H** – **H**ardware (Deep chassis backplane slot modeling: Rockwell ControlLogix 1756, Siemens S7-1500)
-- **A** – **A**sset (Hardware/Software Bill of Materials: HBOM & SBOM generation)
-- **N** – **N**etwork (Purdue Enterprise Reference Architecture, ISA/IEC 62443 zones, conduits & violation audits)
-- **K** – **K**nowledge (Contextual OT risk scoring, ICS-CERT advisories, EOL/EOS obsolescence lifecycle)
-
-Traditional IT scanners treat an asset as a single IP and often crash delicate PLCs with noisy port sweeps. **SHANK** operates silently, non-intrusively, and pierces directly into the exact physical slot, module catalog number, and firmware revision.
+Unlike IT discovery tools that sweep IP subnets with aggressive port probes and crash fragile PLCs, **SHANK** operates through a decoupled two-tier architecture: edge **Selective Probing Nodes** interrogate infrastructure (switches, routers, chassis backplanes) and package structured **Portable Inventory Data (PID)** for automated aggregation, deterministic Layer 1 physical link resolution, multi-perspective Kandinsky orthogonal network rendering, and enterprise ITSM/SIEM/Firewall integration.
 
 ---
 
-## The 6 Core Pillars of OT-BASE
+## Architecture Overview: Decoupled Two-Tier Engine
 
 ```
 +-----------------------------------------------------------------------------------------------------------------+
-|                                          OT-BASE Web Asset Center                                               |
-|  - Executive KPI Dashboard & Real-Time Risk Heatmaps                                                            |
-|  - Visual PLC Rack / Backplane Chassis Explorer (Slot-by-Slot Hardware & LED Status)                            |
-|  - Purdue Enterprise Reference Architecture (PERA) & Zone / Conduit Visualizer                                   |
-|  - Contextual OT Vulnerability & ICS-CERT Advisory Correlation Engine                                            |
-|  - Hardware Obsolescence & End-of-Life (EOL / EOS) Replacement Planner                                          |
-|  - Ingestion Lab (Rockwell Studio 5000 .L5X, Siemens .aml, CSV/JSON & Non-Intrusive Probes)                     |
+|                                          OTbase Inventory Center (Central Hub)                                  |
+|  - Multi-Dimensional Context Engine (5-Tier Location Trees, Duplicate IP Disambiguation, OT Systems)            |
+|  - Kandinsky Orthogonal 90° Graph Engine (Connections, Locations, Purdue Hierarchy, Networks, Organic)          |
+|  - NetFlow / sFlow Telemetry Aggregator (Sankey Flow Matrix & Asset Directional Path Profiling)                 |
+|  - Contextual OT Risk & ICS-CERT Engine (Ralph Langner Risk Formula + Key Switch Memory Locks)                 |
+|  - Enterprise Ecosystem Connectors (ServiceNow CMDB ISA-95, Splunk TA Syslog, Fortinet/Palo Alto Firewalls)     |
 +-------------------------------------------------------+---------------------------------------------------------+
-                                                        |
-                                                        v
-+-----------------------------------------------------------------------------------------------------------------+
-|                                           FastAPI Core Platform Backend                                         |
-+------------------------------------+------------------------------------+---------------------------------------+
-|         Asset & Backplane DB       |       Purdue Segmentation Rules    |        Contextual OT Risk Engine      |
-|  - Enterprise -> Facility -> Area  |  - Levels 0, 1, 2, 3, 3.5, 4       |  - CVSS v3 Base Score                 |
-|  - Numbered Backplane Slots        |  - ISA/IEC 62443 Security Zones    |  - Purdue Location Exposure Factor    |
-|  - Sub-Module Firmware Tracking    |  - Cross-Zone Conduits & Ports     |  - Process Impact Criticality (SIS)   |
-|  - Dual-Homed NIC Detection        |  - Automated Violation Detection   |  - Key Switch Write-Protect Discount  |
-+------------------------------------+------------------------------------+---------------------------------------+
-|                                    Discovery & Parser Subsystem                                                 |
-|  - Studio 5000 .L5X XML Parser     |  - Siemens TIA Portal .aml Parser  |  - Safe Passive Broadcast Sniffer     |
-+-----------------------------------------------------------------------------------------------------------------+
-|                                        Compliance & HBOM / SBOM Subsystem                                       |
-|  - IEC 62443-3-3 FR1-FR7 Auditing  |  - NIST SP 800-82r3 Flaw Controls  |  - Hardware Bill of Materials (HBOM)  |
+                                                        ^
+                                                        |  JSON-over-HTTPS (Encrypted / Air-Gapped Sneakernet)
+                                                        |  Portable Inventory Data (PID Schema v1.2)
++-------------------------------------------------------+---------------------------------------------------------+
+|                                        Selective Probing Nodes (Distributed Edge)                               |
+|  - SNMP Switch Interrogation: RFC 1213/2863 ifXTable, RFC 1493/4188 Bridge MIB dot1dTpFdbTable, LLDP/CDP       |
+|  - Backplane Crawler: CIP Routing Across ControlLogix 1756, Remote Point I/O, PowerFlex Drives, S7comm, DCP    |
+|  - Passive Telemetry Collector: NetFlow v5/v9 & sFlow Sampling (1:128) for Zero-Overhead Flow Ingestion        |
+|  - Industrial Config Ingestion: Rockwell .L5X, Siemens .aml, Ignition .gwbk Gateway Backups, CSV/JSON Spreadsheets |
 +-----------------------------------------------------------------------------------------------------------------+
 ```
 
-### 1. Visual PLC Rack / Chassis Backplane Modeling (The Signature OT-BASE Feature)
-Unlike IT scanners that stop at the network interface, OT-BASE accurately models industrial chassis:
-- **Rockwell ControlLogix 1756** (4, 7, 10, 13, 17-slot chassis) and **Siemens S7-1500 / S7-400** modular rails.
-- Displays slot numbers (0–16), catalog/part numbers, serial numbers, hardware revisions, and firmware versions for every card.
-- Real-time animated **LED Status Indicators** (`RUN`, `FORCE`, `BAT`, `NET`, `OK`, `FLT`).
-- **Slot-Level CVE Tracking**: Distinguishes between vulnerabilities in the CPU (e.g. CVE-2022-1159) versus vulnerabilities in the Ethernet communications bridge (e.g. CVE-2020-6967 in 1756-EN2T).
+---
 
-### 2. Purdue Reference Architecture & ISA/IEC 62443 Conduits
-Visualizes and audits segmentation across all Purdue levels:
-- **Level 0**: Physical Process & Field Instrumentation (Flowmeters, Transmitters, Drives).
-- **Level 1**: Basic Process Control Systems (PLCs, RTUs, IEDs, Safety Instrumented Systems).
-- **Level 2**: Supervisory & Area Control (Operator HMIs, SCADA Terminals, Industrial Managed Switches).
-- **Level 3**: Site Operations & Control (Historians, Engineering Workstations, Asset Centers).
-- **Level 3.5**: Industrial DMZ (IDMZ Jump Hosts, Reverse Proxies, Security Gateways).
-- **Automated Violation Audit**: Flags dual-homed multi-NIC bridges bypassing supervisory firewalls, direct Level 4 IT-to-OT links, uninspected cross-zone conduits, and PLCs left in `REMOTE` position.
+## Core Pillars of the OTbase Clone
 
-### 3. Contextual OT Vulnerability & Advisory Engine
-In OT, CVSS Base scores are insufficient. OT-BASE applies Ralph Langner's contextual risk model:
-$$\text{OT Risk Score} = \min\left(10.0, \frac{\text{Base CVSS} \times \text{Purdue Factor} \times \text{Criticality Factor} \times \text{Key Switch Factor}}{\prod (1 - \text{Compensating Control Discount})}\right)$$
-- **Physical Key Switch Discount**: Rotating the controller key switch to `RUN` hardware write-protects memory, discounting vulnerability exploitability by **30%**.
-- **Compensating Controls**: Record and apply compensating defenses (Inline DPI Firewalls, Data Diodes, Isolated VLANs, Read-Only Gateways) to document defensibility without requiring risky plant shutdowns.
+### 1. Selective Probing & Deterministic Layer 1 Link Resolution
+Rather than ping-sweeping PLCs, the discovery node directly queries industrial managed switches (Cisco IE, Hirschmann, Moxa, Ruggedcom):
+- Interrogates `ifTable`/`ifXTable` for interface operational status, speeds, duplex, and port descriptions.
+- Queries Bridge MIB `dot1dTpFdbTable` / `dot1qTpFdbTable` for MAC forwarding tables across all 802.1Q VLAN trunks.
+- Correlates with local ARP caches (`ipNetToMediaTable`) to translate MAC addresses to IP addresses.
+- Resolves multi-chassis switch uplinks via LLDP (`lldpRemTable`) and CDP (`cdpCacheTable`).
+- **Physical Link Binding**: Disambiguates single-device edge ports from trunk uplinks, deterministically pinning each PLC and HMI to its exact physical switch port (`SW-01-IND Fa1/1 -> PLC-01-MAIN`).
 
-### 4. Hardware Obsolescence & Lifecycle Management (EOL / EOS)
-- Tracks vendor lifecycle milestones: Active, Mature, End-of-Life (sales discontinued), End-of-Support (firmware patches ceased), and Obsolete.
-- Generates urgency ratings and modernization upgrade paths (e.g. migrating legacy Siemens S7-400H to S7-1500R/H).
+### 2. Automation Backplane Traversal & Deep Chassis Modeling
+Industrial controllers are modular racks containing multiple processors, communication adapters, and I/O cards:
+- **Rockwell ControlLogix 1756**: Uses Common Industrial Protocol (CIP) route paths (`1, <slot>`) to crawl backplane slots, extracting catalog numbers, firmware revisions, hardware series, and serial numbers.
+- **Fieldbus & Remote I/O**: Traverses communication bridges (1756-EN2T) onto remote Ethernet/IP subnets to discover Point I/O drops (1734-AENT) and PowerFlex 525 drives.
+- **Siemens S7 & PROFINET**: Parses S7comm System Status Lists (SZL 0x0011 / 0x0111) and PROFINET DCP Layer 2 multicast identify frames (`0x8892`).
+- **Slot-Level CVE Tracking**: Pinpoints whether a vulnerability exists in the controller execution engine or the communication interface card.
 
-### 5. Ingestion Lab & Non-Intrusive Discovery
-- **Inductive Automation Ignition Parser**: Ingests Gateway Backups (`.gwbk` SQLite database) and Tag JSON exports. Extracts the entire PLC/RTU device connection table (Logix, Siemens, Modbus, DNP3), hostnames, IPs, slot mappings, and parses tag semantics to infer process criticality (safety loops, chemical feeds, boilers).
-- **Rockwell Studio 5000 `.L5X` Parser**: Extracts complete controller configurations, chassis backplanes, slot numbers, and catalog revisions.
-- **Siemens TIA Portal `.aml` (AutomationML) Parser**: Ingests S7 hardware configuration trees.
-- **Bulk CSV / JSON Importer**: Normalizes external asset spreadsheets.
-- **Safe Passive Sniffer**: Captures CIP ListIdentity, S7comm SZL, Modbus FC43, and PROFINET DCP broadcasts without invasive TCP port sweeps.
+### 3. Kandinsky Graph-Theoretic Orthogonal Layout Engine
+Process engineers and OT operators reject erratic IT force-directed "hairball" diagrams. SHANK implements an orthogonal routing engine inspired by Kandinsky:
+- **Orthogonal 90° Routing**: Edges route on strict horizontal and vertical grid segments with automated bend-point minimization and edge crossing reduction.
+- **5 Operational Perspectives**:
+  1. **Connections (Physical)**: Visualizes exact switch ports, patch cables, and Layer 1 physical topology.
+  2. **Locations**: Organizes assets within nested boundaries representing geographic sites, buildings, rooms, and cabinet racks.
+  3. **Purdue Hierarchy**: Enforces strict horizontal stratification from Level 0/1 up through Level 3.5 IDMZ.
+  4. **Networks (Subnets/VLANs)**: Groups nodes by IP broadcast domains and 802.1Q VLAN tags.
+  5. **Organic**: Force-directed spring layout for high-level exploratory analysis.
+- **Hybrid Unmanaged Switch Modeling**: Unmanaged switches (e.g. Stratix 2000, Hirschmann Spider) lack SNMP management. SHANK detects groups of MAC addresses appearing on a single managed switch port and synthesizes an intermediate "virtual hub" with dotted boundary lines.
+- **Vector & Data Export**: One-click export to native SVG and GraphML for enterprise architecture modeling.
 
-### 6. Compliance Scorecards & Hardware Bill of Materials (HBOM)
-- Automated scoring against **ISA/IEC 62443** (Foundational Requirements FR1 to FR7), **NIST SP 800-82r3**, and **CISA Cross-Sector CPGs**.
-- One-click export of complete **Hardware Bill of Materials (HBOM)** in JSON and CSV formats.
+### 4. Multi-Dimensional Context & Duplicate IP Disambiguation
+Industrial facilities frequently deploy standardized OEM machine skids (packaging lines, RO skids, turbine skids) with identical factory IP addressing (`192.168.1.50`):
+- **5-Tier Location Tree**: `Enterprise -> Site -> Building -> Room / Area -> Cabinet`.
+- **Disambiguation Engine**: Binds identical IP addresses to their distinct Location Tree nodes and physical switch port context, allowing multiple assets with IP `192.168.1.50` to coexist cleanly without database key collisions.
+- **Functional OT Systems**: Groups cross-Purdue assets into logical manufacturing lines (e.g. *Water Clarification & Filtration System*).
+- **Shared Trunk Risk Analysis**: Automatically flags when two logically isolated systems route traffic through the same unsegmented switch trunk.
+
+### 5. Sampled Flow Telemetry & Sankey Behavioral Profiling
+Continuous Deep Packet Inspection (DPI) requires expensive physical taps and dedicated compute hardware:
+- Ingests sampled NetFlow v5/v9 and sFlow (1:128 sampling rate) directly from core and distribution switches.
+- Assembles an aggregated, directional byte/packet flow matrix.
+- Generates interactive **Sankey Diagrams** showing inter-zone traffic volume and protocol distribution.
+- **Device Traffic Path Profiler**: Profiles every observed communication partner for each asset and detects unauthorized conduits (e.g. direct Level 1 PLC communicating directly with Level 4 enterprise subnets).
+
+### 6. Enterprise Ecosystem Connectors
+Closes the gap between factory floor reality and corporate cybersecurity systems:
+- **ServiceNow CMDB**: Generates payloads for the Service Graph Connector mapped to the ISA-95 equipment model (`cmdb_ci_ot_control_system`, `cmdb_ci_ot_network_interface`).
+- **Splunk Industrial TA**: Produces Common Event Format (CEF) syslog events for asset lifecycle, switch port state changes, and key switch manipulation.
+- **Industrial Firewall ACL Policy Generator**: Synthesizes enforceable rule-sets for **Fortinet FortiOS** (`config firewall policy`) and **Palo Alto PAN-OS** (XML/CLI set syntax) based strictly on discovered valid communication baselines.
 
 ---
 
@@ -98,12 +98,12 @@ pip install -r requirements.txt
 ```
 
 ### 2. Run Test Suite
-Run the automated pytest test suite:
+Run the automated pytest test suite (30 passing tests):
 ```powershell
 python -m pytest tests/ -v
 ```
 
-### 3. Launch the OT-BASE Asset Center Web Dashboard
+### 3. Launch the OTbase Web Asset Center
 Start the local server:
 ```powershell
 python -m otbase.cli start --port 8000
@@ -112,32 +112,10 @@ Open your browser to: **`http://localhost:8000`**
 
 ---
 
-## Pre-Populated Industrial Scenarios
-
-Switch between pre-configured industrial plant environments directly from the web navigation bar or CLI:
-
-1. **Municipal Water Treatment Facility (`water_treatment`)**:
-   - Primary Control: Rockwell ControlLogix 5580 (10-slot 1756-A10 chassis with EN2T, IB16, OB16E, IF8, OF4, SYNCH).
-   - Chemical Dosing: CompactLogix 5380 (5069-L320ERM).
-   - Operator Supervisory: AVEVA InTouch 2020 R2 HMI, FactoryTalk Historian SE.
-   - Dual-homed EWS breach and Level 3.5 IDMZ Security Gateway (FL mGuard RS4000).
-
-2. **500kV Transmission Substation Alpha (`substation`)**:
-   - Automation Controller: Schweitzer SEL-3530 Real-Time Automation Controller (RTAC).
-   - Protection Relays: SEL-421 Distance Relay, Siemens SIPROTEC 5 7UT85.
-   - Electronic Security Perimeter: Ruggedcom RX1500 (NERC CIP-005 compliant).
-
-3. **Petrochemical Continuous Refinery (`refinery`)**:
-   - Distributed Control: Yokogawa Centum VP Field Control Station (AFV30D) & HIS Console.
-   - Safety Instrumented System (SIS): Schneider Electric Triconex Tricon v11.4 (TMR SIL 3).
-   - Legacy Utility: Siemens SIMATIC S7-400H Redundant System (End of Support).
-
----
-
 ## CLI Usage Guide
 
 ```powershell
-# Start web server
+# Start the web server and REST API
 python -m otbase.cli start --host 127.0.0.1 --port 8000
 
 # Inspect active inventory
@@ -149,41 +127,48 @@ python -m otbase.cli inspect PLC-01-MAIN
 # Run ISA/IEC 62443 compliance audit in terminal
 python -m otbase.cli audit
 
-# Trigger safe passive OT network discovery probe
-python -m otbase.cli scan
+# Inspect Kandinsky orthogonal topology across perspectives
+python -m otbase.cli topology --mode connections
+python -m otbase.cli topology --mode purdue
+python -m otbase.cli topology --mode locations
+python -m otbase.cli topology --mode networks
 
-# Switch plant scenario
-python -m otbase.cli seed --scenario substation
-
-# Export Hardware Bill of Materials (HBOM)
-python -m otbase.cli export --format csv
-python -m otbase.cli export --format json
+# Export data to enterprise connectors
+python -m otbase.cli export --format servicenow
+python -m otbase.cli export --format splunk
+python -m otbase.cli export --format firewall
+python -m otbase.cli export --format graphml
+python -m otbase.cli export --format svg
 ```
 
 ---
 
 ## REST API Reference
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `GET` | `/api/status` | System health, version, and active facility |
-| `GET` | `/api/dashboard` | Executive KPIs, risk averages, and top riskiest assets |
-| `GET` | `/api/scenarios` | List available plant simulation scenarios |
-| `POST` | `/api/scenarios/{name}` | Switch active plant scenario (`water_treatment`, `substation`, `refinery`) |
-| `GET` | `/api/assets` | Query asset inventory with filtering (Purdue level, vendor, tag) |
-| `GET` | `/api/assets/{id}` | Detailed asset metadata, network interfaces, and active CVEs |
-| `PUT` | `/api/assets/{id}/keyswitch` | Update physical key switch (`RUN`, `REMOTE_RUN`, `PROG`) |
-| `GET` | `/api/chassis/{id}` | Visual rack chassis layout and slot module breakdown |
-| `GET` | `/api/topology` | Purdue zones, conduits, and detected segmentation violations |
-| `GET` | `/api/vulnerabilities` | Correlated ICS-CERT advisories and contextual OT risk scores |
-| `POST` | `/api/vulnerabilities/{id}/compensate` | Apply compensating control (DPI firewall, key lock, diode) |
-| `DELETE` | `/api/vulnerabilities/{id}/compensate/{cid}` | Remove compensating control and recalculate risk |
-| `GET` | `/api/lifecycle` | Hardware obsolescence status and EOL/EOS replacement advice |
-| `POST` | `/api/discovery/probe` | Run simulated safe non-intrusive broadcast probe |
-| `POST` | `/api/ingest/upload` | Upload `.L5X`, `.aml`, `.csv`, or `.json` configuration file |
-| `GET` | `/api/export/hbom/json` | Download Hardware Bill of Materials (JSON) |
-| `GET` | `/api/export/hbom/csv` | Download Hardware Bill of Materials (CSV) |
-| `GET` | `/api/export/compliance` | Generate IEC 62443 & NIST SP 800-82 audit scorecard |
+| Category | Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| **System** | `GET` | `/api/status` | System health, version, active scenario |
+| **Dashboard** | `GET` | `/api/dashboard` | Executive KPIs, risk heatmaps, top riskiest assets |
+| **Scenarios** | `POST` | `/api/scenarios/{name}` | Switch industrial scenarios (`water_treatment`, `substation`, `refinery`) |
+| **Assets** | `GET` | `/api/assets` | Query inventory with filtering (Purdue, vendor, tag) |
+| **Assets** | `PUT` | `/api/assets/{id}/keyswitch` | Toggle physical key switch (`RUN`, `REMOTE_RUN`, `PROG`) |
+| **Chassis** | `GET` | `/api/chassis/{id}` | Slot-by-slot chassis hardware & active LEDs |
+| **Topology** | `GET` | `/api/topology` | Purdue zones, conduits, and rule violations |
+| **Topology** | `GET` | `/api/topology/perspectives` | Kandinsky orthogonal coordinates (5 perspectives) |
+| **Topology** | `GET` | `/api/topology/unmanaged-switch`| Virtual hub model for unmanaged switches |
+| **Telemetry** | `GET` | `/api/telemetry/flows` | Ingested NetFlow/sFlow raw flow records |
+| **Telemetry** | `GET` | `/api/telemetry/sankey` | Sankey node/link flow volume matrix |
+| **Telemetry** | `GET` | `/api/telemetry/profile/{ip}` | Detailed asset traffic path profiler |
+| **Context** | `GET` | `/api/locations` | 5-tier location trees & duplicate IP report |
+| **Context** | `GET` | `/api/systems` | Functional OT Systems & shared switch risk |
+| **PID Ingest** | `POST` | `/api/ingest/pid` | Ingest Portable Inventory Data from discovery node |
+| **Enterprise** | `GET` | `/api/export/servicenow` | ServiceNow CMDB Service Graph payload (ISA-95) |
+| **Enterprise** | `GET` | `/api/export/splunk` | Splunk TA CEF syslog stream |
+| **Enterprise** | `GET` | `/api/export/firewall-rules` | FortiOS & PAN-OS industrial firewall policies |
+| **Enterprise** | `GET` | `/api/export/topology-graphml` | Export topology as standard GraphML XML |
+| **Enterprise** | `GET` | `/api/export/topology-svg` | Download standalone SVG orthogonal diagram |
+| **Compliance** | `GET` | `/api/export/compliance` | Generate IEC 62443 & NIST SP 800-82 audit scorecard |
+| **HBOM** | `GET` | `/api/export/hbom/json` | Download complete Hardware Bill of Materials (JSON) |
 
 ---
 

@@ -77,3 +77,50 @@ def test_api_hbom_and_compliance():
     res_comp = client.get("/api/export/compliance?format=json")
     assert res_comp.status_code == 200
     assert "overall_score" in res_comp.json()
+
+def test_api_network_context_and_enterprise_connectors():
+    # 1. Kandinsky Perspectives
+    for mode in ["connections", "locations", "purdue", "networks", "organic"]:
+        res_persp = client.get(f"/api/topology/perspectives?mode={mode}")
+        assert res_persp.status_code == 200
+        data = res_persp.json()
+        assert len(data["nodes"]) > 0
+
+    # 2. Telemetry and Sankey
+    res_sankey = client.get("/api/telemetry/sankey")
+    assert res_sankey.status_code == 200
+    assert "links" in res_sankey.json()
+
+    res_profile = client.get("/api/telemetry/profile/192.168.10.10")
+    assert res_profile.status_code == 200
+    assert res_profile.json()["target_ip"] == "192.168.10.10"
+
+    # 3. Locations and Systems
+    res_loc = client.get("/api/locations")
+    assert res_loc.status_code == 200
+    assert len(res_loc.json()["location_tree"]) > 0
+
+    res_sys = client.get("/api/systems")
+    assert res_sys.status_code == 200
+    assert len(res_sys.json()["systems"]) > 0
+
+    # 4. Enterprise Connectors
+    res_snow = client.get("/api/export/servicenow")
+    assert res_snow.status_code == 200
+    assert res_snow.json()["source"] == "OTbase Service Graph Connector"
+
+    res_splunk = client.get("/api/export/splunk")
+    assert res_splunk.status_code == 200
+    assert "CEF:0|Langner|OTbase" in res_splunk.text
+
+    res_fw = client.get("/api/export/firewall-rules?vendor=fortinet")
+    assert res_fw.status_code == 200
+    assert "config firewall policy" in res_fw.text
+
+    res_graphml = client.get("/api/export/topology-graphml?mode=connections")
+    assert res_graphml.status_code == 200
+    assert "<graphml" in res_graphml.text
+
+    res_svg = client.get("/api/export/topology-svg?mode=connections")
+    assert res_svg.status_code == 200
+    assert "<svg" in res_svg.text

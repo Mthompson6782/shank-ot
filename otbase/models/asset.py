@@ -61,6 +61,14 @@ class LEDStatus(BaseModel):
     name: str
     state: LEDColor = LEDColor.GREEN
 
+class SwitchPortBinding(BaseModel):
+    switch_asset_id: str
+    switch_name: Optional[str] = None
+    port_name: str
+    vlan_id: Optional[int] = 1
+    is_uplink: bool = False
+    resolution_method: str = "SNMP Bridge MIB dot1dTpFdbTable"
+
 class NetworkInterface(BaseModel):
     name: str = "eth0"
     mac_address: str
@@ -69,6 +77,7 @@ class NetworkInterface(BaseModel):
     gateway: Optional[str] = None
     vlan: Optional[int] = None
     is_management: bool = False
+    switch_port: Optional[SwitchPortBinding] = None
 
 class SerialPort(BaseModel):
     name: str = "Channel 0"
@@ -116,6 +125,10 @@ class Asset(BaseModel):
     area: str = "Process Area"
     production_line: Optional[str] = None
     workcell: Optional[str] = None
+    location_id: Optional[str] = None
+    location_path: Optional[str] = None
+    system_id: Optional[str] = None
+    system_name: Optional[str] = None
     criticality: Criticality = Criticality.HIGH
     key_switch: KeySwitchMode = KeySwitchMode.NOT_APPLICABLE
     chassis: Optional[Chassis] = None

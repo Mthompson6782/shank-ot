@@ -37,9 +37,13 @@ function switchTab(tabId) {
     if (tabId === "tab-assets") loadAssets();
     if (tabId === "tab-chassis") loadChassisView();
     if (tabId === "tab-topology") loadTopology();
+    if (tabId === "tab-flows") loadFlows();
+    if (tabId === "tab-locations") loadLocations();
+    if (tabId === "tab-systems") loadSystems();
     if (tabId === "tab-vulns") loadVulnerabilities();
     if (tabId === "tab-lifecycle") loadLifecycle();
     if (tabId === "tab-compliance") loadCompliance();
+    if (tabId === "tab-armis") loadArmis();
 }
 
 // Facility / Scenario Selector
@@ -387,25 +391,39 @@ function inspectModule(slotIdx) {
 }
 
 // ============================================================================
-// 4. PURDUE NETWORK & ZONE VISUALIZER
+// 4. KANDINSKY NETWORK TOPOLOGY & MULTI-PERSPECTIVE SYNTHESIZER
 // ============================================================================
+let currentTopologyMode = "connections";
+
+function switchTopologyMode(mode) {
+    currentTopologyMode = mode;
+    document.querySelectorAll(".topo-mode-btn").forEach(b => {
+        b.classList.toggle("active", b.getAttribute("data-mode") === mode);
+    });
+    loadTopology();
+}
+
 async function loadTopology() {
     try {
-        const res = await fetch("/api/topology");
-        currentTopology = await res.json();
-        renderTopology(currentTopology);
+        const [resPersp, resViolations] = await Promise.all([
+            fetch(`/api/topology/perspectives?mode=${currentTopologyMode}`),
+            fetch("/api/topology")
+        ]);
+        const perspData = await resPersp.json();
+        const topoData = await resViolations.json();
+        renderKandinskyTopology(perspData, topoData.violations);
     } catch (err) {
-        console.error("Error loading topology:", err);
+        console.error("Error loading Kandinsky topology:", err);
     }
 }
 
-function renderTopology(topo) {
-    const container = document.getElementById("topology-view");
-    
-    // Violations List
-    let violationsHtml = "";
-    if (topo.violations && topo.violations.length > 0) {
-        violationsHtml = topo.violations.map(v => `
+function renderKandinskyTopology(data, violations) {
+    const container = document.getElementById("kandinsky-canvas-container");
+    const violationsContainer = document.getElementById("topology-violations-list");
+
+    // Render Violations
+    if (violations && violations.length > 0) {
+        violationsContainer.innerHTML = violations.map(v => `
             <div class="violation-banner">
                 <div style="font-size:1.5rem;">⚠️</div>
                 <div style="flex:1;">
@@ -416,79 +434,315 @@ function renderTopology(topo) {
             </div>
         `).join("");
     } else {
-        violationsHtml = `<div class="badge badge-green" style="margin-bottom:1rem;">✓ Zero Purdue Segmentation Violations Detected</div>`;
+        violationsContainer.innerHTML = `<div class="badge badge-green" style="margin-bottom:1rem;">✓ Zero Purdue Segmentation Violations Detected</div>`;
     }
 
-    // Purdue Levels Breakdown
-    const purdueLevels = [
-        "Level 3.5 - Industrial DMZ (IDMZ)",
-        "Level 3 - Operations & Historians",
-        "Level 2 - Supervisory / HMIs",
-        "Level 1 - Basic Control (PLCs/RTUs)",
-        "Level 0 - Process / Field"
-    ];
+    if (!data.nodes || data.nodes.length === 0) {
+        container.innerHTML = `<p style="padding:2rem;color:var(--text-muted);text-align:center;">No topology nodes in this perspective.</p>`;
+        return;
+    }
 
-    let levelsHtml = purdueLevels.map(lvl => {
-        const zones = topo.zones.filter(z => z.purdue_level === lvl);
-        const assets = topo.assets.filter(a => a.purdue_level === lvl);
+    // Determine canvas dimensions from node bounds
+    let maxX = 1200;
+    let maxY = 700;
+    data.nodes.forEach(n => {
+        if (n.x + n.width + 100 > maxX) maxX = n.x + n.width + 100;
+        if (n.y + n.height + 100 > maxY) maxY = n.y + n.height + 100;
+    });
 
-        return `
-            <div style="background-color:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:8px;padding:1rem;margin-bottom:1rem;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">
-                    <span style="font-weight:700;color:#38bdf8;font-size:0.9rem;">${lvl}</span>
-                    <span class="badge badge-gray">${assets.length} Assets</span>
+    let svgHtml = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${maxX} ${maxY}" width="${maxX}px" height="${maxY}px" style="background:#090d16;min-width:100%;font-family:Inter,sans-serif;">
+            <defs>
+                <pattern id="canvas-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+                </pattern>
+                <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 8 5 L 0 9 z" fill="#0284c7"/>
+                </marker>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#canvas-grid)" />
+    `;
+
+    // 1. Draw Orthogonal Edges
+    (data.edges || []).forEach(edge => {
+        const strokeColor = edge.is_manual ? "#ef4444" : "#0284c7";
+        const strokeDash = edge.is_manual ? "stroke-dasharray:6,6;" : "";
+        const pts = (edge.waypoints || []).map(p => `${p[0]},${p[1]}`).join(" ");
+
+        if (pts) {
+            svgHtml += `<polyline points="${pts}" fill="none" stroke="${strokeColor}" stroke-width="2.5" style="${strokeDash}" />`;
+            if (edge.source_port && edge.waypoints.length > 0) {
+                const p0 = edge.waypoints[0];
+                svgHtml += `
+                    <rect x="${p0[0] + 4}" y="${p0[1] - 18}" width="50" height="15" rx="3" fill="#0369a1" />
+                    <text x="${p0[0] + 8}" y="${p0[1] - 7}" fill="#f8fafc" font-size="9" font-weight="bold">${edge.source_port}</text>
+                `;
+            }
+        }
+    });
+
+    // 2. Draw Nodes
+    data.nodes.forEach(node => {
+        let fill = "#0f172a";
+        let stroke = "#38bdf8";
+        let icon = "⚡";
+
+        if (node.node_type === "managed_switch") {
+            fill = "#082f49";
+            stroke = "#06b6d4";
+            icon = "🔀";
+        } else if (node.node_type === "unmanaged_switch") {
+            fill = "#422006";
+            stroke = "#eab308";
+            icon = "🔌";
+        } else if (node.node_type === "router_firewall") {
+            fill = "#450a0a";
+            stroke = "#dc2626";
+            icon = "🛡️";
+        } else if (node.node_type === "location_box") {
+            fill = "rgba(30, 41, 59, 0.4)";
+            stroke = "#475569";
+            icon = "🏢";
+        } else if (node.node_type === "hmi") {
+            fill = "#172554";
+            stroke = "#60a5fa";
+            icon = "🖥️";
+        }
+
+        const lines = (node.label || "").split("\n");
+
+        svgHtml += `
+            <g style="cursor:pointer;" onclick="inspectAsset('${node.id}')">
+                <rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.8" />
+                <text x="${node.x + 10}" y="${node.y + 22}" fill="#f8fafc" font-size="12" font-weight="bold">${icon} ${lines[0] || ''}</text>
+        `;
+        if (lines[1]) {
+            svgHtml += `<text x="${node.x + 10}" y="${node.y + 38}" fill="#94a3b8" font-size="10">${lines[1]}</text>`;
+        }
+        if (node.ip_address) {
+            svgHtml += `<text x="${node.x + 10}" y="${node.y + node.height - 10}" fill="#38bdf8" font-size="10" font-family="monospace">${node.ip_address}</text>`;
+        }
+        svgHtml += `</g>`;
+    });
+
+    svgHtml += `</svg>`;
+    container.innerHTML = svgHtml;
+}
+
+function exportTopology(format) {
+    window.open(`/api/export/topology-${format}?mode=${currentTopologyMode}`, "_blank");
+}
+
+function openUnmanagedSwitchModal() {
+    const sel = document.getElementById("unsw-asset-select");
+    sel.innerHTML = currentAssets.map(a => `<option value="${a.id}">${a.tag_name} - ${a.display_name} (${a.purdue_level.split(" - ")[0]})</option>`).join("");
+    document.getElementById("unmanaged-switch-modal").style.display = "flex";
+}
+
+function closeUnmanagedSwitchModal() {
+    document.getElementById("unmanaged-switch-modal").style.display = "none";
+}
+
+async function submitUnmanagedSwitch() {
+    const label = document.getElementById("unsw-label").value || "UNM-SW-SKID-01";
+    const assetId = document.getElementById("unsw-asset-select").value;
+    const switchId = `unsw-${Date.now().toString().slice(-4)}`;
+
+    await fetch("/api/topology/unmanaged-switch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            id: switchId,
+            label: label,
+            x: 480,
+            y: 380,
+            connected_asset_ids: [assetId]
+        })
+    });
+
+    closeUnmanagedSwitchModal();
+    showToast(`Hybrid unmanaged switch added. Asserted dashed link to ${assetId}.`);
+    loadTopology();
+}
+
+// ============================================================================
+// 5. FLOW TELEMETRY & SANKEY
+// ============================================================================
+async function loadFlows() {
+    try {
+        const [resSankey, resAssets] = await Promise.all([
+            fetch("/api/telemetry/sankey"),
+            fetch("/api/assets")
+        ]);
+        const sankey = await resSankey.json();
+        const assets = await resAssets.json();
+
+        // Populate table
+        const tbody = document.getElementById("sankey-table-body");
+        tbody.innerHTML = (sankey.links || []).map(l => `
+            <tr>
+                <td><strong>${l.source_name}</strong></td>
+                <td style="color:#38bdf8;font-weight:bold;">━━━━▶</td>
+                <td><strong>${l.target_name}</strong></td>
+                <td><span class="badge badge-cyan">${l.value} ${l.unit}</span></td>
+                <td><span class="badge badge-gray">sFlow 1:128 Hardware Line-Rate</span></td>
+            </tr>
+        `).join("");
+
+        // Populate Asset picker
+        const picker = document.getElementById("flow-asset-picker");
+        picker.innerHTML = `<option value="">-- Choose Asset to Profile --</option>` + 
+            assets.filter(a => a.network_interfaces && a.network_interfaces.length > 0 && a.network_interfaces[0].ip_address)
+                  .map(a => `<option value="${a.network_interfaces[0].ip_address}">${a.tag_name} (${a.network_interfaces[0].ip_address})</option>`).join("");
+    } catch (err) {
+        console.error("Error loading flows:", err);
+    }
+}
+
+async function profileAssetTraffic(ip) {
+    if (!ip) return;
+    try {
+        const res = await fetch(`/api/telemetry/profile/${ip}`);
+        const data = await res.json();
+        const container = document.getElementById("asset-flow-profile-container");
+
+        let anomaliesHtml = "";
+        if (data.anomalies && data.anomalies.length > 0) {
+            anomaliesHtml = `
+                <div class="violation-banner" style="margin-bottom:1rem;">
+                    <div style="font-size:1.5rem;">🚨</div>
+                    <div>
+                        <div class="violation-title">Anomalous / Rogue Flow Detected</div>
+                        <div class="violation-desc">${data.anomalies.map(a => a.reason + ': ' + a.flow).join('<br>')}</div>
+                    </div>
                 </div>
-                <div style="display:flex;flex-wrap:wrap;gap:0.75rem;">
-                    ${assets.map(a => `
-                        <div style="background-color:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:0.6rem 0.85rem;min-width:180px;">
-                            <div style="font-weight:700;font-size:0.85rem;color:#f8fafc;">${a.tag_name}</div>
-                            <div style="font-size:0.75rem;color:var(--text-secondary);">${a.display_name}</div>
-                            <div style="display:flex;justify-content:space-between;margin-top:0.4rem;font-size:0.72rem;">
-                                <code>${a.ip_address || 'No IP'}</code>
-                                <span class="badge ${a.ot_risk_score >= 8 ? 'badge-red' : (a.ot_risk_score >= 5 ? 'badge-amber' : 'badge-green')}">
-                                    Risk ${a.ot_risk_score}
-                                </span>
-                            </div>
+            `;
+        }
+
+        container.innerHTML = `
+            ${anomaliesHtml}
+            <div style="display:flex;gap:1.5rem;margin-bottom:1rem;font-size:0.85rem;">
+                <div><span style="color:var(--text-muted);">Target IP:</span> <code>${data.target_ip}</code></div>
+                <div><span style="color:var(--text-muted);">Total Inbound:</span> <strong style="color:#38bdf8;">${data.total_inbound_mb} MB</strong></div>
+                <div><span style="color:var(--text-muted);">Total Outbound:</span> <strong style="color:#34d399;">${data.total_outbound_mb} MB</strong></div>
+                <div><span style="color:var(--text-muted);">Observed Ports:</span> <code>${data.observed_services.join(', ') || 'None'}</code></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div>
+                    <h4 style="font-size:0.85rem;color:#f8fafc;margin-bottom:0.5rem;">Inbound Talkers</h4>
+                    ${data.inbound_peers.map(p => `
+                        <div style="background:rgba(255,255,255,0.03);padding:0.5rem;border-radius:4px;margin-bottom:0.4rem;font-size:0.75rem;">
+                            <strong>${p.peer_name}</strong> (${p.peer_ip}) &rarr; Port ${p.port} (${p.protocol})
+                            <div style="color:var(--text-muted);">${(p.bytes / 1024 / 1024).toFixed(2)} MB (${p.packets} packets)</div>
                         </div>
-                    `).join("")}
+                    `).join('') || '<div style="color:var(--text-muted);font-size:0.8rem;">No inbound flows observed.</div>'}
+                </div>
+                <div>
+                    <h4 style="font-size:0.85rem;color:#f8fafc;margin-bottom:0.5rem;">Outbound Destinations</h4>
+                    ${data.outbound_peers.map(p => `
+                        <div style="background:rgba(255,255,255,0.03);padding:0.5rem;border-radius:4px;margin-bottom:0.4rem;font-size:0.75rem;">
+                            &rarr; <strong>${p.peer_name}</strong> (${p.peer_ip}) Port ${p.port} (${p.protocol})
+                            <div style="color:var(--text-muted);">${(p.bytes / 1024 / 1024).toFixed(2)} MB (${p.packets} packets)</div>
+                        </div>
+                    `).join('') || '<div style="color:var(--text-muted);font-size:0.8rem;">No outbound flows observed.</div>'}
                 </div>
             </div>
         `;
-    }).join("");
+    } catch (err) {
+        console.error("Error profiling traffic:", err);
+    }
+}
 
-    // Conduits List
-    let conduitsHtml = topo.conduits.map(c => `
-        <div style="background-color:var(--bg-card);border:1px solid var(--border-color);border-radius:6px;padding:0.75rem;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center;">
-            <div>
-                <strong>${c.name}</strong>
-                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.2rem;">
-                    Protocols: ${c.allowed_protocols.join(", ")} | Ports: ${c.ports.join(", ")}
+// ============================================================================
+// 6. LOCATION TREES & DUPLICATE IP DISAMBIGUATION
+// ============================================================================
+async function loadLocations() {
+    try {
+        const res = await fetch("/api/locations");
+        const data = await res.json();
+
+        // Duplicate IP Banner
+        const banner = document.getElementById("duplicate-ip-report-banner");
+        const dup = data.duplicate_ip_report;
+        if (dup && dup.total_duplicate_ips_tracked > 0) {
+            banner.innerHTML = `
+                <div style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);border-radius:8px;padding:1rem;">
+                    <div style="font-weight:700;color:#c084fc;margin-bottom:0.35rem;">✓ Duplicate IP Address Spaces Disambiguated by Location Trees</div>
+                    <div style="font-size:0.82rem;color:var(--text-secondary);">
+                        Detected ${dup.total_duplicate_ips_tracked} duplicated private subnet IP(s) across modular skids. OTbase binds each asset strictly to its unique Location ID, preventing data collisions.
+                    </div>
+                </div>
+            `;
+        } else {
+            banner.innerHTML = `
+                <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:0.75rem;color:#34d399;font-size:0.82rem;">
+                    ✓ All private IP subnets verified with clean Location ID bindings.
+                </div>
+            `;
+        }
+
+        // Table
+        const tbody = document.getElementById("locations-table-body");
+        tbody.innerHTML = (data.location_tree || []).map(l => `
+            <tr>
+                <td><code>${l.id}</code></td>
+                <td><strong>${l.name}</strong></td>
+                <td><span class="badge badge-purple">${l.tier}</span></td>
+                <td><code>${l.parent_id || 'ROOT'}</code></td>
+                <td><span class="badge ${l.metadata && l.metadata.duplicate_subnet_enabled ? 'badge-amber' : 'badge-green'}">${l.metadata && l.metadata.duplicate_subnet_enabled ? 'Duplicate Skid Namespace (' + l.metadata.subnet + ')' : 'Unique Subnet'}</span></td>
+            </tr>
+        `).join("");
+    } catch (err) {
+        console.error("Error loading locations:", err);
+    }
+}
+
+// ============================================================================
+// 7. OT SYSTEMS ABSTRACTION
+// ============================================================================
+async function loadSystems() {
+    try {
+        const res = await fetch("/api/systems");
+        const data = await res.json();
+
+        // Shared switch warning
+        const warnContainer = document.getElementById("shared-switch-warning-container");
+        if (data.shared_trunk_switches && data.shared_trunk_switches.length > 0) {
+            warnContainer.innerHTML = data.shared_trunk_switches.map(sw => `
+                <div class="violation-banner">
+                    <div style="font-size:1.5rem;">⚠️</div>
+                    <div>
+                        <div class="violation-title">Shared Trunk Infrastructure Warning: ${sw.switch_id}</div>
+                        <div class="violation-desc">${sw.shared_risk_warning}</div>
+                    </div>
+                </div>
+            `).join("");
+        } else {
+            warnContainer.innerHTML = "";
+        }
+
+        // Systems Cards
+        const grid = document.getElementById("ot-systems-cards-grid");
+        grid.innerHTML = (data.systems || []).map(sys => `
+            <div class="card" style="border-color:rgba(56,189,248,0.3);">
+                <div class="card-header">
+                    <div class="card-title">${sys.name}</div>
+                    <span class="badge badge-blue">${sys.process_criticality}</span>
+                </div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.75rem;">${sys.description}</p>
+                <div style="font-size:0.75rem;color:var(--text-muted);display:grid;gap:0.4rem;">
+                    <div>Primary Controller: <strong style="color:#f8fafc;">${sys.primary_controller_id}</strong></div>
+                    <div>Associated Assets: <strong style="color:#f8fafc;">${sys.asset_ids.join(', ')}</strong></div>
+                    <div>Serving Switches: <strong style="color:#06b6d4;">${sys.shared_switch_ids.join(', ')}</strong></div>
+                    <div>Operational Bandwidth: <strong style="color:#34d399;">${sys.total_bandwidth_kbps} kbps</strong></div>
                 </div>
             </div>
-            <div>
-                <span class="badge ${c.is_inspected ? 'badge-green' : 'badge-red'}">
-                    ${c.is_inspected ? '🛡️ Inspected by ' + (c.inspection_device || 'Firewall') : '⚠️ UNINSPECTED'}
-                </span>
-            </div>
-        </div>
-    `).join("");
-
-    container.innerHTML = `
-        <div style="margin-bottom:1rem;">
-            ${violationsHtml}
-        </div>
-        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
-            <div>
-                <h3 style="margin-bottom:0.75rem;font-size:0.95rem;color:#fff;">Purdue Architectural Zones</h3>
-                ${levelsHtml}
-            </div>
-            <div>
-                <h3 style="margin-bottom:0.75rem;font-size:0.95rem;color:#fff;">Inter-Zone Conduits (ISA/IEC 62443)</h3>
-                ${conduitsHtml}
-            </div>
-        </div>
-    `;
+        `).join("");
+    } catch (err) {
+        console.error("Error loading systems:", err);
+    }
 }
+
 
 // ============================================================================
 // 5. VULNERABILITY CENTER & COMPENSATING CONTROLS
@@ -824,4 +1078,166 @@ function showToast(msg) {
     toast.style.fontWeight = "600";
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
+}
+
+// ============================================================================
+// 12. ARMIS INTEGRATION & RECONCILIATION
+// ============================================================================
+let armisLiveConfig = {
+    tenantUrl: "",
+    apiSecretKey: ""
+};
+
+async function loadArmis() {
+    try {
+        const [devRes, reconRes] = await Promise.all([
+            fetch("/api/armis/devices"),
+            fetch("/api/armis/reconciliation")
+        ]);
+
+        const devData = await devRes.json();
+        const reconData = await reconRes.json();
+
+        // Update KPIs
+        const devCount = devData.count || (devData.devices ? devData.devices.length : 0);
+        document.getElementById("kpi-armis-devices").textContent = devCount;
+        document.getElementById("kpi-armis-correlated").textContent = reconData.correlated_assets_count || 0;
+        document.getElementById("kpi-armis-rogue").textContent = reconData.rogue_assets_count || 0;
+        document.getElementById("kpi-armis-dormant").textContent = reconData.dormant_assets_count || 0;
+        document.getElementById("kpi-armis-discrepancies").textContent = (reconData.discrepancies || []).length;
+
+        document.getElementById("badge-discrepancy-count").textContent = `${(reconData.discrepancies || []).length} Detected`;
+        document.getElementById("badge-armis-count").textContent = `${devCount} Devices`;
+
+        // Render Discrepancies Table
+        renderArmisDiscrepancies(reconData.discrepancies || []);
+
+        // Render Armis Devices Table
+        renderArmisDevices(devData.devices || []);
+    } catch (e) {
+        console.error("Failed to load Armis data:", e);
+        showToast("Failed to load Armis data");
+    }
+}
+
+function renderArmisDiscrepancies(discrepancies) {
+    const tbody = document.getElementById("armis-discrepancies-table-body");
+    if (!tbody) return;
+    if (!discrepancies || discrepancies.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:2rem;">✓ Zero discrepancies detected between Armis passive visibility and OTbase ground truth.</td></tr>`;
+        return;
+    }
+
+    const sevColors = {
+        "CRITICAL": "#ef4444",
+        "HIGH": "#f97316",
+        "MEDIUM": "#eab308",
+        "LOW": "#38bdf8",
+        "INFO": "#94a3b8"
+    };
+
+    tbody.innerHTML = discrepancies.map(d => {
+        const sevColor = sevColors[d.severity] || "#94a3b8";
+        const armisVal = d.armis_value !== null ? `<span style="font-family:monospace;color:#38bdf8;">${escapeHtml(String(d.armis_value))}</span>` : "-";
+        const groundVal = d.ground_truth_value !== null ? `<span style="font-family:monospace;color:#4ade80;">${escapeHtml(String(d.ground_truth_value))}</span>` : "-";
+
+        return `
+            <tr>
+                <td><span class="badge" style="background:${sevColor};color:#fff;font-weight:700;">${d.severity}</span></td>
+                <td><code style="color:#c084fc;font-weight:600;">${d.discrepancy_type}</code></td>
+                <td><strong>${escapeHtml(d.asset_tag || d.ip_address || "Unknown")}</strong><br><small style="color:var(--text-secondary);font-family:monospace;">${escapeHtml(d.ip_address || "")}</small></td>
+                <td>${armisVal}</td>
+                <td>${groundVal}</td>
+                <td style="max-width:340px;">
+                    <div style="font-size:0.8rem;color:#f1f5f9;margin-bottom:0.35rem;">${escapeHtml(d.description)}</div>
+                    <div style="font-size:0.75rem;color:#94a3b8;border-left:2px solid ${sevColor};padding-left:0.5rem;">
+                        <strong>Remediation:</strong> ${escapeHtml(d.remediation_recommendation)}
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+function renderArmisDevices(devices) {
+    const tbody = document.getElementById("armis-devices-table-body");
+    if (!tbody) return;
+    if (!devices || devices.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-secondary);padding:2rem;">No Armis devices currently cached. Click 'Sync Armis Data' to query.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = devices.map(dev => {
+        const riskColor = dev.risk_level >= 7 ? "#ef4444" : dev.risk_level >= 4 ? "#eab308" : "#22c55e";
+        const portStr = dev.switch_port ? `${escapeHtml(dev.switch_name || "")} (${escapeHtml(dev.switch_port)})` : `<span style="color:var(--text-secondary);">Direct / Wi-Fi</span>`;
+        const protos = (dev.protocols || []).map(p => `<span class="badge" style="background:rgba(56,189,248,0.15);color:#38bdf8;font-size:0.7rem;">${p}</span>`).join(" ");
+
+        return `
+            <tr>
+                <td><code style="color:#94a3b8;">${dev.id}</code></td>
+                <td><strong>${escapeHtml(dev.name || "")}</strong><br><small style="color:var(--text-secondary);">${escapeHtml(dev.manufacturer || "")} ${escapeHtml(dev.model || "")}</small></td>
+                <td><code style="color:#38bdf8;">${escapeHtml(dev.ip_address || "-")}</code></td>
+                <td><code style="color:var(--text-secondary);">${escapeHtml(dev.mac_address || "-")}</code></td>
+                <td><span class="badge" style="background:rgba(255,255,255,0.08);color:#f1f5f9;">${escapeHtml(dev.device_type || dev.category)}</span></td>
+                <td><small>${portStr}</small></td>
+                <td>${protos || "-"}</td>
+                <td><span class="badge" style="background:${riskColor};color:#fff;font-weight:700;">${dev.risk_level} / 10</span></td>
+            </tr>
+        `;
+    }).join("");
+}
+
+async function triggerArmisSync() {
+    const aqlInput = document.getElementById("armis-aql-input");
+    const aql = aqlInput ? aqlInput.value : "in:devices";
+
+    showToast("Querying Armis Platform...");
+    try {
+        const res = await fetch("/api/armis/sync", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                simulate: !armisLiveConfig.tenantUrl,
+                tenant_url: armisLiveConfig.tenantUrl || null,
+                api_secret_key: armisLiveConfig.apiSecretKey || null,
+                aql: aql
+            })
+        });
+        const data = await res.json();
+        showToast(`✓ Armis Sync Complete: ${data.devices_discovered} devices, ${data.discrepancies_count} discrepancies`);
+        await loadArmis();
+    } catch (e) {
+        showToast("Error triggering Armis sync: " + e.message);
+    }
+}
+
+async function ingestArmisFlows() {
+    showToast("Ingesting Armis flows into Sankey Matrix...");
+    try {
+        const res = await fetch("/api/armis/connections/ingest-to-flows", { method: "POST" });
+        const data = await res.json();
+        showToast(`✓ Ingested ${data.new_flows_ingested} new flows (Total: ${data.total_flows})`);
+    } catch (e) {
+        showToast("Error ingesting flows: " + e.message);
+    }
+}
+
+function toggleArmisConfigModal() {
+    const tenant = prompt("Enter Armis Tenant URL (or leave blank to use high-fidelity simulator):", armisLiveConfig.tenantUrl);
+    if (tenant !== null) {
+        if (tenant.trim()) {
+            const secret = prompt("Enter Armis API Secret Key:", armisLiveConfig.apiSecretKey);
+            if (secret) {
+                armisLiveConfig.tenantUrl = tenant.trim();
+                armisLiveConfig.apiSecretKey = secret.trim();
+                document.getElementById("armis-mode-status").textContent = `Mode: Live Cloud Tenant (${armisLiveConfig.tenantUrl})`;
+                showToast("Configured for Live Armis Tenant");
+            }
+        } else {
+            armisLiveConfig.tenantUrl = "";
+            armisLiveConfig.apiSecretKey = "";
+            document.getElementById("armis-mode-status").textContent = "Mode: Active Simulation (No external credentials required)";
+            showToast("Reset to Armis Simulator");
+        }
+    }
 }

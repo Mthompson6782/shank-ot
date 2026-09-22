@@ -19,6 +19,10 @@
       "area": "Raw Water Intake & Filtration",
       "production_line": "Intake Train A",
       "workcell": "Filter Bed Control",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "High (Process Trip Risk)",
       "key_switch": "RUN (Hardware Memory Protected)",
       "chassis": {
@@ -241,7 +245,15 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.10.1",
           "vlan": 10,
-          "is_management": false
+          "is_management": false,
+          "switch_port": {
+            "switch_asset_id": "wt-sw-01",
+            "switch_name": "Plant Floor Core Managed Industrial Switch",
+            "port_name": "FastEthernet1/1",
+            "vlan_id": 10,
+            "is_uplink": false,
+            "resolution_method": "SNMP dot1dTpFdbTable Bridge Forwarding + ARP Correlation"
+          }
         },
         {
           "name": "1756-L83E Onboard GigE",
@@ -250,17 +262,18 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.10.1",
           "vlan": 10,
-          "is_management": false
+          "is_management": false,
+          "switch_port": null
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T21:36:45.425764Z",
-      "last_seen": "2026-09-06T21:36:45.425768Z",
+      "first_discovered": "2026-09-22T01:45:29.993964Z",
+      "last_seen": "2026-09-22T01:45:29.993968Z",
       "configuration_hash": null,
       "active_cves": [
-        "CVE-2022-1159",
         "CVE-2020-6967",
-        "CVE-2021-22681"
+        "CVE-2021-22681",
+        "CVE-2022-1159"
       ],
       "ot_risk_score": 6.8,
       "lifecycle_state": "Active",
@@ -285,6 +298,10 @@
       "area": "Chemical Feed Building",
       "production_line": "Chlorine Gas & Alum Feed",
       "workcell": "Disinfection Header",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "Safety Critical (SIL 2/3 / SIS)",
       "key_switch": "RUN (Hardware Memory Protected)",
       "chassis": null,
@@ -296,7 +313,15 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.10.1",
           "vlan": 10,
-          "is_management": false
+          "is_management": false,
+          "switch_port": {
+            "switch_asset_id": "wt-sw-01",
+            "switch_name": "Plant Floor Core Managed Industrial Switch",
+            "port_name": "FastEthernet1/2",
+            "vlan_id": 10,
+            "is_uplink": false,
+            "resolution_method": "SNMP dot1dTpFdbTable Bridge Forwarding + ARP Correlation"
+          }
         }
       ],
       "serial_ports": [
@@ -309,12 +334,12 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-06T21:36:45.425789Z",
-      "last_seen": "2026-09-06T21:36:45.425790Z",
+      "first_discovered": "2026-09-22T01:45:29.993989Z",
+      "last_seen": "2026-09-22T01:45:29.993990Z",
       "configuration_hash": null,
       "active_cves": [
-        "CVE-2022-1159",
-        "CVE-2021-22681"
+        "CVE-2021-22681",
+        "CVE-2022-1159"
       ],
       "ot_risk_score": 10.0,
       "lifecycle_state": "Active",
@@ -339,6 +364,10 @@
       "area": "Central Control Room",
       "production_line": "All Trains",
       "workcell": "Operator Desk A",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "High (Process Trip Risk)",
       "key_switch": "N/A",
       "chassis": null,
@@ -350,12 +379,20 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.20.1",
           "vlan": 20,
-          "is_management": false
+          "is_management": false,
+          "switch_port": {
+            "switch_asset_id": "wt-sw-01",
+            "switch_name": "Plant Floor Core Managed Industrial Switch",
+            "port_name": "FastEthernet1/3",
+            "vlan_id": 20,
+            "is_uplink": false,
+            "resolution_method": "SNMP dot1dTpFdbTable Bridge Forwarding + ARP Correlation"
+          }
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T21:36:45.425801Z",
-      "last_seen": "2026-09-06T21:36:45.425802Z",
+      "first_discovered": "2026-09-22T01:45:29.994003Z",
+      "last_seen": "2026-09-22T01:45:29.994004Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.9,
@@ -381,6 +418,10 @@
       "area": "Engineering Office",
       "production_line": "Automation Maintenance",
       "workcell": "Programmer Bench",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "High (Process Trip Risk)",
       "key_switch": "N/A",
       "chassis": null,
@@ -392,7 +433,8 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.30.1",
           "vlan": 30,
-          "is_management": false
+          "is_management": false,
+          "switch_port": null
         },
         {
           "name": "Direct Control NIC (DUAL HOMED BREACH)",
@@ -401,12 +443,20 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.10.1",
           "vlan": 10,
-          "is_management": false
+          "is_management": false,
+          "switch_port": {
+            "switch_asset_id": "wt-sw-01",
+            "switch_name": "Plant Floor Core Managed Industrial Switch",
+            "port_name": "FastEthernet1/4",
+            "vlan_id": 10,
+            "is_uplink": false,
+            "resolution_method": "SNMP dot1dTpFdbTable Bridge Forwarding + ARP Correlation"
+          }
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T21:36:45.425816Z",
-      "last_seen": "2026-09-06T21:36:45.425817Z",
+      "first_discovered": "2026-09-22T01:45:29.994017Z",
+      "last_seen": "2026-09-22T01:45:29.994017Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.1,
@@ -432,6 +482,10 @@
       "area": "Server Room Rack 1",
       "production_line": "Plant-Wide Telemetry",
       "workcell": "Historian Node",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "Medium (Secondary Unit)",
       "key_switch": "N/A",
       "chassis": null,
@@ -443,12 +497,20 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.30.1",
           "vlan": 30,
-          "is_management": false
+          "is_management": false,
+          "switch_port": {
+            "switch_asset_id": "wt-sw-01",
+            "switch_name": "Plant Floor Core Managed Industrial Switch",
+            "port_name": "FastEthernet1/5",
+            "vlan_id": 30,
+            "is_uplink": false,
+            "resolution_method": "SNMP dot1dTpFdbTable Bridge Forwarding + ARP Correlation"
+          }
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T21:36:45.425828Z",
-      "last_seen": "2026-09-06T21:36:45.425828Z",
+      "first_discovered": "2026-09-22T01:45:29.994029Z",
+      "last_seen": "2026-09-22T01:45:29.994029Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.7,
@@ -474,6 +536,10 @@
       "area": "DMZ Border Enclosure",
       "production_line": "Perimeter",
       "workcell": "IDMZ Security Cluster",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "High (Process Trip Risk)",
       "key_switch": "N/A",
       "chassis": null,
@@ -485,7 +551,8 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "10.100.5.254",
           "vlan": 100,
-          "is_management": false
+          "is_management": false,
+          "switch_port": null
         },
         {
           "name": "Internal OT Port (Level 3)",
@@ -494,12 +561,13 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.30.1",
           "vlan": 30,
-          "is_management": false
+          "is_management": false,
+          "switch_port": null
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-06T21:36:45.425841Z",
-      "last_seen": "2026-09-06T21:36:45.425842Z",
+      "first_discovered": "2026-09-22T01:45:29.994042Z",
+      "last_seen": "2026-09-22T01:45:29.994042Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.3,
@@ -525,6 +593,10 @@
       "area": "Control Room Network Rack",
       "production_line": "Plant Backbone",
       "workcell": "Switching Core",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "High (Process Trip Risk)",
       "key_switch": "N/A",
       "chassis": null,
@@ -536,7 +608,8 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.20.1",
           "vlan": 20,
-          "is_management": true
+          "is_management": true,
+          "switch_port": null
         }
       ],
       "serial_ports": [
@@ -549,8 +622,8 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-06T21:36:45.425856Z",
-      "last_seen": "2026-09-06T21:36:45.425857Z",
+      "first_discovered": "2026-09-22T01:45:29.994056Z",
+      "last_seen": "2026-09-22T01:45:29.994057Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.9,
@@ -576,6 +649,10 @@
       "area": "Intake Vault 1",
       "production_line": "Influent Header",
       "workcell": "Pipeline Measurement",
+      "location_id": null,
+      "location_path": null,
+      "system_id": null,
+      "system_name": null,
       "criticality": "High (Process Trip Risk)",
       "key_switch": "N/A",
       "chassis": null,
@@ -587,7 +664,8 @@
           "subnet_mask": "255.255.255.0",
           "gateway": "192.168.10.1",
           "vlan": 10,
-          "is_management": false
+          "is_management": false,
+          "switch_port": null
         }
       ],
       "serial_ports": [
@@ -600,14 +678,68 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-06T21:36:45.425870Z",
-      "last_seen": "2026-09-06T21:36:45.425870Z",
+      "first_discovered": "2026-09-22T01:45:29.994070Z",
+      "last_seen": "2026-09-22T01:45:29.994070Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.0,
       "lifecycle_state": "Active",
       "is_compromised_simulated": false,
       "notes": "Transmits real-time mega-gallons/day (MGD) influent flow to PLC-01-MAIN."
+    },
+    {
+      "id": "AST-PID-813625",
+      "tag_name": "REMOTE-PANEL-01",
+      "display_name": "Discovered Rockwell Automation Device",
+      "vendor": "Rockwell Automation",
+      "model": "Ethernet Field Device",
+      "catalog_number": null,
+      "serial_number": null,
+      "hardware_revision": null,
+      "firmware_version": null,
+      "os_name": null,
+      "os_version": null,
+      "device_type": "Field Sensor / Transmitter / Actuator",
+      "purdue_level": "Level 1 - Basic Control (PLCs/RTUs)",
+      "facility": "Municipal Water Treatment Facility",
+      "area": "Process Area",
+      "production_line": null,
+      "workcell": null,
+      "location_id": "loc-skid-01",
+      "location_path": "Global Corp/Substation Alpha/Relay Room/Panel 4",
+      "system_id": null,
+      "system_name": null,
+      "criticality": "High (Process Trip Risk)",
+      "key_switch": "N/A",
+      "chassis": null,
+      "network_interfaces": [
+        {
+          "name": "eth0",
+          "mac_address": "00:1D:9C:AA:BB:CC",
+          "ip_address": "192.168.10.180",
+          "subnet_mask": "255.255.255.0",
+          "gateway": null,
+          "vlan": null,
+          "is_management": false,
+          "switch_port": {
+            "switch_asset_id": "wt-sw-01",
+            "switch_name": "Plant Floor Core Managed Industrial Switch",
+            "port_name": "FastEthernet1/7",
+            "vlan_id": 1,
+            "is_uplink": false,
+            "resolution_method": "SNMP dot1dTpFdbTable Bridge Forwarding + ARP Correlation"
+          }
+        }
+      ],
+      "serial_ports": [],
+      "first_discovered": "2026-09-22T01:45:30.236074Z",
+      "last_seen": "2026-09-22T01:45:30.236076Z",
+      "configuration_hash": null,
+      "active_cves": [],
+      "ot_risk_score": 0.0,
+      "lifecycle_state": "Active",
+      "is_compromised_simulated": false,
+      "notes": null
     }
   ],
   "zones": [
@@ -927,7 +1059,7 @@
   "applied_compensating_controls": {
     "wt-plc-01": [
       {
-        "id": "ctrl-c99fbf",
+        "id": "ctrl-81795f",
         "control_type": "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
         "name": "DPI Firewall Filter",
         "description": "Block unauthorized CIP memory writes",
@@ -936,5 +1068,888 @@
         "justification": "Testing compensating control via API"
       }
     ]
+  },
+  "location_tree": [
+    {
+      "id": "loc-ent-01",
+      "name": "Global Water Utilities Corp",
+      "tier": "Enterprise",
+      "parent_id": null,
+      "description": "Enterprise Corporate Level",
+      "facility": "Municipal Water Treatment Facility",
+      "metadata": {}
+    },
+    {
+      "id": "loc-site-01",
+      "name": "Municipal Water Treatment Facility",
+      "tier": "Site",
+      "parent_id": "loc-ent-01",
+      "description": "Regional Production Facility",
+      "facility": "Municipal Water Treatment Facility",
+      "metadata": {}
+    },
+    {
+      "id": "loc-bld-01",
+      "name": "Filtration & Chemical Treatment Building",
+      "tier": "Building",
+      "parent_id": "loc-site-01",
+      "description": null,
+      "facility": "Municipal Water Treatment Facility",
+      "metadata": {}
+    },
+    {
+      "id": "loc-room-01",
+      "name": "Main Supervisory Control Room",
+      "tier": "Control Room",
+      "parent_id": "loc-bld-01",
+      "description": null,
+      "facility": "Municipal Water Treatment Facility",
+      "metadata": {}
+    },
+    {
+      "id": "loc-skid-01",
+      "name": "Skid 1 - Coagulation & Chemical Dosing",
+      "tier": "Cabinet / Skid",
+      "parent_id": "loc-room-01",
+      "description": null,
+      "facility": "Municipal Water Treatment Facility",
+      "metadata": {
+        "duplicate_subnet_enabled": true,
+        "subnet": "192.168.1.0/24"
+      }
+    },
+    {
+      "id": "loc-skid-02",
+      "name": "Skid 2 - Flocculation & Polymer Dosing (OEM Duplicate)",
+      "tier": "Cabinet / Skid",
+      "parent_id": "loc-room-01",
+      "description": null,
+      "facility": "Municipal Water Treatment Facility",
+      "metadata": {
+        "duplicate_subnet_enabled": true,
+        "subnet": "192.168.1.0/24"
+      }
+    }
+  ],
+  "systems": [
+    {
+      "id": "sys-coag-01",
+      "name": "Primary Coagulation & Filtration System",
+      "description": "Controls intake mixing and chemical coagulant addition.",
+      "facility": "Municipal Water Treatment Facility",
+      "primary_controller_id": "PLC-01-MAIN",
+      "asset_ids": [
+        "PLC-01-MAIN",
+        "HMI-OPERATOR-01",
+        "SW-CORE-01"
+      ],
+      "shared_switch_ids": [
+        "SW-CORE-01"
+      ],
+      "conduit_ids": [],
+      "process_criticality": "High",
+      "total_bandwidth_kbps": 18400.0,
+      "active_alarms": 0
+    },
+    {
+      "id": "sys-chem-02",
+      "name": "Secondary Chemical Disinfection Skid",
+      "description": "Modular OEM skid dosing sodium hypochlorite.",
+      "facility": "Municipal Water Treatment Facility",
+      "primary_controller_id": "PLC-02-CHEM",
+      "asset_ids": [
+        "PLC-02-CHEM",
+        "SW-CORE-01"
+      ],
+      "shared_switch_ids": [
+        "SW-CORE-01"
+      ],
+      "conduit_ids": [],
+      "process_criticality": "High",
+      "total_bandwidth_kbps": 9200.0,
+      "active_alarms": 0
+    }
+  ],
+  "flows": [
+    {
+      "src_ip": "192.168.20.20",
+      "dst_ip": "192.168.10.10",
+      "src_port": 49152,
+      "dst_port": 44818,
+      "protocol": "TCP",
+      "byte_count": 84500000,
+      "packet_count": 124000,
+      "sampling_ratio": 128,
+      "first_switched": null,
+      "last_switched": null
+    },
+    {
+      "src_ip": "192.168.20.20",
+      "dst_ip": "192.168.10.20",
+      "src_port": 49153,
+      "dst_port": 44818,
+      "protocol": "TCP",
+      "byte_count": 42100000,
+      "packet_count": 68000,
+      "sampling_ratio": 128,
+      "first_switched": null,
+      "last_switched": null
+    },
+    {
+      "src_ip": "192.168.20.20",
+      "dst_ip": "192.168.20.30",
+      "src_port": 51200,
+      "dst_port": 135,
+      "protocol": "TCP",
+      "byte_count": 195000000,
+      "packet_count": 215000,
+      "sampling_ratio": 128,
+      "first_switched": null,
+      "last_switched": null
+    },
+    {
+      "src_ip": "192.168.10.10",
+      "dst_ip": "192.168.10.75",
+      "src_port": 2222,
+      "dst_port": 2222,
+      "protocol": "UDP",
+      "byte_count": 61200000,
+      "packet_count": 980000,
+      "sampling_ratio": 128,
+      "first_switched": null,
+      "last_switched": null
+    },
+    {
+      "src_ip": "192.168.30.100",
+      "dst_ip": "192.168.10.10",
+      "src_port": 50124,
+      "dst_port": 44818,
+      "protocol": "TCP",
+      "byte_count": 12800000,
+      "packet_count": 15400,
+      "sampling_ratio": 128,
+      "first_switched": null,
+      "last_switched": null
+    },
+    {
+      "src_ip": "192.168.20.15",
+      "dst_ip": "192.168.10.10",
+      "src_port": 51234,
+      "dst_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 1245000,
+      "packet_count": 6400,
+      "sampling_ratio": 128,
+      "first_switched": "2026-09-21T18:00:00Z",
+      "last_switched": "2026-09-21T20:30:00Z"
+    },
+    {
+      "src_ip": "192.168.30.50",
+      "dst_ip": "192.168.10.10",
+      "src_port": 49882,
+      "dst_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 450000,
+      "packet_count": 1800,
+      "sampling_ratio": 128,
+      "first_switched": "2026-09-21T19:15:00Z",
+      "last_switched": "2026-09-21T20:25:00Z"
+    },
+    {
+      "src_ip": "192.168.20.88",
+      "dst_ip": "192.168.10.10",
+      "src_port": 38912,
+      "dst_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 24800,
+      "packet_count": 120,
+      "sampling_ratio": 128,
+      "first_switched": "2026-09-21T20:10:00Z",
+      "last_switched": "2026-09-21T20:38:00Z"
+    },
+    {
+      "src_ip": "192.168.20.15",
+      "dst_ip": "192.168.10.180",
+      "src_port": 50000,
+      "dst_port": 44818,
+      "protocol": "TCP",
+      "byte_count": 5242880,
+      "packet_count": 6400,
+      "sampling_ratio": 128,
+      "first_switched": null,
+      "last_switched": null
+    }
+  ],
+  "switch_ports": [
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 1,
+      "if_name": "FastEthernet1/1",
+      "if_descr": "IE-3400 10/100Base-TX Access Port",
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        10
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:1D:9C:C4:55:01",
+          "vlan_id": 10,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 2,
+      "if_name": "FastEthernet1/2",
+      "if_descr": "IE-3400 10/100Base-TX Access Port",
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        10
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:1D:9C:88:22:19",
+          "vlan_id": 10,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 3,
+      "if_name": "FastEthernet1/3",
+      "if_descr": "IE-3400 10/100Base-TX Access Port",
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        20
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:50:56:A2:3B:11",
+          "vlan_id": 20,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 4,
+      "if_name": "FastEthernet1/4",
+      "if_descr": "IE-3400 10/100Base-TX Access Port",
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        10
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:50:56:88:C1:23",
+          "vlan_id": 10,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 5,
+      "if_name": "FastEthernet1/5",
+      "if_descr": "IE-3400 10/100Base-TX Access Port",
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        30
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:50:56:11:44:AA",
+          "vlan_id": 30,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 6,
+      "if_name": "FastEthernet1/6",
+      "if_descr": "IE-3400 10/100Base-TX Access Port",
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        10
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:07:90:3A:41:88",
+          "vlan_id": 10,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 9,
+      "if_name": "GigabitEthernet1/1",
+      "if_descr": "Uplink Trunk to IDMZ Firewall",
+      "if_alias": null,
+      "if_speed_bps": 1000000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": true,
+      "vlan_ids": [
+        10,
+        20,
+        30,
+        35
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:A0:45:11:22:34",
+          "vlan_id": 35,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": "eth1",
+      "neighbor_system_name": "IDMZ-SEC-GW01"
+    },
+    {
+      "switch_ip": "192.168.20.2",
+      "switch_mac": null,
+      "switch_name": "SW-01-IND",
+      "if_index": 7,
+      "if_name": "FastEthernet1/7",
+      "if_descr": null,
+      "if_alias": null,
+      "if_speed_bps": 100000000,
+      "if_oper_status": "up",
+      "if_admin_status": "up",
+      "duplex": "full",
+      "is_trunk": false,
+      "vlan_ids": [
+        1
+      ],
+      "learned_macs": [
+        {
+          "mac_address": "00:1D:9C:AA:BB:CC",
+          "vlan_id": 10,
+          "status": "learned"
+        }
+      ],
+      "neighbor_chassis_id": null,
+      "neighbor_port_id": null,
+      "neighbor_system_name": null
+    }
+  ],
+  "unmanaged_switches": [],
+  "armis_devices": [
+    {
+      "id": 101,
+      "name": "PLC-01-MAIN",
+      "ip_address": "192.168.10.10",
+      "mac_address": "00:1D:9C:C4:55:01",
+      "manufacturer": "Rockwell Automation",
+      "model": "ControlLogix 5580",
+      "category": "Industrial",
+      "device_type": "PLC",
+      "operating_system": "Rockwell Firmware",
+      "operating_system_version": "v32",
+      "risk_level": 7,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 1",
+        "Filtration Subnet"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/1",
+      "vlan": 10,
+      "protocols": [
+        "CIP",
+        "EtherNet/IP",
+        "SNMP"
+      ],
+      "vulnerabilities": [
+        "CVE-2022-1159",
+        "CVE-2020-6967"
+      ],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 102,
+      "name": "PLC-02-CHEM",
+      "ip_address": "192.168.10.20",
+      "mac_address": "00:1D:9C:88:22:19",
+      "manufacturer": "Rockwell Automation",
+      "model": "CompactLogix 5380",
+      "category": "Industrial",
+      "device_type": "PLC",
+      "operating_system": "Rockwell Firmware",
+      "operating_system_version": "32.012",
+      "risk_level": 8,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 1",
+        "Chemical Subnet"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/2",
+      "vlan": 10,
+      "protocols": [
+        "CIP",
+        "EtherNet/IP"
+      ],
+      "vulnerabilities": [
+        "CVE-2021-22681"
+      ],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 103,
+      "name": "HMI-01-OP",
+      "ip_address": "192.168.20.15",
+      "mac_address": "00:50:56:A2:3B:11",
+      "manufacturer": "AVEVA",
+      "model": "InTouch 2020 R2",
+      "category": "Computers",
+      "device_type": "HMI",
+      "operating_system": "Windows 10 Enterprise LTSC",
+      "operating_system_version": "21H2",
+      "risk_level": 3,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 2",
+        "Supervisory VLAN"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/3",
+      "vlan": 20,
+      "protocols": [
+        "HTTP",
+        "HTTPS",
+        "CIP",
+        "RDP"
+      ],
+      "vulnerabilities": [
+        "CVE-2022-45139"
+      ],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 104,
+      "name": "EWS-01-ENG",
+      "ip_address": "192.168.30.50",
+      "mac_address": "00:50:56:88:C1:22",
+      "manufacturer": "Dell",
+      "model": "Precision 3640",
+      "category": "Computers",
+      "device_type": "Engineering Workstation",
+      "operating_system": "Windows 11 Pro",
+      "operating_system_version": "22H2",
+      "risk_level": 4,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 3",
+        "Engineering VLAN"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/9",
+      "vlan": 30,
+      "protocols": [
+        "CIP",
+        "S7comm",
+        "SSH",
+        "RDP",
+        "HTTPS"
+      ],
+      "vulnerabilities": [],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 105,
+      "name": "HIST-01-SRV",
+      "ip_address": "192.168.30.100",
+      "mac_address": "00:50:56:11:44:AA",
+      "manufacturer": "Rockwell Automation",
+      "model": "FactoryTalk Historian SE",
+      "category": "Computers",
+      "device_type": "Historian",
+      "operating_system": "Windows Server 2019",
+      "operating_system_version": "1809",
+      "risk_level": 2,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 3",
+        "Historian VLAN"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/5",
+      "vlan": 30,
+      "protocols": [
+        "OPC UA",
+        "OSIsoft PI",
+        "TCP/445"
+      ],
+      "vulnerabilities": [],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 106,
+      "name": "SW-01-IND",
+      "ip_address": "192.168.20.2",
+      "mac_address": "00:2A:6A:99:88:10",
+      "manufacturer": "Cisco Systems",
+      "model": "Catalyst IE-3400",
+      "category": "Network Equipment",
+      "device_type": "Industrial Switch",
+      "operating_system": "Cisco IOS-XE",
+      "operating_system_version": "17.9.2a",
+      "risk_level": 3,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 2",
+        "Core Infrastructure"
+      ],
+      "switch_ip": null,
+      "switch_name": null,
+      "switch_port": null,
+      "vlan": 1,
+      "protocols": [
+        "SNMP",
+        "SSH",
+        "LLDP",
+        "CDP",
+        "HTTPS"
+      ],
+      "vulnerabilities": [],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 107,
+      "name": "ROGUE-TABLET-MAINT",
+      "ip_address": "192.168.20.88",
+      "mac_address": "AC:DE:48:11:22:33",
+      "manufacturer": "Samsung Electronics",
+      "model": "Galaxy Tab Active3",
+      "category": "Mobile",
+      "device_type": "Tablet",
+      "operating_system": "Android 13",
+      "operating_system_version": "13.0",
+      "risk_level": 9,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 2",
+        "Supervisory VLAN"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/6",
+      "vlan": 20,
+      "protocols": [
+        "CIP",
+        "HTTPS",
+        "DNS"
+      ],
+      "vulnerabilities": [
+        "CVE-2023-21433"
+      ],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    },
+    {
+      "id": 108,
+      "name": "CAM-01-INSPECTION",
+      "ip_address": "192.168.20.90",
+      "mac_address": "00:40:8C:99:11:02",
+      "manufacturer": "Axis Communications",
+      "model": "M3065-V Network Camera",
+      "category": "IoT",
+      "device_type": "IP Camera",
+      "operating_system": "Axis OS",
+      "operating_system_version": "10.12.190",
+      "risk_level": 4,
+      "site": "Municipal Water Treatment Facility",
+      "boundaries": [
+        "Purdue Level 2",
+        "Physical Security VLAN"
+      ],
+      "switch_ip": "192.168.20.2",
+      "switch_name": "SW-01-IND",
+      "switch_port": "FastEthernet1/8",
+      "vlan": 20,
+      "protocols": [
+        "RTSP",
+        "HTTPS",
+        "ONVIF"
+      ],
+      "vulnerabilities": [],
+      "first_seen": null,
+      "last_seen": null,
+      "tags": []
+    }
+  ],
+  "armis_connections": [
+    {
+      "connection_id": "armis-conn-001",
+      "source_ip": "192.168.20.15",
+      "source_port": 51234,
+      "destination_ip": "192.168.10.10",
+      "destination_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 1245000,
+      "packet_count": 6400,
+      "start_time": "2026-09-21T18:00:00Z",
+      "last_activity": "2026-09-21T20:30:00Z",
+      "boundary_crossed": "Level 2 -> Level 1"
+    },
+    {
+      "connection_id": "armis-conn-002",
+      "source_ip": "192.168.30.50",
+      "source_port": 49882,
+      "destination_ip": "192.168.10.10",
+      "destination_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 450000,
+      "packet_count": 1800,
+      "start_time": "2026-09-21T19:15:00Z",
+      "last_activity": "2026-09-21T20:25:00Z",
+      "boundary_crossed": "Level 3 -> Level 1 (Direct Conduit Violation)"
+    },
+    {
+      "connection_id": "armis-conn-003",
+      "source_ip": "192.168.30.100",
+      "source_port": 58900,
+      "destination_ip": "192.168.10.10",
+      "destination_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 8500000,
+      "packet_count": 42000,
+      "start_time": "2026-09-21T00:00:00Z",
+      "last_activity": "2026-09-21T20:35:00Z",
+      "boundary_crossed": "Level 3 -> Level 1"
+    },
+    {
+      "connection_id": "armis-conn-004",
+      "source_ip": "192.168.20.88",
+      "source_port": 38912,
+      "destination_ip": "192.168.10.10",
+      "destination_port": 44818,
+      "protocol": "CIP",
+      "byte_count": 24800,
+      "packet_count": 120,
+      "start_time": "2026-09-21T20:10:00Z",
+      "last_activity": "2026-09-21T20:38:00Z",
+      "boundary_crossed": "UNAUTHORIZED CONDUIT (Rogue Tablet -> PLC-01)"
+    }
+  ],
+  "latest_reconciliation": {
+    "generated_at": "2026-09-22T01:45:34.374803+00:00",
+    "total_armis_devices": 8,
+    "total_otbase_assets": 9,
+    "correlated_assets_count": 6,
+    "rogue_assets_count": 2,
+    "dormant_assets_count": 3,
+    "discrepancies": [
+      {
+        "discrepancy_type": "FIRMWARE_MISMATCH",
+        "severity": "HIGH",
+        "asset_id": "wt-plc-01",
+        "asset_tag": "PLC-01-MAIN",
+        "ip_address": "192.168.10.10",
+        "mac_address": "00:1D:9C:C4:55:01",
+        "armis_value": "v32",
+        "ground_truth_value": "33.011",
+        "description": "Firmware drift: Armis observed 'v32' but physical ground truth reports '33.011'.",
+        "remediation_recommendation": "Recalculate vulnerability exposure based on confirmed chassis hardware catalog revision.",
+        "detected_at": "2026-09-22T01:45:34.374880+00:00"
+      },
+      {
+        "discrepancy_type": "FIRMWARE_MISMATCH",
+        "severity": "HIGH",
+        "asset_id": "wt-hmi-01",
+        "asset_tag": "HMI-01-OP",
+        "ip_address": "192.168.20.15",
+        "mac_address": "00:50:56:A2:3B:11",
+        "armis_value": "21H2",
+        "ground_truth_value": "1809 (Build 17763)",
+        "description": "Operating System drift: Armis observed '21H2' but physical ground truth reports '1809 (Build 17763)'.",
+        "remediation_recommendation": "Recalculate vulnerability exposure based on confirmed chassis hardware catalog revision.",
+        "detected_at": "2026-09-22T01:45:34.374909+00:00"
+      },
+      {
+        "discrepancy_type": "FIRMWARE_MISMATCH",
+        "severity": "HIGH",
+        "asset_id": "wt-ews-01",
+        "asset_tag": "EWS-01-ENG",
+        "ip_address": "192.168.30.50",
+        "mac_address": "00:50:56:88:C1:22",
+        "armis_value": "22H2",
+        "ground_truth_value": "21H2",
+        "description": "Operating System drift: Armis observed '22H2' but physical ground truth reports '21H2'.",
+        "remediation_recommendation": "Recalculate vulnerability exposure based on confirmed chassis hardware catalog revision.",
+        "detected_at": "2026-09-22T01:45:34.374924+00:00"
+      },
+      {
+        "discrepancy_type": "PORT_MISMATCH",
+        "severity": "MEDIUM",
+        "asset_id": "wt-ews-01",
+        "asset_tag": "EWS-01-ENG",
+        "ip_address": "192.168.30.50",
+        "mac_address": "00:50:56:88:C1:22",
+        "armis_value": "FastEthernet1/9",
+        "ground_truth_value": "FastEthernet1/4",
+        "description": "Switch port conflict: Armis reported 'FastEthernet1/9' while SNMP Bridge MIB dot1dTpFdbTable resolved 'FastEthernet1/4'.",
+        "remediation_recommendation": "Interrogate switch LLDP/CDP forwarding table to verify if an intermediate unmanaged hub or patch was moved.",
+        "detected_at": "2026-09-22T01:45:34.374941+00:00"
+      },
+      {
+        "discrepancy_type": "ROGUE_ASSET",
+        "severity": "CRITICAL",
+        "asset_id": "armis-107",
+        "asset_tag": "ROGUE-TABLET-MAINT",
+        "ip_address": "192.168.20.88",
+        "mac_address": "AC:DE:48:11:22:33",
+        "armis_value": "Samsung Electronics Galaxy Tab Active3 (Tablet)",
+        "ground_truth_value": "NOT_FOUND_IN_BASELINE",
+        "description": "Device 'ROGUE-TABLET-MAINT' (192.168.20.88) observed by Armis is NOT in the authorized baseline inventory.",
+        "remediation_recommendation": "Quarantine switch port immediately and verify with automation lead whether this is an authorized maintenance device.",
+        "detected_at": "2026-09-22T01:45:34.374972+00:00"
+      },
+      {
+        "discrepancy_type": "ROGUE_ASSET",
+        "severity": "HIGH",
+        "asset_id": "armis-108",
+        "asset_tag": "CAM-01-INSPECTION",
+        "ip_address": "192.168.20.90",
+        "mac_address": "00:40:8C:99:11:02",
+        "armis_value": "Axis Communications M3065-V Network Camera (IP Camera)",
+        "ground_truth_value": "NOT_FOUND_IN_BASELINE",
+        "description": "Device 'CAM-01-INSPECTION' (192.168.20.90) observed by Armis is NOT in the authorized baseline inventory.",
+        "remediation_recommendation": "Quarantine switch port immediately and verify with automation lead whether this is an authorized maintenance device.",
+        "detected_at": "2026-09-22T01:45:34.374987+00:00"
+      },
+      {
+        "discrepancy_type": "DORMANT_ASSET",
+        "severity": "MEDIUM",
+        "asset_id": "wt-idmz-gw",
+        "asset_tag": "IDMZ-SEC-GW01",
+        "ip_address": "10.100.5.1",
+        "mac_address": "00:A0:45:11:22:33",
+        "armis_value": "UNSEEN_BY_PASSIVE_DPI",
+        "ground_truth_value": "Phoenix Contact FL mGuard RS4000 TX/TX (Purdue Level 3.5 - Industrial DMZ (IDMZ))",
+        "description": "Authorized asset 'IDMZ-SEC-GW01' exists in engineering ground truth but was never seen transmitting by Armis.",
+        "remediation_recommendation": "Verify if asset is a cold standby, powered down, or located on a fieldbus isolated from Armis SPAN/TAP ports.",
+        "detected_at": "2026-09-22T01:45:34.375006+00:00"
+      },
+      {
+        "discrepancy_type": "DORMANT_ASSET",
+        "severity": "MEDIUM",
+        "asset_id": "wt-field-01",
+        "asset_tag": "FIT-101-RAW",
+        "ip_address": "192.168.10.150",
+        "mac_address": "00:07:60:55:12:89",
+        "armis_value": "UNSEEN_BY_PASSIVE_DPI",
+        "ground_truth_value": "Endress+Hauser Proline Promag W 400 (Purdue Level 0 - Process / Field)",
+        "description": "Authorized asset 'FIT-101-RAW' exists in engineering ground truth but was never seen transmitting by Armis.",
+        "remediation_recommendation": "Verify if asset is a cold standby, powered down, or located on a fieldbus isolated from Armis SPAN/TAP ports.",
+        "detected_at": "2026-09-22T01:45:34.375016+00:00"
+      },
+      {
+        "discrepancy_type": "DORMANT_ASSET",
+        "severity": "MEDIUM",
+        "asset_id": "AST-PID-813625",
+        "asset_tag": "REMOTE-PANEL-01",
+        "ip_address": "192.168.10.180",
+        "mac_address": "00:1D:9C:AA:BB:CC",
+        "armis_value": "UNSEEN_BY_PASSIVE_DPI",
+        "ground_truth_value": "Rockwell Automation Ethernet Field Device (Purdue Level 1 - Basic Control (PLCs/RTUs))",
+        "description": "Authorized asset 'REMOTE-PANEL-01' exists in engineering ground truth but was never seen transmitting by Armis.",
+        "remediation_recommendation": "Verify if asset is a cold standby, powered down, or located on a fieldbus isolated from Armis SPAN/TAP ports.",
+        "detected_at": "2026-09-22T01:45:34.375023+00:00"
+      }
+    ],
+    "summary_by_type": {
+      "FIRMWARE_MISMATCH": 3,
+      "PORT_MISMATCH": 1,
+      "ROGUE_ASSET": 2,
+      "DORMANT_ASSET": 3
+    }
   }
 }

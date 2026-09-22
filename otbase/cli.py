@@ -1,6 +1,7 @@
 import argparse
 import sys
 import json
+import os
 import uvicorn
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -12,6 +13,9 @@ from otbase.engine.cve_matcher import CVEMatcher
 from otbase.discovery.probe_simulator import OTProbeSimulator
 from otbase.exporter.hbom_sbom import HBOMExporter
 from otbase.exporter.compliance_report import ComplianceReportGenerator
+from otbase.exporter.enterprise_connectors import EnterpriseConnectors
+from otbase.models.topology import LayoutPerspective
+from otbase.engine.kandinsky_layout import KandinskyLayoutEngine
 
 def main():
     parser = argparse.ArgumentParser(
@@ -46,8 +50,22 @@ def main():
     audit_parser = subparsers.add_parser("audit", help="Run IEC 62443 / NIST SP 800-82 compliance audit")
 
     # Command: export
-    export_parser = subparsers.add_parser("export", help="Export Hardware Bill of Materials (HBOM)")
-    export_parser.add_argument("--format", choices=["json", "csv"], default="json")
+    export_parser = subparsers.add_parser("export", help="Export HBOM, ServiceNow CMDB, Splunk TA, or Firewall Rules")
+    export_parser.add_argument("--format", choices=["json", "csv", "servicenow", "splunk", "firewall", "graphml", "svg"], default="json")
+
+    # Command: topology
+    topo_parser = subparsers.add_parser("topology", help="Inspect synthesized Kandinsky network topology or physical switch ports")
+    topo_parser.add_argument("--mode", choices=["connections", "locations", "purdue", "networks", "organic"], default="connections")
+
+    # Command: armis
+    armis_parser = subparsers.add_parser("armis", help="Sync with Armis and run ground-truth reconciliation")
+    armis_parser.add_argument("--simulate", action="store_true", default=True, help="Run with high-fidelity Armis simulator (default: True)")
+    armis_parser.add_argument("--live", action="store_true", help="Connect to live Armis cloud tenant")
+    armis_parser.add_argument("--tenant", help="Armis tenant URL (e.g. https://mycompany.armis.com)")
+    armis_parser.add_argument("--secret", help="Armis API secret key")
+    armis_parser.add_argument("--aql", default="in:devices", help="Armis Query Language filter (default: 'in:devices')")
+    armis_parser.add_argument("--reconcile", action="store_true", help="Print discrepancy reconciliation scorecard")
+    armis_parser.add_argument("--export-json", help="Save discovered Armis devices to JSON file")
 
     args = parser.parse_args()
 
@@ -127,8 +145,84 @@ def main():
         assets = repo.list_assets()
         if args.format == "csv":
             print(HBOMExporter.generate_hbom_csv(assets))
+        elif args.format == "servicenow":
+            payload = EnterpriseConnectors.generate_servicenow_cmdb_payload(assets, repo.current_facility)
+            print(json.dumps(payload, indent=2))
+        elif args.format == "splunk":
+            print(EnterpriseConnectors.generate_splunk_ta_events(assets, repo.list_violations(), repo.flows))
+        elif args.format == "firewall":
+            print(EnterpriseConnectors.generate_firewall_rules(repo.list_conduits(), assets, "fortinet"))
+        elif args.format == "graphml":
+            persp = repo.get_topology_perspective(LayoutPerspective.CONNECTIONS)
+            print(KandinskyLayoutEngine.export_graphml(persp))
+        elif args.format == "svg":
+            persp = repo.get_topology_perspective(LayoutPerspective.CONNECTIONS)
+            print(KandinskyLayoutEngine.export_svg(persp))
         else:
             print(json.dumps(HBOMExporter.generate_hbom_json(assets), indent=2))
+
+    elif args.command == "topology":
+        mode_map = {
+            "connections": LayoutPerspective.CONNECTIONS,
+            "locations": LayoutPerspective.LOCATIONS,
+            "purdue": LayoutPerspective.PURDUE_HIERARCHY,
+            "networks": LayoutPerspective.NETWORKS,
+            "organic": LayoutPerspective.ORGANIC
+        }
+        persp = mode_map.get(args.mode, LayoutPerspective.CONNECTIONS)
+        data = repo.get_topology_perspective(persp)
+        print(f"\n========================================================")
+        print(f"  OTBASE TOPOLOGY // {data.perspective.value.upper()}")
+        print(f"  Facility: {data.facility} | Kandinsky Orthogonal Model")
+        print(f"  Total Nodes: {len(data.nodes)} | Total Edges: {len(data.edges)}")
+        print(f"========================================================\n")
+        print("--- [NODES] ---")
+        for n in data.nodes:
+            lbl = n.label.replace('\n', ' ')
+            ip_str = f" @ {n.ip_address}" if n.ip_address else ""
+            print(f"  * [{n.node_type.value:16s}] {lbl:35s}{ip_str}")
+        print("\n--- [EDGES / PHYSICAL CONNECTIONS] ---")
+        for e in data.edges:
+            p_str = f" [Port: {e.source_port}]" if e.source_port else ""
+            link_type = "DASHED (Manual)" if e.is_manual else "SOLID (Discovered L1)"
+            print(f"  -> {e.source_id} ===> {e.target_id}{p_str} | {link_type}")
+
+    elif args.command == "armis":
+        simulate = not args.live
+        tenant = args.tenant or os.environ.get("ARMIS_TENANT_URL")
+        secret = args.secret or os.environ.get("ARMIS_API_SECRET_KEY")
+
+        if not simulate and (not tenant or not secret):
+            print("[ERROR] Live mode requires --tenant and --secret (or ARMIS_TENANT_URL and ARMIS_API_SECRET_KEY env vars).")
+            sys.exit(1)
+
+        mode_str = "SIMULATION" if simulate else f"LIVE ({tenant})"
+        print(f"\n========================================================")
+        print(f"  ARMIS CENTRIX FOR OT/IOT INTEGRATION // {mode_str}")
+        print(f"  Query (AQL): '{args.aql}'")
+        print(f"========================================================\n")
+
+        res = repo.sync_armis(tenant_url=tenant, api_secret_key=secret, simulate=simulate, aql=args.aql)
+        print(f"✓ Discovered {res['devices_discovered']} Armis devices across plant perimeters.")
+        print(f"✓ Ingested {res['connections_discovered']} active connection flows.")
+        print(f"✓ Correlated {res['correlated_assets']} devices with OTbase physical ground truth.")
+        print(f"⚠ Rogue Devices Detected:     {res['rogue_assets']}")
+        print(f"⚠ Dormant Assets Detected:   {res['dormant_assets']}")
+        print(f"⚠ Total Discrepancies:       {res['discrepancies_count']}")
+
+        if args.export_json:
+            with open(args.export_json, "w", encoding="utf-8") as f:
+                json.dump([d.model_dump(mode="json") for d in repo.armis_devices], f, indent=2)
+            print(f"\n✓ Exported {len(repo.armis_devices)} devices to {args.export_json}")
+
+        if args.reconcile or res['discrepancies_count'] > 0:
+            report = repo.get_reconciliation_report()
+            print(f"\n--- [ARMIS VS OTBASE RECONCILIATION DISCREPANCY AUDIT] ---")
+            for d in report.discrepancies:
+                badge = f"[{d.severity.value:8s}] [{d.discrepancy_type.value:20s}]"
+                target = d.asset_tag or d.ip_address or "UNKNOWN"
+                print(f"  * {badge} {target}: {d.description}")
+                print(f"    -> Remediation: {d.remediation_recommendation}")
 
 if __name__ == "__main__":
     main()

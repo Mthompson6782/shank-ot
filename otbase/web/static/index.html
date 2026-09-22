@@ -38,11 +38,15 @@
         <button class="tab-btn active" data-tab="tab-dashboard">📊 Executive Dashboard</button>
         <button class="tab-btn" data-tab="tab-assets">🗂️ Asset Inventory</button>
         <button class="tab-btn" data-tab="tab-chassis">🎛️ Rack & Chassis Explorer</button>
-        <button class="tab-btn" data-tab="tab-topology">🌐 Purdue Network & Conduits</button>
+        <button class="tab-btn" data-tab="tab-topology">🌐 Kandinsky Topology</button>
+        <button class="tab-btn" data-tab="tab-flows">🌊 Flow Telemetry & Sankey</button>
+        <button class="tab-btn" data-tab="tab-locations">🌲 Location Trees & Duplicate IPs</button>
+        <button class="tab-btn" data-tab="tab-systems">⚙️ OT Systems</button>
         <button class="tab-btn" data-tab="tab-vulns">🛡️ Vulnerability Center</button>
         <button class="tab-btn" data-tab="tab-lifecycle">⏳ Hardware Lifecycle (EOL)</button>
-        <button class="tab-btn" data-tab="tab-ingest">📥 Ingestion & Discovery Lab</button>
-        <button class="tab-btn" data-tab="tab-compliance">📋 Compliance & Audit</button>
+        <button class="tab-btn" data-tab="tab-ingest">📥 Ingestion & PID Lab</button>
+        <button class="tab-btn" data-tab="tab-compliance">📋 Compliance & Enterprise Export</button>
+        <button class="tab-btn" data-tab="tab-armis">🛰️ Armis Sync & Reconciliation</button>
     </nav>
 
     <!-- Main Content Container -->
@@ -205,19 +209,178 @@
         </section>
 
         <!-- ================================================================ -->
-        <!-- 4. PURDUE NETWORK & CONDUITS                                     -->
+        <!-- 4. KANDINSKY NETWORK TOPOLOGY                                    -->
         <!-- ================================================================ -->
         <section id="tab-topology" class="tab-pane">
             <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🌐 Purdue Model Architecture & ISA/IEC 62443 Conduits</div>
-                    <span class="badge badge-cyan">Automated Segmentation Audit</span>
+                <div class="card-header" style="flex-wrap:wrap;gap:0.75rem;">
+                    <div>
+                        <div class="card-title">🌐 Kandinsky Orthogonal Graph Synthesizer</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.2rem;">
+                            Orthogonal 90° Cartesian grid layout with deterministic Layer 1 switch port resolution and hybrid unmanaged switch modeling.
+                        </p>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <button class="btn btn-secondary" onclick="openUnmanagedSwitchModal()">➕ Add Unmanaged Switch</button>
+                        <button class="btn btn-secondary" onclick="exportTopology('svg')">📥 Export SVG</button>
+                        <button class="btn btn-secondary" onclick="exportTopology('graphml')">📥 Export GraphML</button>
+                    </div>
                 </div>
-                <div id="topology-view">
+
+                <!-- Perspective Switcher Bar -->
+                <div style="display:flex;gap:0.5rem;background:rgba(15,23,42,0.6);padding:0.6rem;border-radius:6px;margin-bottom:1rem;flex-wrap:wrap;">
+                    <span style="font-size:0.8rem;color:var(--text-muted);font-weight:700;display:flex;align-items:center;margin-right:0.5rem;">PERSPECTIVE:</span>
+                    <button class="btn btn-secondary topo-mode-btn active" data-mode="connections" onclick="switchTopologyMode('connections')">🔌 Connections (L1/L2 Ports)</button>
+                    <button class="btn btn-secondary topo-mode-btn" data-mode="locations" onclick="switchTopologyMode('locations')">🏢 Locations (Containment)</button>
+                    <button class="btn btn-secondary topo-mode-btn" data-mode="purdue" onclick="switchTopologyMode('purdue')">🏛️ Purdue Hierarchy</button>
+                    <button class="btn btn-secondary topo-mode-btn" data-mode="networks" onclick="switchTopologyMode('networks')">🌐 Networks (L3 Subnets)</button>
+                    <button class="btn btn-secondary topo-mode-btn" data-mode="organic" onclick="switchTopologyMode('organic')">🌀 Organic Clustered</button>
+                </div>
+
+                <!-- Legend -->
+                <div style="display:flex;gap:1.5rem;font-size:0.75rem;color:var(--text-secondary);margin-bottom:0.75rem;flex-wrap:wrap;padding:0.4rem 0.6rem;background:rgba(255,255,255,0.02);border-radius:4px;">
+                    <div style="display:flex;align-items:center;gap:0.35rem;">
+                        <span style="display:inline-block;width:24px;height:3px;background:#0284c7;"></span>
+                        <span>Solid Line: Discovered L1 Port (Bridge MIB)</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.35rem;">
+                        <span style="display:inline-block;width:24px;height:3px;border-top:2px dashed #ef4444;"></span>
+                        <span>Dashed Line: Manual Link (Hybrid Modeling)</span>
+                    </div>
+                    <div><span style="color:#06b6d4;font-weight:bold;">■</span> Managed Switch</div>
+                    <div><span style="color:#eab308;font-weight:bold;">■</span> Unmanaged Switch</div>
+                    <div><span style="color:#dc2626;font-weight:bold;">■</span> Security Gateway / FW</div>
+                    <div><span style="color:#38bdf8;font-weight:bold;">■</span> PLC / Control Node</div>
+                </div>
+
+                <!-- Interactive SVG Canvas -->
+                <div id="kandinsky-canvas-container" style="background:#090d16;border:1px solid var(--border-color);border-radius:8px;overflow:auto;min-height:540px;position:relative;">
+                    <div style="text-align:center;padding:3rem;color:var(--text-muted);">Loading Kandinsky Orthogonal Layout...</div>
+                </div>
+
+                <div class="card-title" style="margin-top:1.5rem;margin-bottom:0.75rem;">🚨 Automated ISA/IEC 62443 Segmentation Violations</div>
+                <div id="topology-violations-list">
                     <!-- Populated dynamically -->
                 </div>
             </div>
         </section>
+
+        <!-- ================================================================ -->
+        <!-- 5. FLOW TELEMETRY & SANKEY                                       -->
+        <!-- ================================================================ -->
+        <section id="tab-flows" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">🌊 Sampled Flow Telemetry & Behavioral Profiling</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.2rem;">
+                            Ingested NetFlow (v5/v9), sFlow (1:128 sampled), and host-level socket monitoring from Discovery Agents.
+                        </p>
+                    </div>
+                    <span class="badge badge-cyan">Zero DPI Appliance Overhead</span>
+                </div>
+
+                <!-- Sankey Summary Volume Table -->
+                <div class="card-title" style="margin-bottom:0.75rem;">Sankey Communication Volumes (Zone-to-Zone & Subnets)</div>
+                <div class="table-wrapper" style="margin-bottom:1.5rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Source Node / Subnet</th>
+                                <th>Direction</th>
+                                <th>Destination Node / Subnet</th>
+                                <th>Total Wire Volume</th>
+                                <th>Telemetry Source</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sankey-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Device Traffic Profiler -->
+                <div class="card" style="background:rgba(15,23,42,0.4);border-color:rgba(56,189,248,0.2);">
+                    <div class="card-header">
+                        <div class="card-title">🔍 Asset Communication Path Profiler</div>
+                        <div style="display:flex;align-items:center;gap:0.5rem;">
+                            <span style="font-size:0.75rem;color:var(--text-muted);">SELECT ASSET:</span>
+                            <select id="flow-asset-picker" class="filter-select" onchange="profileAssetTraffic(this.value)">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    <div id="asset-flow-profile-container">
+                        <p style="color:var(--text-muted);font-size:0.85rem;">Select an asset above to inspect its observed inbound/outbound communication paths and verify Purdue boundary authorization.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 6. LOCATION TREES & DUPLICATE IP DISAMBIGUATION                  -->
+        <!-- ================================================================ -->
+        <section id="tab-locations" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">🌲 Location Hierarchy & Duplicate IP Namespace Isolation</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.2rem;">
+                            Strict Location ID data bindings: Enterprise → Site → Building → Control Room → Cabinet / Skid.
+                        </p>
+                    </div>
+                    <span class="badge badge-purple">Duplicate Subnet Disambiguation</span>
+                </div>
+
+                <!-- Duplicate IP Alert Banner -->
+                <div id="duplicate-ip-report-banner" style="margin-bottom:1.5rem;"></div>
+
+                <!-- 5-Tier Location Tree Visualization -->
+                <div class="card-title" style="margin-bottom:0.75rem;">Active Location Tree Nodes</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Location ID</th>
+                                <th>Location Name</th>
+                                <th>Hierarchy Tier</th>
+                                <th>Parent Location</th>
+                                <th>Duplicate Subnet Isolation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="locations-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 7. OT SYSTEMS ABSTRACTION                                         -->
+        <!-- ================================================================ -->
+        <section id="tab-systems" class="tab-pane">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">⚙️ Cyber-Physical OT Systems & Shared Switch Infrastructure</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.2rem;">
+                            Consolidated process profiles grouping controllers, HMIs, drives, and network infrastructure.
+                        </p>
+                    </div>
+                    <span class="badge badge-amber">Shared Infrastructure Risk</span>
+                </div>
+
+                <!-- Shared Trunk Switch Warning -->
+                <div id="shared-switch-warning-container" style="margin-bottom:1.5rem;"></div>
+
+                <!-- OT Systems Grid -->
+                <div id="ot-systems-cards-grid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:1rem;">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
 
         <!-- ================================================================ -->
         <!-- 5. VULNERABILITY CENTER                                          -->
@@ -382,10 +545,186 @@
                 <div id="compliance-reqs-list">
                     <!-- Populated dynamically -->
                 </div>
+
+                <!-- Upstream Enterprise Ecosystem Connectors -->
+                <div class="card-title" style="margin-top:2rem;margin-bottom:0.75rem;">🚀 Upstream Enterprise Ecosystem Connectors</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1rem;">
+                    <div style="background:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:6px;padding:1rem;">
+                        <div style="font-weight:700;color:#38bdf8;margin-bottom:0.35rem;">ServiceNow CMDB Connector</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:0.75rem;">
+                            Synchronizes discovered OT assets into ServiceNow Configuration Management Database (CMDB) mapped to ISA-95 equipment models.
+                        </p>
+                        <a href="/api/export/servicenow" class="btn btn-secondary" style="font-size:0.8rem;padding:0.4rem 0.8rem;">📥 Export ServiceNow JSON</a>
+                    </div>
+                    <div style="background:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:6px;padding:1rem;">
+                        <div style="font-weight:700;color:#38bdf8;margin-bottom:0.35rem;">Splunk Enterprise Security (TA)</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:0.75rem;">
+                            Common Event Format (CEF) syslog event stream ingesting asset profiles, port attachments, and vulnerability scores into Splunk SIEM.
+                        </p>
+                        <a href="/api/export/splunk" target="_blank" class="btn btn-secondary" style="font-size:0.8rem;padding:0.4rem 0.8rem;">📥 Export Splunk CEF Stream</a>
+                    </div>
+                    <div style="background:rgba(15,23,42,0.6);border:1px solid var(--border-color);border-radius:6px;padding:1rem;">
+                        <div style="font-weight:700;color:#38bdf8;margin-bottom:0.35rem;">Industrial Firewall Rules</div>
+                        <p style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:0.75rem;">
+                            Generates Fortinet FortiOS CLI or Palo Alto PAN-OS ACL policies enforcing verified baseline Purdue conduits.
+                        </p>
+                        <div style="display:flex;gap:0.5rem;">
+                            <a href="/api/export/firewall-rules?vendor=fortinet" target="_blank" class="btn btn-secondary" style="font-size:0.8rem;padding:0.4rem 0.6rem;">Fortinet CLI</a>
+                            <a href="/api/export/firewall-rules?vendor=paloalto" target="_blank" class="btn btn-secondary" style="font-size:0.8rem;padding:0.4rem 0.6rem;">Palo Alto XML</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <!-- 12. ARMIS INTEGRATION & RECONCILIATION                            -->
+        <!-- ================================================================ -->
+        <section id="tab-armis" class="tab-pane">
+            <div style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <h2 style="font-size:1.25rem;font-weight:700;">🛰️ Armis Centrix for OT/IoT Integration & Ground-Truth Reconciliation</h2>
+                    <p style="font-size:0.8rem;color:var(--text-secondary);">
+                        Correlate Armis continuous passive visibility with OTbase deterministic Layer 1 switch ports, CIP backplanes, and physical key switches.
+                    </p>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                    <button class="btn btn-primary" onclick="triggerArmisSync()">🔄 Sync Armis Data</button>
+                    <button class="btn btn-secondary" onclick="ingestArmisFlows()">🌊 Ingest Flows to Sankey</button>
+                </div>
+            </div>
+
+            <!-- Armis Connection Banner / Settings -->
+            <div class="card" style="margin-bottom:1.25rem;background:linear-gradient(135deg, rgba(30,58,138,0.2) 0%, rgba(15,23,42,0.6) 100%);">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <span style="font-size:1.75rem;">🛡️</span>
+                        <div>
+                            <div style="font-weight:700;color:#60a5fa;">Armis Platform Connector</div>
+                            <div style="font-size:0.8rem;color:var(--text-secondary);" id="armis-mode-status">Mode: Active Simulation (No external credentials required)</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <label style="font-size:0.8rem;color:var(--text-secondary);">AQL Query:</label>
+                        <input type="text" id="armis-aql-input" class="form-control" style="width:240px;font-size:0.8rem;padding:0.3rem 0.6rem;" value="in:devices">
+                        <button class="btn btn-secondary" style="font-size:0.8rem;padding:0.3rem 0.6rem;" onclick="toggleArmisConfigModal()">⚙️ Tenant Config</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Armis KPI Grid -->
+            <div class="kpi-grid" style="margin-bottom:1.25rem;">
+                <div class="kpi-card kpi-cyan">
+                    <span class="kpi-label">Armis Devices</span>
+                    <span class="kpi-value" id="kpi-armis-devices">0</span>
+                    <span class="kpi-sub">Passive DPI Observed</span>
+                </div>
+                <div class="kpi-card kpi-success">
+                    <span class="kpi-label">Correlated Assets</span>
+                    <span class="kpi-value" id="kpi-armis-correlated">0</span>
+                    <span class="kpi-sub">Matched to Ground Truth</span>
+                </div>
+                <div class="kpi-card kpi-danger">
+                    <span class="kpi-label">Rogue Devices</span>
+                    <span class="kpi-value" id="kpi-armis-rogue">0</span>
+                    <span class="kpi-sub">Unregistered on Plant Floor</span>
+                </div>
+                <div class="kpi-card kpi-warning">
+                    <span class="kpi-label">Dormant Assets</span>
+                    <span class="kpi-value" id="kpi-armis-dormant">0</span>
+                    <span class="kpi-sub">Unseen by Passive Taps</span>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <span class="kpi-label">Discrepancies</span>
+                    <span class="kpi-value" id="kpi-armis-discrepancies">0</span>
+                    <span class="kpi-sub">Firmware, Port & Risk Drifts</span>
+                </div>
+            </div>
+
+            <!-- Reconciliation Discrepancies Table -->
+            <div class="card" style="margin-bottom:1.25rem;">
+                <div class="card-header">
+                    <div class="card-title">🚨 Ground-Truth Discrepancy Audit Scorecard</div>
+                    <span class="badge" style="background:#ef4444;color:#fff;" id="badge-discrepancy-count">0 Detected</span>
+                </div>
+                <p style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.75rem;">
+                    Highlights differences between Armis observed telemetry and OTbase deterministic hardware chassis & switch ground truth.
+                </p>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Severity</th>
+                                <th>Discrepancy Type</th>
+                                <th>Target Asset / IP</th>
+                                <th>Armis Passive Observation</th>
+                                <th>OTbase Physical Ground Truth</th>
+                                <th>Description & Remediation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="armis-discrepancies-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Armis Discovered Perimeter Inventory Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">📋 Armis Discovered Asset Perimeter</div>
+                    <span class="badge" style="background:var(--accent-blue);color:#fff;" id="badge-armis-count">0 Devices</span>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Armis ID</th>
+                                <th>Device Name</th>
+                                <th>IP Address</th>
+                                <th>MAC Address</th>
+                                <th>Category / Type</th>
+                                <th>Switch & Port</th>
+                                <th>Protocols</th>
+                                <th>Risk</th>
+                            </tr>
+                        </thead>
+                        <tbody id="armis-devices-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
     </main>
+
+    <!-- Unmanaged Switch Modal -->
+    <div id="unmanaged-switch-modal" class="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="card-title">➕ Add Unmanaged Switch (Hybrid Modeling)</div>
+                <button class="close-btn" onclick="closeUnmanagedSwitchModal()">&times;</button>
+            </div>
+            <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:1rem;">
+                Unmanaged switches lack SNMP and IP addresses. Anchor field assets to this unmanaged switch; links will be rendered as <strong>dashed lines</strong> to ensure audit integrity.
+            </p>
+            <div class="form-group">
+                <label class="form-label">Unmanaged Switch Label / Identifier</label>
+                <input type="text" id="unsw-label" class="form-control" placeholder="e.g. UNM-SW-SKID-01 (Moxa EDS-205)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Attached Downstream Asset</label>
+                <select id="unsw-asset-select" class="form-control">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1rem;">
+                <button class="btn btn-secondary" onclick="closeUnmanagedSwitchModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitUnmanagedSwitch()">Assert Hybrid Link</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Compensating Control Modal -->
     <div id="compensate-modal" class="modal-backdrop">
@@ -421,6 +760,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Scripts -->
     <script src="/static/js/app.js"></script>

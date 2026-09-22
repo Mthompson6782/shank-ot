@@ -23,6 +23,12 @@ from otbase.discovery.parsers.ignition_parser import IgnitionParser
 from otbase.discovery.probe_simulator import OTProbeSimulator
 from otbase.exporter.hbom_sbom import HBOMExporter
 from otbase.exporter.compliance_report import ComplianceReportGenerator
+from otbase.models.pid_schema import PIDPayload, FlowTelemetryRecord
+from otbase.models.topology import LayoutPerspective, TopologyPerspectiveData
+from otbase.engine.flow_engine import FlowEngine
+from otbase.engine.kandinsky_layout import KandinskyLayoutEngine
+from otbase.engine.location_engine import LocationEngine
+from otbase.exporter.enterprise_connectors import EnterpriseConnectors
 
 app = FastAPI(
     title="SHANK: SCADA & Hardware Asset Network Knowledge",
@@ -351,14 +357,23 @@ async def upload_file(
         elif filename.endswith(".csv"):
             inferred_type = "csv"
         elif filename.endswith(".json"):
-            if "opcItemPath" in text_content or "tagType" in text_content or "opcServer" in text_content:
+            if "pid_version" in text_content or "backplane_crawls" in text_content or "probed_subnets" in text_content:
+                inferred_type = "pid"
+            elif "opcItemPath" in text_content or "tagType" in text_content or "opcServer" in text_content:
                 inferred_type = "ignition_tags"
             else:
                 inferred_type = "json"
+        elif filename.endswith(".pid"):
+            inferred_type = "pid"
 
     added_assets = []
     try:
-        if inferred_type == "gwbk":
+        if inferred_type == "pid":
+            data = json.loads(text_content)
+            payload = PIDPayload.model_validate(data)
+            res = repo.ingest_pid(payload)
+            added_assets = res.get("assets", [])
+        elif inferred_type == "gwbk":
             assets, conduits = IgnitionParser.parse_gwbk_bytes(content, facility=repo.current_facility)
             for a in assets:
                 repo.save_asset(a)
@@ -433,6 +448,152 @@ def get_compliance_scorecard(format: str = "json"):
         return PlainTextResponse(md)
 
     return scorecard
+
+@app.post("/api/ingest/pid")
+def ingest_pid_payload(payload: PIDPayload):
+    result = repo.ingest_pid(payload)
+    refresh_analytics()
+    return result
+
+@app.get("/api/topology/perspectives")
+def get_topology_perspective(mode: str = Query("connections")):
+    mode_map = {
+        "connections": LayoutPerspective.CONNECTIONS,
+        "locations": LayoutPerspective.LOCATIONS,
+        "purdue": LayoutPerspective.PURDUE_HIERARCHY,
+        "networks": LayoutPerspective.NETWORKS,
+        "organic": LayoutPerspective.ORGANIC
+    }
+    persp = mode_map.get(mode.lower(), LayoutPerspective.CONNECTIONS)
+    return repo.get_topology_perspective(persp)
+
+@app.post("/api/topology/unmanaged-switch")
+def add_unmanaged_switch(switch_data: Dict[str, Any]):
+    return repo.add_unmanaged_switch(switch_data)
+
+@app.get("/api/telemetry/flows")
+def get_flow_telemetry():
+    return {
+        "total_flows": len(repo.flows),
+        "flows": repo.flows
+    }
+
+@app.get("/api/telemetry/sankey")
+def get_sankey_data():
+    return repo.get_sankey_data()
+
+@app.get("/api/telemetry/profile/{ip_address}")
+def profile_traffic(ip_address: str):
+    return FlowEngine.profile_asset_traffic(ip_address, repo.flows, repo.list_assets())
+
+@app.get("/api/locations")
+def get_locations_and_duplicate_ips():
+    return {
+        "facility": repo.current_facility,
+        "location_tree": repo.location_tree,
+        "duplicate_ip_report": repo.get_duplicate_ips()
+    }
+
+@app.get("/api/systems")
+def get_systems():
+    return {
+        "facility": repo.current_facility,
+        "systems": repo.systems,
+        "shared_trunk_switches": LocationEngine.find_shared_trunk_switches(repo.systems)
+    }
+
+@app.get("/api/export/servicenow")
+def export_servicenow_cmdb():
+    payload = EnterpriseConnectors.generate_servicenow_cmdb_payload(repo.list_assets(), repo.current_facility)
+    return JSONResponse(
+        content=payload,
+        headers={"Content-Disposition": f"attachment; filename=ServiceNow_CMDB_{repo.current_facility.replace(' ', '_')}.json"}
+    )
+
+@app.get("/api/export/splunk")
+def export_splunk_ta():
+    events = EnterpriseConnectors.generate_splunk_ta_events(repo.list_assets(), repo.list_violations(), repo.flows)
+    return PlainTextResponse(events)
+
+@app.get("/api/export/firewall-rules")
+def export_firewall_rules(vendor: str = Query("fortinet")):
+    rules = EnterpriseConnectors.generate_firewall_rules(repo.list_conduits(), repo.list_assets(), vendor)
+    return PlainTextResponse(rules)
+
+@app.get("/api/export/topology-graphml")
+def export_topology_graphml(mode: str = Query("connections")):
+    mode_map = {
+        "connections": LayoutPerspective.CONNECTIONS,
+        "locations": LayoutPerspective.LOCATIONS,
+        "purdue": LayoutPerspective.PURDUE_HIERARCHY,
+        "networks": LayoutPerspective.NETWORKS,
+        "organic": LayoutPerspective.ORGANIC
+    }
+    data = repo.get_topology_perspective(mode_map.get(mode.lower(), LayoutPerspective.CONNECTIONS))
+    graphml = KandinskyLayoutEngine.export_graphml(data)
+    return Response(
+        content=graphml,
+        media_type="application/xml",
+        headers={"Content-Disposition": f"attachment; filename=Topology_{mode}.graphml"}
+    )
+
+@app.get("/api/export/topology-svg")
+def export_topology_svg(mode: str = Query("connections")):
+    mode_map = {
+        "connections": LayoutPerspective.CONNECTIONS,
+        "locations": LayoutPerspective.LOCATIONS,
+        "purdue": LayoutPerspective.PURDUE_HIERARCHY,
+        "networks": LayoutPerspective.NETWORKS,
+        "organic": LayoutPerspective.ORGANIC
+    }
+    data = repo.get_topology_perspective(mode_map.get(mode.lower(), LayoutPerspective.CONNECTIONS))
+    svg = KandinskyLayoutEngine.export_svg(data)
+    return Response(
+        content=svg,
+        media_type="image/svg+xml",
+        headers={"Content-Disposition": f"attachment; filename=Topology_{mode}.svg"}
+    )
+
+# Armis Integration Endpoints
+class ArmisSyncRequest(BaseModel):
+    tenant_url: Optional[str] = None
+    api_secret_key: Optional[str] = None
+    simulate: bool = True
+    aql: str = "in:devices"
+
+@app.post("/api/armis/sync")
+def sync_armis(payload: Optional[ArmisSyncRequest] = None):
+    p = payload or ArmisSyncRequest()
+    res = repo.sync_armis(
+        tenant_url=p.tenant_url,
+        api_secret_key=p.api_secret_key,
+        simulate=p.simulate,
+        aql=p.aql
+    )
+    return res
+
+@app.get("/api/armis/devices")
+def get_armis_devices():
+    if not repo.armis_devices:
+        repo.sync_armis(simulate=True)
+    return {
+        "count": len(repo.armis_devices),
+        "devices": repo.armis_devices
+    }
+
+@app.get("/api/armis/reconciliation")
+def get_armis_reconciliation():
+    report = repo.get_reconciliation_report()
+    return report
+
+@app.post("/api/armis/connections/ingest-to-flows")
+def ingest_armis_flows():
+    new_flows = repo.ingest_armis_connections_to_flows()
+    return {
+        "status": "success",
+        "new_flows_ingested": new_flows,
+        "total_flows": len(repo.flows)
+    }
 
 # Mount static files
 static_path = settings.static_dir
