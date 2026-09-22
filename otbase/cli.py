@@ -131,7 +131,7 @@ def main():
         violations = TopologyAnalyzer.audit(assets, repo.list_zones(), repo.list_conduits())
         scorecard = ComplianceReportGenerator.evaluate(repo.current_facility, assets, violations)
         print(f"\n========================================================")
-        print(f"  OT-BASE Cybersecurity Compliance Audit Report")
+        print(f"  SHANK Cybersecurity Compliance Audit Report")
         print(f"  Facility: {scorecard.facility}")
         print(f"  Overall Score: {scorecard.overall_score}%")
         print(f"  IEC 62443 Score: {scorecard.iec_62443_score}% | NIST SP 800-82: {scorecard.nist_800_82_score}%")
@@ -172,7 +172,7 @@ def main():
         persp = mode_map.get(args.mode, LayoutPerspective.CONNECTIONS)
         data = repo.get_topology_perspective(persp)
         print(f"\n========================================================")
-        print(f"  OTBASE TOPOLOGY // {data.perspective.value.upper()}")
+        print(f"  SHANK TOPOLOGY // {data.perspective.value.upper()}")
         print(f"  Facility: {data.facility} | Kandinsky Orthogonal Model")
         print(f"  Total Nodes: {len(data.nodes)} | Total Edges: {len(data.edges)}")
         print(f"========================================================\n")
@@ -205,7 +205,7 @@ def main():
         res = repo.sync_armis(tenant_url=tenant, api_secret_key=secret, simulate=simulate, aql=args.aql)
         print(f"✓ Discovered {res['devices_discovered']} Armis devices across plant perimeters.")
         print(f"✓ Ingested {res['connections_discovered']} active connection flows.")
-        print(f"✓ Correlated {res['correlated_assets']} devices with OTbase physical ground truth.")
+        print(f"✓ Correlated {res['correlated_assets']} devices with SHANK physical ground truth.")
         print(f"⚠ Rogue Devices Detected:     {res['rogue_assets']}")
         print(f"⚠ Dormant Assets Detected:   {res['dormant_assets']}")
         print(f"⚠ Total Discrepancies:       {res['discrepancies_count']}")
@@ -217,7 +217,7 @@ def main():
 
         if args.reconcile or res['discrepancies_count'] > 0:
             report = repo.get_reconciliation_report()
-            print(f"\n--- [ARMIS VS OTBASE RECONCILIATION DISCREPANCY AUDIT] ---")
+            print(f"\n--- [ARMIS VS SHANK RECONCILIATION DISCREPANCY AUDIT] ---")
             for d in report.discrepancies:
                 badge = f"[{d.severity.value:8s}] [{d.discrepancy_type.value:20s}]"
                 target = d.asset_tag or d.ip_address or "UNKNOWN"
