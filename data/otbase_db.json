@@ -271,9 +271,9 @@
       "last_seen": "2026-09-22T02:25:05.890888Z",
       "configuration_hash": null,
       "active_cves": [
+        "CVE-2020-6967",
         "CVE-2022-1159",
-        "CVE-2021-22681",
-        "CVE-2020-6967"
+        "CVE-2021-22681"
       ],
       "ot_risk_score": 10.0,
       "lifecycle_state": "Active",
@@ -736,7 +736,7 @@
       "last_seen": "2026-09-22T02:25:06.012489Z",
       "configuration_hash": null,
       "active_cves": [],
-      "ot_risk_score": 0.0,
+      "ot_risk_score": 2.2,
       "lifecycle_state": "Active",
       "is_compromised_simulated": false,
       "notes": null
