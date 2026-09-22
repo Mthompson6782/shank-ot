@@ -1,6 +1,6 @@
 # SHANK: Architecture, Theory, and Operational Implementation of an Infrastructure-Centric OT Asset Knowledge Platform
 
-### *A Comprehensive Systems Architecture and Implementation of Michael Thompson’s OTbase Model with Armis Passive Reconnaissance Fusion*
+### *A Comprehensive Systems Architecture and Implementation of Michael Thompson’s SHANK Model with Armis Passive Reconnaissance Fusion*
 
 **Author**: Engineering Architecture Team  
 **Classification**: Technical Whitepaper & System Architecture Specification  
@@ -20,7 +20,7 @@ Operational Technology (OT) and Industrial Control Systems (ICS/SCADA) underpin 
    - **Chassis Backplane Blindness**: Passive network monitors observe controllers as isolated IP/MAC endpoints. They cannot inspect physical backplane chassis cards (slots 0–16), sub-module catalog part numbers, analog/digital I/O channels, hardware series, or serial numbers that communicate strictly across proprietary backplanes.
    - **Physical Key Switch Ignorance**: Passive sniffers have no visibility into the physical hardware memory write-protection key switch (`RUN` vs. `REMOTE`), forfeiting the ability to assess actual exploitability.
 
-**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) solves this fundamental dilemma. Cloned from the engineering specifications and philosophical foundations of **Michael Thompson's OTbase**, SHANK operates through an **infrastructure-centric, selective probing methodology**. Rather than probing sensitive PLCs directly, SHANK interrogates the industrial network infrastructure (managed switches, routers, firewalls) and automation backplanes via standard, deterministic protocols. 
+**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) solves this fundamental dilemma. Developed from the engineering specifications and philosophical foundations of **Michael Thompson's SHANK platform**, SHANK operates through an **infrastructure-centric, selective probing methodology**. Rather than probing sensitive PLCs directly, SHANK interrogates the industrial network infrastructure (managed switches, routers, firewalls) and automation backplanes via standard, deterministic protocols. 
 
 By coupling this deterministic ground truth with sampled flow telemetry (NetFlow/sFlow 1:128) and an **Armis Centrix Reconciliation Engine**, SHANK delivers 100% comprehensive plant floor context: physical Layer 1 patch cords, backplane slot inventories, orthogonal 90° Kandinsky schematics across 5 operational perspectives, duplicate RFC 1918 IP disambiguation via 5-tier location trees, and automated enterprise integration (ServiceNow CMDB, Splunk SIEM, and Fortinet/Palo Alto industrial firewalls).
 
@@ -30,11 +30,11 @@ By coupling this deterministic ground truth with sampled flow telemetry (NetFlow
 
 Industrial enterprise networks are segmented across strict physical, air-gapped, and regulatory boundaries (Purdue Model Levels 0–4). A centralized scanner attempting to bridge all layers violates ISA/IEC 62443 and NERC CIP segmentation rules.
 
-SHANK implements OTbase’s decoupled, two-tier architecture:
+SHANK implements a decoupled, two-tier architecture:
 
 ```
 +----------------------------------------------------------------------------------------------------+
-|                                    CENTRAL OTBASE INVENTORY CENTER                                 |
+|                                     CENTRAL SHANK INVENTORY CENTER                                 |
 |  - Aggregation & Multi-Dimensional Context Engine (5-Tier Location Trees, OT Systems)              |
 |  - Kandinsky Orthogonal 90° Layout Engine (Connections, Locations, Purdue, Networks, Organic)      |
 |  - Michael Thompson Contextual OT Risk & ICS-CERT Engine (Physical Key Switch Write-Protect Math)  |
@@ -225,7 +225,7 @@ The `LocationEngine` continuously cross-checks OT systems against network switch
 Deploying continuous passive Deep Packet Inspection (DPI) across every plant network switch requires installing dedicated physical optical/copper TAPs, configuring SPAN port mirrors, running extensive physical cabling to centralized appliances, and procuring costly compute hardware capable of line-rate packet reassembly.
 
 ### Sampled NetFlow / sFlow Ingestion (1:128)
-SHANK implements OTbase’s lightweight flow ingestion approach:
+SHANK implements a lightweight flow ingestion approach:
 - Managed industrial switches already support native **NetFlow (v5/v9)** and **sFlow**.
 - Edge switches sample $1$ out of every $128$ packets (a sampling rate that introduces less than $0.1\%$ CPU overhead on the switch).
 - Flow datagrams are exported directly to SHANK's `FlowEngine` via UDP.
@@ -338,7 +338,7 @@ Generates JSON payloads adhering strictly to the **ISA-95 Equipment Model**:
 ### 2. Splunk Industrial Technology Add-on (TA)
 Streams Common Event Format (CEF) syslog events to Splunk indexers for automated correlation:
 ```text
-CEF:0|Langner|OTbase-Clone|1.0|ASSET_DISCOVERED|Asset PLC-01-MAIN Discovered|3|src=192.168.10.10 smac=00:1D:9C:C1:22:01 cs1=1756-L83ES cs1Label=CatalogNumber cs2=33.011 cs2Label=Firmware
+CEF:0|Thompson|SHANK|1.0|ASSET_DISCOVERED|Asset PLC-01-MAIN Discovered|3|src=192.168.10.10 smac=00:1D:9C:C1:22:01 cs1=1756-L83ES cs1Label=CatalogNumber cs2=33.011 cs2Label=Firmware
 ```
 
 ### 3. Industrial Firewall Policy Generator (Fortinet & Palo Alto)
@@ -408,6 +408,6 @@ tests/test_topology_analyzer.py::test_uninspected_conduit_violation PASSED [100%
 
 ## 11. Conclusion
 
-By combining Michael Thompson’s infrastructure-centric selective probing philosophy with deterministic Layer 1 link resolution, CIP backplane traversal, Kandinsky orthogonal schematics, and Armis passive reconnaissance fusion, **SHANK** achieves full feature parity with commercial OTbase. 
+By combining Michael Thompson’s infrastructure-centric selective probing philosophy with deterministic Layer 1 link resolution, CIP backplane traversal, Kandinsky orthogonal schematics, and Armis passive reconnaissance fusion, **SHANK** achieves full feature completeness and superior performance. 
 
 It provides asset owners, control systems engineers, and industrial cybersecurity teams with an uncompromising, open-architecture foundation: **100% plant floor visibility without risking a single plant trip.**

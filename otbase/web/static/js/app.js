@@ -669,7 +669,7 @@ async function loadLocations() {
                 <div style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);border-radius:8px;padding:1rem;">
                     <div style="font-weight:700;color:#c084fc;margin-bottom:0.35rem;">✓ Duplicate IP Address Spaces Disambiguated by Location Trees</div>
                     <div style="font-size:0.82rem;color:var(--text-secondary);">
-                        Detected ${dup.total_duplicate_ips_tracked} duplicated private subnet IP(s) across modular skids. OTbase binds each asset strictly to its unique Location ID, preventing data collisions.
+                        Detected ${dup.total_duplicate_ips_tracked} duplicated private subnet IP(s) across modular skids. SHANK binds each asset strictly to its unique Location ID, preventing data collisions.
                     </div>
                 </div>
             `;
@@ -1124,7 +1124,7 @@ function renderArmisDiscrepancies(discrepancies) {
     const tbody = document.getElementById("armis-discrepancies-table-body");
     if (!tbody) return;
     if (!discrepancies || discrepancies.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:2rem;">✓ Zero discrepancies detected between Armis passive visibility and OTbase ground truth.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);padding:2rem;">✓ Zero discrepancies detected between Armis passive visibility and SHANK ground truth.</td></tr>`;
         return;
     }
 

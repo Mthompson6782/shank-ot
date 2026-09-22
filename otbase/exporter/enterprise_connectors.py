@@ -62,7 +62,7 @@ class EnterpriseConnectors:
             })
 
         return {
-            "source": "OTbase Service Graph Connector",
+            "source": "SHANK Service Graph Connector",
             "schema_version": "2.4.0",
             "extracted_at": datetime.now(timezone.utc).isoformat(),
             "target_cmdb_table": "cmdb_ci_industrial_device",
@@ -79,7 +79,7 @@ class EnterpriseConnectors:
     ) -> str:
         """
         Generates Splunk CIM / CEF formatted syslog event stream for ingestion by
-        Splunk Technical Add-on (TA) for OTbase.
+        Splunk Technical Add-on (TA) for SHANK.
         """
         events = []
         now = datetime.now(timezone.utc).strftime("%b %d %H:%M:%S")
@@ -89,7 +89,7 @@ class EnterpriseConnectors:
             ip = a.network_interfaces[0].ip_address if a.network_interfaces else "0.0.0.0"
             mac = a.network_interfaces[0].mac_address if a.network_interfaces else "00:00:00:00:00:00"
             evt = (
-                f"{now} otbase-server CEF:0|Langner|OTbase|3.4.0|ASSET_DISCOVERY|Device Discovered|1|"
+                f"{now} shank-server CEF:0|Thompson|SHANK|3.4.0|ASSET_DISCOVERY|Device Discovered|1|"
                 f"src={ip} smac={mac} suser={a.tag_name} dhost={a.model} "
                 f"cat={a.device_type.value} cs1Label=PurdueLevel cs1={a.purdue_level.value} "
                 f"cs2Label=RiskScore cs2={a.ot_risk_score} cs3Label=Vendor cs3={a.vendor}"
@@ -100,7 +100,7 @@ class EnterpriseConnectors:
         for v in violations:
             sev_num = 10 if v.severity.value == "Critical" else (7 if v.severity.value == "High" else 4)
             evt = (
-                f"{now} otbase-server CEF:0|Langner|OTbase|3.4.0|SECURITY_VIOLATION|{v.title}|{sev_num}|"
+                f"{now} shank-server CEF:0|Thompson|SHANK|3.4.0|SECURITY_VIOLATION|{v.title}|{sev_num}|"
                 f"msg={v.description} cs1Label=StandardRef cs1={v.standard_reference} "
                 f"cs2Label=Remediation cs2={v.remediation}"
             )

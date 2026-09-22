@@ -1,5 +1,5 @@
 # 🗡️ SHANK: SCADA & Hardware Asset Network Knowledge
-## *The Open-Architecture OTbase Clone for Industrial Control Systems (ICS)*
+## *The Open-Architecture Industrial Control Systems (ICS) Asset & Network Knowledge Platform*
 
 [![Blade Fleet](https://img.shields.io/badge/BLADE_FLEET-SHANK-DC2626?style=flat-square)](https://github.com/Mthompson6782/shank-ot)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -7,7 +7,7 @@
 [![ISA/IEC 62443](https://img.shields.io/badge/Compliance-ISA%2FIEC%2062443-orange.svg)](https://www.isa.org/standards-and-publications/isa-standards/isa-standards-committees/isa62443)
 [![NIST SP 800-82r3](https://img.shields.io/badge/Framework-NIST%20SP%20800--82r3-red.svg)](https://csrc.nist.gov/pubs/sp/800/82/r3/final)
 
-**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is an industrial-grade, open-architecture operational technology (OT) asset management, network context reconstruction, and cyber-physical security platform cloned from the design specifications of **Michael Thompson's OTbase**.
+**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is an industrial-grade, open-architecture operational technology (OT) asset management, network context reconstruction, and cyber-physical security platform designed and engineered from the specifications of **Michael Thompson's SHANK platform**.
 
 Unlike IT discovery tools that sweep IP subnets with aggressive port probes and crash fragile PLCs, **SHANK** operates through a decoupled two-tier architecture: edge **Selective Probing Nodes** interrogate infrastructure (switches, routers, chassis backplanes) and package structured **Portable Inventory Data (PID)** for automated aggregation, deterministic Layer 1 physical link resolution, multi-perspective Kandinsky orthogonal network rendering, and enterprise ITSM/SIEM/Firewall integration.
 
@@ -17,7 +17,7 @@ Unlike IT discovery tools that sweep IP subnets with aggressive port probes and 
 
 ```
 +-----------------------------------------------------------------------------------------------------------------+
-|                                          OTbase Inventory Center (Central Hub)                                  |
+|                                          SHANK Inventory Center (Central Hub)                                   |
 |  - Multi-Dimensional Context Engine (5-Tier Location Trees, Duplicate IP Disambiguation, OT Systems)            |
 |  - Kandinsky Orthogonal 90° Graph Engine (Connections, Locations, Purdue Hierarchy, Networks, Organic)          |
 |  - NetFlow / sFlow Telemetry Aggregator (Sankey Flow Matrix & Asset Directional Path Profiling)                 |
@@ -38,7 +38,7 @@ Unlike IT discovery tools that sweep IP subnets with aggressive port probes and 
 
 ---
 
-## Core Pillars of the OTbase Clone
+## Core Pillars of the SHANK Architecture
 
 ### 1. Selective Probing & Deterministic Layer 1 Link Resolution
 Rather than ping-sweeping PLCs, the discovery node directly queries industrial managed switches (Cisco IE, Hirschmann, Moxa, Ruggedcom):
@@ -103,7 +103,7 @@ Run the automated pytest test suite (30 passing tests):
 python -m pytest tests/ -v
 ```
 
-### 3. Launch the OTbase Web Asset Center
+### 3. Launch the SHANK Web Asset Center
 Start the local server:
 ```powershell
 python -m otbase.cli start --port 8000

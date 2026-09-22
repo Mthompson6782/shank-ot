@@ -27,7 +27,7 @@ def test_servicenow_cmdb_payload():
     ]
 
     payload = EnterpriseConnectors.generate_servicenow_cmdb_payload(assets, "Water Plant")
-    assert payload["source"] == "OTbase Service Graph Connector"
+    assert payload["source"] == "SHANK Service Graph Connector"
     assert payload["records_count"] == 1
     rec = payload["records"][0]
     assert rec["sys_class_name"] == "cmdb_ci_industrial_plc"
@@ -61,7 +61,7 @@ def test_splunk_and_firewall_rules():
 
     # Splunk events
     events = EnterpriseConnectors.generate_splunk_ta_events(assets, [])
-    assert "CEF:0|Langner|OTbase" in events
+    assert "CEF:0|Thompson|SHANK" in events
     assert "PLC-01" in events
 
     # Firewall rules

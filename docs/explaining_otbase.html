@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHANK & OTbase: Architecture, Whitepaper & Plain-English Guide</title>
+    <title>SHANK: Architecture, Whitepaper & Plain-English Guide</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <style>
         .analogy-box {
@@ -26,19 +26,20 @@
         }
         pre code {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
 
-    <!-- Top App Banner -->
-    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <span class="text-3xl">🗡️</span>
+                <div class="w-9 h-9 rounded-lg bg-sky-500 flex items-center justify-center font-bold text-slate-950 text-xl shadow-lg shadow-sky-500/20">
+                    🗡️
+                </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="text-lg font-bold text-slate-100 tracking-tight">SHANK // OTbase Architecture Portal</h1>
+                        <h1 class="text-lg font-bold text-slate-100 tracking-tight">SHANK // Architecture Portal</h1>
                         <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">v2.4.0 Production</span>
                     </div>
                     <p class="text-xs text-slate-400">Operational Technology Asset Management, Selective Probing & Network Context Reconstruction</p>
@@ -166,7 +167,7 @@
                     <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Safety & Probing Methodology</span>
                     <h2 class="text-2xl font-bold text-white mt-1">Selective Probing: How SHANK Discovers Assets Safely</h2>
                     <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                        Michael Thompson invented the concept of <strong>Selective Probing</strong> for OTbase. Instead of knocking on the door of sensitive controllers, SHANK queries the <strong>network infrastructure</strong> (the industrial switches and routers) who is plugged in.
+                        Michael Thompson invented the concept of <strong>Selective Probing</strong> for SHANK. Instead of knocking on the door of sensitive controllers, SHANK queries the <strong>network infrastructure</strong> (the industrial switches and routers) who is plugged in.
                     </p>
                 </div>
 
@@ -439,7 +440,7 @@
             <section id="sec-armis" class="guide-content-section hidden">
                 <div class="mb-8">
                     <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Reconciliation Engine</span>
-                    <h2 class="text-2xl font-bold text-white mt-1">Fusing Armis Passive Radar with OTbase Ground Truth</h2>
+                    <h2 class="text-2xl font-bold text-white mt-1">Fusing Armis Passive Radar with SHANK Ground Truth</h2>
                     <p class="text-slate-300 mt-2 text-base leading-relaxed">
                         Armis is an incredible platform that listens passively to network traffic. But what happens when passive listening disagrees with physical reality?
                     </p>
@@ -541,7 +542,7 @@
                     </p>
                     <div class="p-4 rounded-lg bg-slate-900 border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto">
                         <pre><code>+------------------------------------------------------------------------------------+
-|                       CENTRAL OTBASE INVENTORY CENTER                              |
+|                       CENTRAL SHANK INVENTORY CENTER                               |
 |  - Aggregation & Location Trees  - Kandinsky 90° Engine  - Thompson Risk Engine    |
 +------------------------------------------------------------------------------------+
                                           ^

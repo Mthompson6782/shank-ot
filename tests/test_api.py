@@ -107,11 +107,11 @@ def test_api_network_context_and_enterprise_connectors():
     # 4. Enterprise Connectors
     res_snow = client.get("/api/export/servicenow")
     assert res_snow.status_code == 200
-    assert res_snow.json()["source"] == "OTbase Service Graph Connector"
+    assert res_snow.json()["source"] == "SHANK Service Graph Connector"
 
     res_splunk = client.get("/api/export/splunk")
     assert res_splunk.status_code == 200
-    assert "CEF:0|Langner|OTbase" in res_splunk.text
+    assert "CEF:0|Thompson|SHANK" in res_splunk.text
 
     res_fw = client.get("/api/export/firewall-rules?vendor=fortinet")
     assert res_fw.status_code == 200
