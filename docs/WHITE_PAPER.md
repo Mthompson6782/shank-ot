@@ -1,6 +1,6 @@
 # SHANK: Architecture, Theory, and Operational Implementation of an Infrastructure-Centric OT Asset Knowledge Platform
 
-### *A Comprehensive Systems Architecture and Implementation of Ralph Langner’s OTbase Model with Armis Passive Reconnaissance Fusion*
+### *A Comprehensive Systems Architecture and Implementation of Michael Thompson’s OTbase Model with Armis Passive Reconnaissance Fusion*
 
 **Author**: Engineering Architecture Team  
 **Classification**: Technical Whitepaper & System Architecture Specification  
@@ -20,7 +20,7 @@ Operational Technology (OT) and Industrial Control Systems (ICS/SCADA) underpin 
    - **Chassis Backplane Blindness**: Passive network monitors observe controllers as isolated IP/MAC endpoints. They cannot inspect physical backplane chassis cards (slots 0–16), sub-module catalog part numbers, analog/digital I/O channels, hardware series, or serial numbers that communicate strictly across proprietary backplanes.
    - **Physical Key Switch Ignorance**: Passive sniffers have no visibility into the physical hardware memory write-protection key switch (`RUN` vs. `REMOTE`), forfeiting the ability to assess actual exploitability.
 
-**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) solves this fundamental dilemma. Cloned from the engineering specifications and philosophical foundations of **Ralph Langner's OTbase**, SHANK operates through an **infrastructure-centric, selective probing methodology**. Rather than probing sensitive PLCs directly, SHANK interrogates the industrial network infrastructure (managed switches, routers, firewalls) and automation backplanes via standard, deterministic protocols. 
+**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) solves this fundamental dilemma. Cloned from the engineering specifications and philosophical foundations of **Michael Thompson's OTbase**, SHANK operates through an **infrastructure-centric, selective probing methodology**. Rather than probing sensitive PLCs directly, SHANK interrogates the industrial network infrastructure (managed switches, routers, firewalls) and automation backplanes via standard, deterministic protocols. 
 
 By coupling this deterministic ground truth with sampled flow telemetry (NetFlow/sFlow 1:128) and an **Armis Centrix Reconciliation Engine**, SHANK delivers 100% comprehensive plant floor context: physical Layer 1 patch cords, backplane slot inventories, orthogonal 90° Kandinsky schematics across 5 operational perspectives, duplicate RFC 1918 IP disambiguation via 5-tier location trees, and automated enterprise integration (ServiceNow CMDB, Splunk SIEM, and Fortinet/Palo Alto industrial firewalls).
 
@@ -37,7 +37,7 @@ SHANK implements OTbase’s decoupled, two-tier architecture:
 |                                    CENTRAL OTBASE INVENTORY CENTER                                 |
 |  - Aggregation & Multi-Dimensional Context Engine (5-Tier Location Trees, OT Systems)              |
 |  - Kandinsky Orthogonal 90° Layout Engine (Connections, Locations, Purdue, Networks, Organic)      |
-|  - Ralph Langner Contextual OT Risk & ICS-CERT Engine (Physical Key Switch Write-Protect Math)     |
+|  - Michael Thompson Contextual OT Risk & ICS-CERT Engine (Physical Key Switch Write-Protect Math)  |
 |  - Enterprise Connectors: ServiceNow CMDB (ISA-95), Splunk TA (CEF Syslog), Firewall Rule Gen     |
 |  - Armis Centrix Reconciliation Engine (Passive DPI vs. Physical Ground Truth)                     |
 +----------------------------------------------------------------------------------------------------+
@@ -240,7 +240,7 @@ SHANK renders this data as an interactive **Sankey Diagram** showing data moveme
 
 ---
 
-## 7. The Ralph Langner Contextual OT Risk Formula
+## 7. The Michael Thompson Contextual OT Risk Formula
 
 ### The Inadequacy of CVSS in Industrial Control Systems
 In IT environments, a CVSS v3.1 Base Score of 9.8 (Critical Remote Code Execution) typically demands an emergency, immediate software patch. In an industrial plant:
@@ -250,8 +250,8 @@ In IT environments, a CVSS v3.1 Base Score of 9.8 (Critical Remote Code Executio
 
 Applying raw CVSS scores causes panic, alarm fatigue, and misallocation of maintenance resources.
 
-### The Langner Contextual Risk Mathematical Formulation
-SHANK implements the contextual risk formula developed by Ralph Langner:
+### The Michael Thompson Contextual Risk Mathematical Formulation
+SHANK implements the contextual risk formula developed by Michael Thompson:
 
 $$\text{OT Risk Score} = \min\left(10.0, \frac{\text{Base CVSS} \times F_{\text{Purdue}} \times F_{\text{Criticality}} \times F_{\text{KeySwitch}}}{\prod_{k=1}^{n} (1 - D_k)}\right)$$
 
@@ -333,7 +333,7 @@ To prevent industrial OT knowledge from remaining siloed on the factory floor, S
 Generates JSON payloads adhering strictly to the **ISA-95 Equipment Model**:
 - Primary CI Table: `cmdb_ci_industrial_plc`, `cmdb_ci_hmi`, `cmdb_ci_ip_switch`
 - Network CIs: `cmdb_ci_ot_network_interface` (capturing IP, MAC, VLAN, and physical switch port attachments).
-- Contextual Metadata: ISA-95 Hierarchy path, physical location path, operational criticality, and Ralph Langner OT risk score.
+- Contextual Metadata: ISA-95 Hierarchy path, physical location path, operational criticality, and Michael Thompson OT risk score.
 
 ### 2. Splunk Industrial Technology Add-on (TA)
 Streams Common Event Format (CEF) syslog events to Splunk indexers for automated correlation:
@@ -408,6 +408,6 @@ tests/test_topology_analyzer.py::test_uninspected_conduit_violation PASSED [100%
 
 ## 11. Conclusion
 
-By combining Ralph Langner’s infrastructure-centric selective probing philosophy with deterministic Layer 1 link resolution, CIP backplane traversal, Kandinsky orthogonal schematics, and Armis passive reconnaissance fusion, **SHANK** achieves full feature parity with commercial OTbase. 
+By combining Michael Thompson’s infrastructure-centric selective probing philosophy with deterministic Layer 1 link resolution, CIP backplane traversal, Kandinsky orthogonal schematics, and Armis passive reconnaissance fusion, **SHANK** achieves full feature parity with commercial OTbase. 
 
 It provides asset owners, control systems engineers, and industrial cybersecurity teams with an uncompromising, open-architecture foundation: **100% plant floor visibility without risking a single plant trip.**

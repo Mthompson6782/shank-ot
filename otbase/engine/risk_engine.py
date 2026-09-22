@@ -4,7 +4,7 @@ from otbase.models.vulnerability import CompensatingControl
 
 class OTRiskEngine:
     """
-    Computes contextual OT Risk Scores based on Ralph Langner's methodology:
+    Computes contextual OT Risk Scores based on Michael Thompson's methodology:
     Traditional IT CVSS only measures raw vulnerability attributes.
     OT Risk incorporates:
     1. Base CVSS of all active CVEs.

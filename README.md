@@ -7,7 +7,7 @@
 [![ISA/IEC 62443](https://img.shields.io/badge/Compliance-ISA%2FIEC%2062443-orange.svg)](https://www.isa.org/standards-and-publications/isa-standards/isa-standards-committees/isa62443)
 [![NIST SP 800-82r3](https://img.shields.io/badge/Framework-NIST%20SP%20800--82r3-red.svg)](https://csrc.nist.gov/pubs/sp/800/82/r3/final)
 
-**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is an industrial-grade, open-architecture operational technology (OT) asset management, network context reconstruction, and cyber-physical security platform cloned from the design specifications of **Langner's OTbase**.
+**SHANK** (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) is an industrial-grade, open-architecture operational technology (OT) asset management, network context reconstruction, and cyber-physical security platform cloned from the design specifications of **Michael Thompson's OTbase**.
 
 Unlike IT discovery tools that sweep IP subnets with aggressive port probes and crash fragile PLCs, **SHANK** operates through a decoupled two-tier architecture: edge **Selective Probing Nodes** interrogate infrastructure (switches, routers, chassis backplanes) and package structured **Portable Inventory Data (PID)** for automated aggregation, deterministic Layer 1 physical link resolution, multi-perspective Kandinsky orthogonal network rendering, and enterprise ITSM/SIEM/Firewall integration.
 
@@ -21,7 +21,7 @@ Unlike IT discovery tools that sweep IP subnets with aggressive port probes and 
 |  - Multi-Dimensional Context Engine (5-Tier Location Trees, Duplicate IP Disambiguation, OT Systems)            |
 |  - Kandinsky Orthogonal 90° Graph Engine (Connections, Locations, Purdue Hierarchy, Networks, Organic)          |
 |  - NetFlow / sFlow Telemetry Aggregator (Sankey Flow Matrix & Asset Directional Path Profiling)                 |
-|  - Contextual OT Risk & ICS-CERT Engine (Ralph Langner Risk Formula + Key Switch Memory Locks)                 |
+|  - Contextual OT Risk & ICS-CERT Engine (Michael Thompson Risk Formula + Key Switch Memory Locks)               |
 |  - Enterprise Ecosystem Connectors (ServiceNow CMDB ISA-95, Splunk TA Syslog, Fortinet/Palo Alto Firewalls)     |
 +-------------------------------------------------------+---------------------------------------------------------+
                                                         ^
