@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Understanding OTbase & SHANK: The Plain-English Guide to Industrial Cybersecurity</title>
+    <title>SHANK & OTbase: Architecture, Whitepaper & Plain-English Guide</title>
     <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
     <style>
         .analogy-box {
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(30, 58, 138, 0.2) 100%);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.08) 0%, rgba(30, 58, 138, 0.18) 100%);
             border-left: 4px solid #38bdf8;
         }
         .deep-dive {
@@ -19,508 +19,877 @@
             color: #38bdf8;
             font-weight: 700;
         }
+        .mode-active {
+            background: #0284c7 !important;
+            color: #ffffff !important;
+            border-color: #38bdf8 !important;
+        }
+        pre code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen">
 
-    <!-- Hero Header -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+    <!-- Top App Banner -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <span class="text-3xl">🗡️</span>
                 <div>
-                    <h1 class="text-xl font-bold text-slate-100 flex items-center gap-2">
-                        SHANK / OTbase Explained
-                        <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Interactive Guide</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">The Plain-English Field Guide to Industrial Control Systems & Network Context Reconstruction</p>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-lg font-bold text-slate-100 tracking-tight">SHANK // OTbase Architecture Portal</h1>
+                        <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold">v2.4.0 Production</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Operational Technology Asset Management, Selective Probing & Network Context Reconstruction</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2 text-xs">
-                <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">For Executives, Engineers & Operators</span>
+
+            <!-- Mode Selector Toggle: Plain-English Guide vs Formal Whitepaper -->
+            <div class="flex items-center bg-slate-800/90 p-1 rounded-lg border border-slate-700 shadow-inner">
+                <button id="mode-btn-guide" onclick="switchMainMode('guide')" class="mode-active px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5">
+                    <span>💡</span> Plain-English Guide
+                </button>
+                <button id="mode-btn-whitepaper" onclick="switchMainMode('whitepaper')" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all flex items-center gap-1.5">
+                    <span>📑</span> Formal Technical Whitepaper
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <nav class="border-b border-slate-800 bg-slate-900/50 sticky top-[73px] z-40 backdrop-blur">
-        <div class="max-w-7xl mx-auto px-6 flex gap-6 overflow-x-auto text-sm py-2">
-            <button onclick="switchSection('sec-intro')" class="nav-btn tab-active py-2 px-1 whitespace-nowrap" id="btn-sec-intro">1. The Big Picture (IT vs OT)</button>
-            <button onclick="switchSection('sec-selective')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-selective">2. Why IT Scanners Crash Plants</button>
-            <button onclick="switchSection('sec-chassis')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-chassis">3. Inside the PLC Rack</button>
-            <button onclick="switchSection('sec-layer1')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-layer1">4. Finding the Physical Wire</button>
-            <button onclick="switchSection('sec-clones')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-clones">5. The "Duplicate IP" Problem</button>
-            <button onclick="switchSection('sec-kandinsky')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-kandinsky">6. Clean 90° Maps</button>
-            <button onclick="switchSection('sec-keyswitch')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-keyswitch">7. The Physical Key Switch</button>
-            <button onclick="switchSection('sec-armis')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-armis">8. Fusing with Armis</button>
-            <button onclick="switchSection('sec-enterprise')" class="nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-enterprise">9. Enterprise Connectors</button>
+    <!-- Sub-Navbar / Tabs: Dynamically swapped based on mode -->
+    <nav class="border-b border-slate-800 bg-slate-900/60 sticky top-[69px] z-40 backdrop-blur">
+        <!-- 1. Plain-English Guide Tabs -->
+        <div id="nav-guide-tabs" class="max-w-7xl mx-auto px-6 flex gap-6 overflow-x-auto text-sm py-2">
+            <button onclick="switchGuideSection('sec-intro')" class="guide-nav-btn tab-active py-2 px-1 whitespace-nowrap" id="btn-sec-intro">1. IT vs OT Reality</button>
+            <button onclick="switchGuideSection('sec-selective')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-selective">2. Why IT Scanners Crash Plants</button>
+            <button onclick="switchGuideSection('sec-chassis')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-chassis">3. Inside the PLC Rack</button>
+            <button onclick="switchGuideSection('sec-layer1')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-layer1">4. Finding the Physical Wire</button>
+            <button onclick="switchGuideSection('sec-clones')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-clones">5. Duplicate IP Disambiguation</button>
+            <button onclick="switchGuideSection('sec-kandinsky')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-kandinsky">6. Clean 90° Maps</button>
+            <button onclick="switchGuideSection('sec-keyswitch')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-keyswitch">7. The Physical Key Switch</button>
+            <button onclick="switchGuideSection('sec-armis')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-armis">8. Fusing with Armis</button>
+            <button onclick="switchGuideSection('sec-enterprise')" class="guide-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-sec-enterprise">9. Enterprise Connectors</button>
+        </div>
+
+        <!-- 2. Technical Whitepaper Chapters Tabs -->
+        <div id="nav-whitepaper-tabs" class="max-w-7xl mx-auto px-6 flex gap-6 overflow-x-auto text-sm py-2 hidden">
+            <button onclick="switchWpSection('wp-ch1')" class="wp-nav-btn tab-active py-2 px-1 whitespace-nowrap" id="btn-wp-ch1">Ch 1. Exec Summary & Dilemma</button>
+            <button onclick="switchWpSection('wp-ch2')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch2">Ch 2. Decoupled 2-Tier Architecture</button>
+            <button onclick="switchWpSection('wp-ch3')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch3">Ch 3. Deterministic L1 Resolution</button>
+            <button onclick="switchWpSection('wp-ch4')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch4">Ch 4. Backplane CIP Traversal</button>
+            <button onclick="switchWpSection('wp-ch5')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch5">Ch 5. Kandinsky 90° Layout Engine</button>
+            <button onclick="switchWpSection('wp-ch6')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch6">Ch 6. Location Trees & Skids</button>
+            <button onclick="switchWpSection('wp-ch7')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch7">Ch 7. NetFlow & Sankey Profiling</button>
+            <button onclick="switchWpSection('wp-ch8')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch8">Ch 8. Langner Contextual Risk Math</button>
+            <button onclick="switchWpSection('wp-ch9')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch9">Ch 9. Armis Fusion & Reconciliation</button>
+            <button onclick="switchWpSection('wp-ch10')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch10">Ch 10. Enterprise Connectors</button>
+            <button onclick="switchWpSection('wp-ch11')" class="wp-nav-btn text-slate-400 hover:text-slate-200 py-2 px-1 whitespace-nowrap" id="btn-wp-ch11">Ch 11. Empirical Benchmarks</button>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
+    <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-6 py-8">
 
-        <!-- ================================================================= -->
-        <!-- SECTION 1: THE BIG PICTURE                                        -->
-        <!-- ================================================================= -->
-        <section id="sec-intro" class="content-section">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Foundational Concept</span>
-                <h2 class="text-2xl font-bold text-white mt-1">What is OT, and Why Does It Need Its Own Tool?</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Most cybersecurity tools were designed for <strong>Information Technology (IT)</strong>: office laptops, cloud servers, and smartphones. But factories, water treatment facilities, and power grids run on <strong>Operational Technology (OT)</strong>. 
-                </p>
-            </div>
+        <!-- ################################################################# -->
+        <!-- MODE A: PLAIN-ENGLISH EDUCATIONAL GUIDE                          -->
+        <!-- ################################################################# -->
+        <div id="container-guide" class="space-y-8">
 
-            <!-- Comparison Grid -->
-            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-2xl">🏢</span>
-                        <h3 class="text-lg font-bold text-slate-100">Standard IT Environment</h3>
+            <!-- SECTION 1: IT VS OT -->
+            <section id="sec-intro" class="guide-content-section">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Foundational Concept</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">What is OT, and Why Does It Need Its Own Tool?</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Most cybersecurity software was built for <strong>Information Technology (IT)</strong>: laptops, cloud data centers, and corporate databases. But water utilities, electrical substations, and factories run on <strong>Operational Technology (OT)</strong>. 
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🏢</span>
+                            <h3 class="text-lg font-bold text-slate-100">Standard IT Environment</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <span class="text-sky-400 font-bold">•</span>
+                                <span><strong>Priority:</strong> Data confidentiality. If an IT server reboots to apply a patch, users wait 5 minutes.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-sky-400 font-bold">•</span>
+                                <span><strong>Hardware:</strong> Powerful multi-core Intel/AMD servers with tens of gigabytes of RAM.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-sky-400 font-bold">•</span>
+                                <span><strong>Scanning:</strong> IT scanners blast thousands of network packets per second to map open ports.</span>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="space-y-3 text-sm text-slate-300">
-                        <li class="flex items-start gap-2">
-                            <span class="text-sky-400 font-bold">•</span>
-                            <span><strong>Priority:</strong> Confidentiality first. If a server reboots to apply a patch, users wait 5 minutes.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-sky-400 font-bold">•</span>
-                            <span><strong>Hardware:</strong> Powerful multi-core Intel/AMD servers with gigabytes of RAM.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-sky-400 font-bold">•</span>
-                            <span><strong>Scanning:</strong> IT scanners blast thousands of network packets per second to find open ports.</span>
-                        </li>
+
+                    <div class="bg-slate-900 border border-amber-500/40 rounded-xl p-6 bg-gradient-to-br from-slate-900 to-amber-950/20">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-2xl">🏭</span>
+                            <h3 class="text-lg font-bold text-amber-400">Industrial OT Environment (PLCs & SCADA)</h3>
+                        </div>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <span class="text-amber-400 font-bold">•</span>
+                                <span><strong>Priority:</strong> Physical Safety & Process Continuity. A 50-millisecond network delay can trip an emergency valve or halt a refinery cracker.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-amber-400 font-bold">•</span>
+                                <span><strong>Hardware:</strong> Ruggedized microcontrollers installed in 2008 running low-power 16MHz embedded chips that are never rebooted.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-amber-400 font-bold">•</span>
+                                <span><strong>Scanning:</strong> An IT port scan can freeze the controller and crash the plant!</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="analogy-box p-6 rounded-xl">
+                    <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
+                        <span>💡</span> Real-World Analogy: The Train Horn in the Library
+                    </div>
+                    <p class="text-sm text-slate-200 leading-relaxed">
+                        Imagine walking into an office building and blowing a whistle to see who looks up. In IT, everyone turns their head, responds, and goes back to work. But in an industrial plant, the computers are like delicate brain surgeons operating under strict microsecond timing. If you blast them with sudden noise (an IT port scan), their communication buffers overflow, and the machine locks up in an unrecoverable fault state.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 2: SELECTIVE PROBING -->
+            <section id="sec-selective" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Safety & Probing Methodology</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Selective Probing: How SHANK Discovers Assets Safely</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Ralph Langner invented the concept of <strong>Selective Probing</strong> for OTbase. Instead of knocking on the door of sensitive controllers, SHANK queries the <strong>network infrastructure</strong> (the industrial switches and routers) who is plugged in.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="p-6 rounded-xl bg-red-950/20 border border-red-500/30">
+                        <h3 class="text-lg font-bold text-red-400 mb-2">❌ Dangerous: IT Ping Sweeps</h3>
+                        <p class="text-sm text-slate-300 mb-4">Sends thousands of unexpected packets directly to PLCs.</p>
+                        <div class="bg-slate-950 p-4 rounded text-xs font-mono text-red-300">
+                            [Scanner] ---> ICMP Echo Request ---> [PLC CPU]<br>
+                            [Scanner] ---> TCP SYN Port 80   ---> [PLC Buffer Overflows!]<br>
+                            [Scanner] ---> TCP SYN Port 443  ---> [PLC Faults - Red LED]<br>
+                            <span class="text-red-500 font-bold">RESULT: PLANT PRODUCTION LINE TRIPS AND HALTS</span>
+                        </div>
+                    </div>
+
+                    <div class="p-6 rounded-xl bg-emerald-950/20 border border-emerald-500/30">
+                        <h3 class="text-lg font-bold text-emerald-400 mb-2">✓ Safe: SHANK Selective Probing</h3>
+                        <p class="text-sm text-slate-300 mb-4">Interrogates industrial managed switches; leaves PLCs undisturbed.</p>
+                        <div class="bg-slate-950 p-4 rounded text-xs font-mono text-emerald-300">
+                            [SHANK] ---> SNMP Query ---> [Cisco / Moxa Switch]<br>
+                            [Switch] ---> "Port 1 has MAC 00:1D:9C..." ---> [SHANK]<br>
+                            [Switch] ---> "Port 2 is connected to PLC 2" ---> [SHANK]<br>
+                            <span class="text-emerald-400 font-bold">RESULT: 100% INVENTORY WITH ZERO PLC PACKETS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deep-dive rounded-xl p-6">
+                    <h4 class="font-bold text-sky-400 mb-2 flex items-center gap-2">
+                        <span>🔬</span> Technical Deep Dive: The Protocols Used
+                    </h4>
+                    <p class="text-sm text-slate-300 mb-4">
+                        SHANK interrogates switches using read-only SNMP queries against standardized Management Information Bases (MIBs):
+                    </p>
+                    <div class="grid sm:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-900/80 p-3 rounded border border-slate-800">
+                            <strong class="text-slate-100">RFC 1213 / 2863 (ifTable / ifXTable)</strong>
+                            <p class="text-slate-400 mt-1">Queries interface operational status, link speed (10/100/1000 Mbps), duplex mode, and port descriptions.</p>
+                        </div>
+                        <div class="bg-slate-900/80 p-3 rounded border border-slate-800">
+                            <strong class="text-slate-100">RFC 1493 / 4188 (Bridge MIB)</strong>
+                            <p class="text-slate-400 mt-1">Extracts the Forwarding Database (FDB: <code>dot1dTpFdbTable</code>), revealing which MAC addresses were learned on which physical switch port.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: INSIDE THE PLC RACK -->
+            <section id="sec-chassis" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chassis Architecture</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">The Signature Feature: Peering Inside the PLC Chassis</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Most cybersecurity tools think a PLC is just one box with one IP address. In real life, a PLC is a <strong>chassis rack containing 4 to 17 modular cards</strong> slid into physical slots.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+                    <div class="text-xs text-slate-400 uppercase tracking-wider mb-3">Live Simulation: Rockwell ControlLogix 1756 10-Slot Chassis</div>
+                    <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 text-center text-xs">
+                        <div class="bg-slate-800 border-2 border-emerald-500/60 p-3 rounded">
+                            <div class="font-bold text-emerald-400">Slot 0</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-L83E</div>
+                            <div class="text-[10px] text-slate-400">Main CPU</div>
+                            <div class="mt-2 text-[10px] text-emerald-400 font-bold">[RUN]</div>
+                        </div>
+                        <div class="bg-slate-800 border-2 border-sky-500/60 p-3 rounded">
+                            <div class="font-bold text-sky-400">Slot 1</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-EN2T</div>
+                            <div class="text-[10px] text-slate-400">Ethernet</div>
+                            <div class="mt-2 text-[10px] text-sky-400 font-bold">[NET]</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded">
+                            <div class="font-bold text-slate-300">Slot 2</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-IB16</div>
+                            <div class="text-[10px] text-slate-400">24V Input</div>
+                            <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded">
+                            <div class="font-bold text-slate-300">Slot 3</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-OB16</div>
+                            <div class="text-[10px] text-slate-400">24V Output</div>
+                            <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded">
+                            <div class="font-bold text-slate-300">Slot 4</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-IF8</div>
+                            <div class="text-[10px] text-slate-400">Analog In</div>
+                            <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded">
+                            <div class="font-bold text-slate-300">Slot 5</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-OF4</div>
+                            <div class="text-[10px] text-slate-400">Analog Out</div>
+                            <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded">
+                            <div class="font-bold text-slate-300">Slot 6</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-TIME</div>
+                            <div class="text-[10px] text-slate-400">Sync Clock</div>
+                            <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700 p-3 rounded">
+                            <div class="font-bold text-slate-300">Slot 7</div>
+                            <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-HYD</div>
+                            <div class="text-[10px] text-slate-400">Hydraulics</div>
+                            <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
+                        </div>
+                        <div class="bg-slate-900 border border-dashed border-slate-700 p-3 rounded text-slate-600">
+                            <div>Slot 8</div>
+                            <div class="mt-1">Empty</div>
+                        </div>
+                        <div class="bg-slate-900 border border-dashed border-slate-700 p-3 rounded text-slate-600">
+                            <div>Slot 9</div>
+                            <div class="mt-1">Empty</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analogy-box p-6 rounded-xl">
+                    <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
+                        <span>💡</span> Real-World Analogy: The Desktop PC vs. Graphics Card
+                    </div>
+                    <p class="text-sm text-slate-200 leading-relaxed">
+                        Saying "this PLC has a vulnerability" is like saying "your computer is broken" when only your graphics card driver crashed. In a ControlLogix rack, the CPU runs the program, but the Ethernet card handles the network. If a hacker exploits a flaw in the Ethernet card, the CPU might still be safely running the pumps! SHANK identifies exactly <em>which card</em> has the problem.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 4: LAYER 1 RESOLUTION -->
+            <section id="sec-layer1" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Deterministic Resolution</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Deterministic Layer 1 Link Resolution: No Guessing</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        When an alarm sounds, technicians shouldn't have to trace a physical patch cable through 200 feet of dusty cable conduit. SHANK deterministically proves which switch port each asset is plugged into.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                        <div class="text-sky-400 font-bold text-sm mb-1">Step 1: Interrogate Switch</div>
+                        <p class="text-xs text-slate-400">SHANK asks the managed switch for its learned MAC address table across all ports.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                        <div class="text-sky-400 font-bold text-sm mb-1">Step 2: Filter Uplinks</div>
+                        <p class="text-xs text-slate-400">Using LLDP and CDP, SHANK ignores ports connecting switch-to-switch (trunks).</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+                        <div class="text-emerald-400 font-bold text-sm mb-1">Step 3: Pin the Asset</div>
+                        <p class="text-xs text-slate-400">If port <code>Fa1/1</code> only sees MAC <code>00:1D:9C...</code>, that port is mathematically bound to <code>PLC-01-MAIN</code>.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-base font-bold text-slate-100 mb-2">What happens when someone plugs in a cheap unmanaged switch?</h3>
+                    <p class="text-sm text-slate-300 mb-4">
+                        In factories, technicians often plug in an unmanaged 5-port hub (like a Moxa EDS-205) inside a machine skid. These hubs have no IP address and no SNMP.
+                    </p>
+                    <div class="p-4 rounded-lg bg-sky-950/30 border border-sky-500/30 text-xs text-slate-300">
+                        <strong>SHANK's Hybrid Detection:</strong> When SHANK sees 4 different MAC addresses appearing on a single managed port (and it's not a trunk), it detects that an unmanaged switch is hidden there. It automatically creates a <em>"Virtual Hub"</em> and renders the connections with dashed audit lines so engineers know a shadow device exists.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: DUPLICATE IPS -->
+            <section id="sec-clones" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Multi-Dimensional Context</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">The "Clone Machine" Problem: Duplicate IP Addresses</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        In corporate IT, every device has a unique IP address. In factories, OEMs build identical machine skids with identical IP addresses (e.g. <code>192.168.1.50</code>).
+                    </p>
+                </div>
+
+                <div class="analogy-box p-6 rounded-xl mb-8">
+                    <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
+                        <span>💡</span> Real-World Analogy: Apartment 4B
+                    </div>
+                    <p class="text-sm text-slate-200 leading-relaxed">
+                        If you mail a letter addressed simply to "Apartment 4B", the post office cannot deliver it. Millions of buildings have an "Apartment 4B". You need the full address: Country, City, Street, Building Number, and Apartment Number. That is exactly what SHANK's <strong>5-Tier Location Tree</strong> does for industrial assets.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-base font-bold text-slate-100 mb-4">How SHANK Solves the Conflict</h3>
+                    <div class="grid sm:grid-cols-2 gap-4 text-xs font-mono">
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                            <span class="text-sky-400 font-bold">Skid 1: Filtration Machine</span><br>
+                            Location: Plant-North / Building-A / Room-1 / Cabinet-CP01<br>
+                            IP Address: <span class="text-amber-400 font-bold">192.168.1.50</span><br>
+                            Switch Port: SW-01 Port Fa1/1
+                        </div>
+                        <div class="bg-slate-950 p-4 rounded border border-slate-800">
+                            <span class="text-emerald-400 font-bold">Skid 2: Chemical Dosing Machine</span><br>
+                            Location: Plant-North / Building-B / Room-4 / Cabinet-CP02<br>
+                            IP Address: <span class="text-amber-400 font-bold">192.168.1.50</span><br>
+                            Switch Port: SW-02 Port Fa1/1
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-4">
+                        In standard IT databases, Skid 2 would overwrite Skid 1. In SHANK, both assets live happily side-by-side because they are anchored by their location path and physical switch port.
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 6: KANDINSKY MAPS -->
+            <section id="sec-kandinsky" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Kandinsky Engine</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Clean 90° Maps: Why Straight Lines Matter</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Most IT network mapping software produces "hairball" diagrams: thousands of diagonal bouncy lines that look like a spiderweb. Plant operators hate this.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                        <h3 class="text-base font-bold text-red-400 mb-2">❌ Traditional IT: The Hairball</h3>
+                        <p class="text-xs text-slate-400 mb-4">Force-directed spring layout. Nodes float randomly, wires cross diagonally across zones.</p>
+                        <div class="h-32 bg-slate-950 rounded flex items-center justify-center text-slate-500 font-mono text-xs border border-slate-800">
+                            [Diagonal crossing spaghetti lines - unreadable]
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-sky-500/30 rounded-xl p-6">
+                        <h3 class="text-base font-bold text-sky-400 mb-2">✓ SHANK: Kandinsky Orthogonal 90°</h3>
+                        <p class="text-xs text-slate-400 mb-4">Strict horizontal and vertical lines. Clean corners, organized like electrical schematics.</p>
+                        <div class="h-32 bg-slate-950 rounded flex items-center justify-center text-sky-400 font-mono text-xs border border-slate-800">
+                            +---[Switch]----+---->---[HMI]<br>
+                            |                 |<br>
+                            +--->---[PLC-01]--+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7: THE PHYSICAL KEY SWITCH -->
+            <section id="sec-keyswitch" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Ralph Langner Risk Math</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">The Physical Key Switch: Hardware-Locked Security</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Most industrial PLCs have a physical metal keyhole on the front bezel. Turning this physical key changes the physics of the controller!
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-8 text-xs">
+                    <div class="bg-slate-900 border border-emerald-500/40 p-5 rounded-xl">
+                        <div class="text-emerald-400 font-bold text-sm mb-1">🔑 Position: RUN</div>
+                        <p class="text-slate-300 mt-1">The memory is <strong>hardware write-protected</strong>. Even if a remote hacker has an administrator password, the physical circuit prevents modifying the logic!</p>
+                        <div class="mt-3 px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">30% Risk Discount Applied</div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-amber-500/40 p-5 rounded-xl">
+                        <div class="text-amber-400 font-bold text-sm mb-1">🔑 Position: REMOTE RUN</div>
+                        <p class="text-slate-300 mt-1">Normal operating mode. Engineers can download program changes across the network without leaving the control room.</p>
+                        <div class="mt-3 px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-bold">Standard Risk Calculation</div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-red-500/40 p-5 rounded-xl">
+                        <div class="text-red-400 font-bold text-sm mb-1">🔑 Position: PROG</div>
+                        <p class="text-slate-300 mt-1">The CPU is halted. Used for major program overhauls during scheduled plant turnarounds.</p>
+                        <div class="mt-3 px-2 py-1 rounded bg-red-500/20 text-red-300 font-bold">High Vulnerability Factor</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 8: FUSING WITH ARMIS -->
+            <section id="sec-armis" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Reconciliation Engine</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Fusing Armis Passive Radar with OTbase Ground Truth</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Armis is an incredible platform that listens passively to network traffic. But what happens when passive listening disagrees with physical reality?
+                    </p>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-base font-bold text-slate-100 mb-4">The 4 Discrepancy Audits Performed Automatically</h3>
+                    <div class="grid sm:grid-cols-2 gap-4 text-xs">
+                        <div class="p-4 rounded bg-red-950/30 border border-red-500/30">
+                            <strong class="text-red-400 text-sm">1. Rogue Assets (CRITICAL)</strong>
+                            <p class="text-slate-300 mt-1">Armis detects a Wi-Fi maintenance tablet communicating with a PLC over port 44818. It is NOT in the authorized engineering baseline. <em>Immediate quarantine!</em></p>
+                        </div>
+                        <div class="p-4 rounded bg-amber-950/30 border border-amber-500/30">
+                            <strong class="text-amber-400 text-sm">2. Firmware Drift (HIGH)</strong>
+                            <p class="text-slate-300 mt-1">Armis inferred firmware "v32" based on packet headers. But our CIP backplane crawler confirmed the physical card is running "v33.011".</p>
+                        </div>
+                        <div class="p-4 rounded bg-sky-950/30 border border-sky-500/30">
+                            <strong class="text-sky-400 text-sm">3. Port Conflicts (MEDIUM)</strong>
+                            <p class="text-slate-300 mt-1">Armis thought the device was on Port 9, but switch SNMP Bridge MIB proves it is on Port 4. Flags where patches were moved.</p>
+                        </div>
+                        <div class="p-4 rounded bg-purple-950/30 border border-purple-500/30">
+                            <strong class="text-purple-400 text-sm">4. Dormant Assets (MEDIUM)</strong>
+                            <p class="text-slate-300 mt-1">A safety flowmeter exists in the engineering blueprints, but Armis saw 0 packets. Proves a device is offline or unmonitored.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 9: ENTERPRISE CONNECTORS -->
+            <section id="sec-enterprise" class="guide-content-section hidden">
+                <div class="mb-8">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Ecosystem Integration</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Connecting the Factory Floor to the Boardroom</h2>
+                    <p class="text-slate-300 mt-2 text-base leading-relaxed">
+                        Plant floor data is useless if it stays locked in the substation. SHANK translates factory ground truth into the enterprise tools your corporate teams already use.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-8 text-xs">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                        <div class="text-sky-400 font-bold text-sm mb-1">ServiceNow CMDB</div>
+                        <p class="text-slate-300 mt-1">Exports complete Service Graph Connector payloads mapped to the ISA-95 standard (<code>cmdb_ci_industrial_plc</code>) so IT asset managers have exact models and serials.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                        <div class="text-emerald-400 font-bold text-sm mb-1">Splunk SIEM</div>
+                        <p class="text-slate-300 mt-1">Generates Common Event Format (CEF) syslog feeds whenever a key switch is toggled, a port status changes, or a new card is plugged in.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
+                        <div class="text-purple-400 font-bold text-sm mb-1">Fortinet & Palo Alto</div>
+                        <p class="text-slate-300 mt-1">Automatically synthesizes firewall ACL rules based strictly on approved conduits. No more manual typo errors when securing zones!</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ################################################################# -->
+        <!-- MODE B: FORMAL TECHNICAL WHITEPAPER (WITH TABS)                   -->
+        <!-- ################################################################# -->
+        <div id="container-whitepaper" class="space-y-8 hidden">
+
+            <!-- WP CH 1: EXECUTIVE SUMMARY -->
+            <section id="wp-ch1" class="wp-content-section">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 1 // Systems Specification</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Executive Summary & Cyber-Physical Dilemma</h2>
+                    <p class="text-xs text-slate-400 mt-1">ISA/IEC 62443-3-2 & NIST SP 800-82r3 Foundations</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        Operational Technology (OT) and Industrial Control Systems (ICS/SCADA) underpin global critical infrastructure. In industrial facilities, network context encompasses significantly more than an enumerated list of Internet Protocol (IP) addresses. Comprehensive context requires capturing physical Layer 1 patch interconnections, Layer 2 data link switching states, Layer 3 routing boundaries, automation backplane chassis configurations, functional process dependencies, and dynamic traffic flows.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-4 my-4">
+                        <div class="p-4 rounded-lg bg-slate-900 border border-slate-800">
+                            <strong class="text-sky-400 block mb-1">Active IT Scanning Vulnerabilities</strong>
+                            Traditional active scanners (Nmap, Nessus) execute rapid SYN/UDP/ICMP sweeps. Against legacy PLCs, these floods exhaust embedded microcontrollers and saturate low-bandwidth fieldbuses (RS-485, Modbus RTU), triggering communications timeouts, CPU faults, and unplanned plant trips.
+                        </div>
+                        <div class="p-4 rounded-lg bg-slate-900 border border-slate-800">
+                            <strong class="text-amber-400 block mb-1">Passive DPI Blind Spots</strong>
+                            Purely passive network monitors (SPAN/TAP) only observe assets when they transmit over IP. They remain completely blind to dormant cold-standby controllers, disconnected engineering laptops, and physical backplane chassis sub-modules (slots 0–16) communicating across proprietary backplanes.
+                        </div>
+                    </div>
+                    <p>
+                        <strong>SHANK</strong> (**S**CADA & **H**ardware **A**sset **N**etwork **K**nowledge) implements an infrastructure-centric philosophy. Rather than probing sensitive PLCs directly, SHANK interrogates managed network switches and automation backplanes via deterministic protocols.
+                    </p>
+                </div>
+            </section>
+
+            <!-- WP CH 2: TWO-TIER ARCHITECTURE -->
+            <section id="wp-ch2" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 2 // Architectural Design</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Decoupled Two-Tier Architecture & Portable Inventory Data (PID)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Air-Gapped Ingestion & Schema v1.2 Specification</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        To satisfy ISA/IEC 62443 zone partitioning and NERC CIP Electronic Security Perimeter (ESP) isolation, SHANK separates active discovery from central inventory aggregation. Edge nodes operate independently within plant zones, packaging discovery telemetry into a standardized <strong>Portable Inventory Data (PID)</strong> payload.
+                    </p>
+                    <div class="p-4 rounded-lg bg-slate-900 border border-slate-800 font-mono text-xs text-slate-300 overflow-x-auto">
+                        <pre><code>+------------------------------------------------------------------------------------+
+|                       CENTRAL OTBASE INVENTORY CENTER                              |
+|  - Aggregation & Location Trees  - Kandinsky 90° Engine  - Langner Risk Engine     |
++------------------------------------------------------------------------------------+
+                                          ^
+                                          | JSON-over-HTTPS or Sneakernet USB (PID v1.2)
++------------------------------------------------------------------------------------+
+|                     SELECTIVE PROBING NODES (EDGE PROXIES)                         |
+|  - SNMP Switch Interrogator      - CIP Backplane Crawler - NetFlow/sFlow Sampler   |
++------------------------------------------------------------------------------------+</code></pre>
+                    </div>
+                    <h4 class="font-bold text-slate-100 text-base mt-4">PID Payload Schema Structure</h4>
+                    <p>
+                        The PID schema defines strict serializable models for edge telemetry:
+                    </p>
+                    <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300">
+                        <li><code>DiscoveryNodeMetadata</code>: Node UUID, site identifier, and execution timestamps.</li>
+                        <li><code>SwitchPortDiscovery</code>: Interface indices, operational status, duplex, VLAN IDs, and learned MAC entries (<code>SwitchPortLearnedMac</code>).</li>
+                        <li><code>BackplaneCrawlPayload</code>: Numbered chassis slots (0–16), sub-module catalog numbers, serials, and firmware revisions.</li>
+                        <li><code>FlowTelemetryRecord</code>: Sampled flow tuples (source, destination, protocol, bytes, packets).</li>
                     </ul>
                 </div>
+            </section>
 
-                <div class="bg-slate-900 border border-amber-500/40 rounded-xl p-6 bg-gradient-to-br from-slate-900 to-amber-950/20">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-2xl">🏭</span>
-                        <h3 class="text-lg font-bold text-amber-400">Industrial OT Environment (PLCs & SCADA)</h3>
+            <!-- WP CH 3: DETERMINISTIC L1 RESOLUTION -->
+            <section id="wp-ch3" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 3 // Network Context Acquisition</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Deterministic Layer 1 Physical Link Resolution</h2>
+                    <p class="text-xs text-slate-400 mt-1">SNMP Bridge MIB dot1dTpFdbTable & Elimination Algorithm</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        Tracing physical patch cables without walking the plant floor requires interrogating managed switches via SNMP read-only community strings across four standardized MIBs:
+                    </p>
+                    <div class="grid sm:grid-cols-2 gap-3 text-xs my-4">
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-sky-400">RFC 1213 / 2863 (ifXTable)</strong><br>
+                            Interface speeds, duplex, administrative status, and descriptions.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-emerald-400">RFC 1493 / 4188 (dot1dTpFdbTable)</strong><br>
+                            Bridge forwarding database mapping learned MACs to physical port indices.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-purple-400">RFC 1213 (ipNetToMediaTable)</strong><br>
+                            Switch ARP cache resolving Layer 2 MACs to active IPv4 addresses.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-amber-400">IEEE 802.1AB / CDP (lldpRemTable)</strong><br>
+                            Neighbor discovery isolating switch-to-switch trunk uplinks.
+                        </div>
                     </div>
-                    <ul class="space-y-3 text-sm text-slate-300">
-                        <li class="flex items-start gap-2">
-                            <span class="text-amber-400 font-bold">•</span>
-                            <span><strong>Priority:</strong> Availability and Physical Safety. A 50-millisecond delay can trigger an emergency valve shutdown or damage a multimillion-dollar turbine.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-amber-400 font-bold">•</span>
-                            <span><strong>Hardware:</strong> Ruggedized microcontrollers installed in 2008 running low-power 16MHz chips that never reboot.</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-amber-400 font-bold">•</span>
-                            <span><strong>Scanning:</strong> An IT port scan can freeze the controller and crash the plant!</span>
-                        </li>
+                    <h4 class="font-bold text-slate-100 text-base">Mathematical Resolution Logic</h4>
+                    <p>
+                        Let $L(p)$ be the set of learned MAC addresses on switch port $p$:
+                    </p>
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded font-mono text-xs text-emerald-300">
+                        If |L(p)| == 1 and p not in Trunk_Uplinks:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;MAC m = L(p)[0]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;IP ip = ARP_Cache(m)<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Deterministic_Binding = &lt;Switch: s, Port: p, Asset: Match(m, ip)&gt;<br>
+                        Else if |L(p)| &gt; 1 and p not in Trunk_Uplinks:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;Trigger Hybrid Unmanaged Switch Modeling (Synthesize Virtual Hub)
+                    </div>
+                </div>
+            </section>
+
+            <!-- WP CH 4: BACKPLANE CIP TRAVERSAL -->
+            <section id="wp-ch4" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 4 // Automation Traversal</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Deep Automation Backplane Traversal & Fieldbus Crawling</h2>
+                    <p class="text-xs text-slate-400 mt-1">Common Industrial Protocol (CIP) Route Paths Across ControlLogix 1756</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        Industrial controllers are modular racks containing multiple autonomous processors, communication adapters, and I/O cards. SHANK implements CIP route path browsing across Rockwell ControlLogix 1756 backplanes.
+                    </p>
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded font-mono text-xs text-sky-300">
+                        CIP Route Path = [Port 1 (Backplane), Slot N (0 to 16)]<br>
+                        Outbound Fieldbus = [Port 2 (Front Ethernet), IP 192.168.10.x]
+                    </div>
+                    <p>
+                        The crawler traverses outbound bridge adapters into remote Point I/O drops (1734-AENT) and PowerFlex 525 drives, while parsing Siemens S7comm System Status Lists (SZL 0x0011 / 0x0111) and PROFINET DCP Layer 2 frames (EtherType <code>0x8892</code>).
+                    </p>
+                    <h4 class="font-bold text-slate-100 text-base mt-2">Slot-Level Vulnerability Decoupling</h4>
+                    <p>
+                        By modeling down to the slot card, SHANK isolates vulnerabilities to their exact component:
+                    </p>
+                    <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300">
+                        <li><strong>CVE-2022-1159 (CVSS 7.7)</strong>: Attached strictly to the CPU card in Slot 0 (1756-L83E).</li>
+                        <li><strong>CVE-2020-6967 (CVSS 7.5)</strong>: Attached strictly to the Ethernet communications bridge in Slot 1 (1756-EN2T).</li>
                     </ul>
                 </div>
-            </div>
+            </section>
 
-            <!-- Analogy Callout -->
-            <div class="analogy-box p-6 rounded-xl mb-8">
-                <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
-                    <span>💡</span> Real-World Analogy: The Train Horn in the Library
+            <!-- WP CH 5: KANDINSKY LAYOUT ENGINE -->
+            <section id="wp-ch5" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 5 // Graph Theory & Visualization</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Kandinsky Graph-Theoretic Orthogonal Layout Engine</h2>
+                    <p class="text-xs text-slate-400 mt-1">Planar Orthogonal 90° Routing & The 5 Operational Perspectives</p>
                 </div>
-                <p class="text-sm text-slate-200 leading-relaxed">
-                    Imagine walking into an office building and blowing a whistle to see who looks up. In IT, everyone turns their head, responds, and goes back to work. But in an industrial plant, the computers are like delicate brain surgeons operating under strict timing. If you blast them with sudden noise (an IT port scan), their hands shake, the communication buffer overflows, and the machine locks up in an unrecoverable fault state.
-                </p>
-            </div>
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- SECTION 2: WHY IT SCANNERS CRASH PLANTS                           -->
-        <!-- ================================================================= -->
-        <section id="sec-selective" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Safety & Probing Methodology</span>
-                <h2 class="text-2xl font-bold text-white mt-1">Selective Probing: How SHANK Discovers Everything Safely</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Ralph Langner invented the concept of <strong>Selective Probing</strong> for OTbase. Instead of knocking on the door of every sensitive controller, we ask the <strong>network infrastructure</strong> (the industrial switches and routers) who is plugged in.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                <div class="p-6 rounded-xl bg-red-950/20 border border-red-500/30">
-                    <h3 class="text-lg font-bold text-red-400 mb-2">❌ Dangerous: IT Ping Sweeps</h3>
-                    <p class="text-sm text-slate-300 mb-4">Sends thousands of unexpected packets directly to PLCs.</p>
-                    <div class="bg-slate-950 p-4 rounded text-xs font-mono text-red-300">
-                        [Scanner] ---> ICMP Echo Request ---> [PLC CPU]<br>
-                        [Scanner] ---> TCP SYN Port 80   ---> [PLC Buffer Overflows!]<br>
-                        [Scanner] ---> TCP SYN Port 443  ---> [PLC Faults - Red LED]<br>
-                        <span class="text-red-500 font-bold">RESULT: PLANT PRODUCTION LINE HALTS</span>
-                    </div>
-                </div>
-
-                <div class="p-6 rounded-xl bg-emerald-950/20 border border-emerald-500/30">
-                    <h3 class="text-lg font-bold text-emerald-400 mb-2">✓ Safe: SHANK Selective Probing</h3>
-                    <p class="text-sm text-slate-300 mb-4">Interrogates industrial managed switches; leaves PLCs undisturbed.</p>
-                    <div class="bg-slate-950 p-4 rounded text-xs font-mono text-emerald-300">
-                        [SHANK] ---> SNMP Query ---> [Cisco / Moxa Switch]<br>
-                        [Switch] ---> "Port 1 has MAC 00:1D:9C..." ---> [SHANK]<br>
-                        [Switch] ---> "Port 2 is connected to PLC 2" ---> [SHANK]<br>
-                        <span class="text-emerald-400 font-bold">RESULT: 100% INVENTORY WITH ZERO PLC PACKETS</span>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        Process engineers reject IT force-directed "hairball" diagrams. SHANK implements Tamassia's orthogonal graph drawing algorithm:
+                    </p>
+                    <ol class="list-decimal pl-5 space-y-2 text-xs text-slate-300">
+                        <li><strong>Cartesian Grid Planarization</strong>: All nodes snap to a discrete Cartesian coordinate grid.</li>
+                        <li><strong>Orthogonal 90° Edge Routing</strong>: Every conduit consists solely of alternating horizontal and vertical segments.</li>
+                        <li><strong>Bend-Point Minimization</strong>: Minimizes total edge bends while preserving minimum conduit spacing.</li>
+                    </ol>
+                    <h4 class="font-bold text-slate-100 text-base mt-4">The 5 Operational Perspectives</h4>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-sky-400">1. Connections</strong><br>Layer 1 switch ports, patch cables, and physical topology.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-emerald-400">2. Locations</strong><br>Geographic containment: Site &rarr; Building &rarr; Room &rarr; Cabinet.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-purple-400">3. Purdue Hierarchy</strong><br>Stratified horizontal tiers from Level 0 to Level 3.5 IDMZ.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-amber-400">4. Networks</strong><br>Grouped by CIDR broadcast domains and 802.1Q VLANs.
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-rose-400">5. Organic</strong><br>Force-directed exploratory view for initial survey.
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Deep Dive Accordion -->
-            <div class="deep-dive rounded-xl p-6">
-                <h4 class="font-bold text-sky-400 mb-2 flex items-center gap-2">
-                    <span>🔬</span> Technical Deep Dive: The Protocols Used
-                </h4>
-                <p class="text-sm text-slate-300 mb-4">
-                    SHANK interrogates switches using read-only SNMP queries against standardized Management Information Bases (MIBs):
-                </p>
-                <div class="grid sm:grid-cols-2 gap-4 text-xs">
-                    <div class="bg-slate-900/80 p-3 rounded border border-slate-800">
-                        <strong class="text-slate-100">RFC 1213 / 2863 (ifTable / ifXTable)</strong>
-                        <p class="text-slate-400 mt-1">Queries interface operational status, link speed (10/100/1000 Mbps), duplex mode, and port descriptions.</p>
+            <!-- WP CH 6: LOCATION TREES -->
+            <section id="wp-ch6" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 6 // Data Modeling</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Multi-Dimensional Context & Duplicate IP Disambiguation</h2>
+                    <p class="text-xs text-slate-400 mt-1">5-Tier Location Trees & Shared Trunk Switch Risk Analysis</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        Turnkey OEM machine skids (e.g. reverse osmosis units, bottling lines) frequently reuse standardized RFC 1918 private subnets (e.g., <code>192.168.1.50</code>). Standard IT databases use IP address as the primary key, resulting in database collisions.
+                    </p>
+                    <p>
+                        SHANK disambiguates assets using an immutable <strong>5-Tier Location Tree</strong>:
+                    </p>
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded font-mono text-xs text-sky-300">
+                        Enterprise &rarr; Site &rarr; Building &rarr; Room / Area &rarr; Cabinet / Enclosure<br><br>
+                        Asset Key = &lt;LocationPath, SwitchPortBinding, MAC Address&gt;
                     </div>
-                    <div class="bg-slate-900/80 p-3 rounded border border-slate-800">
-                        <strong class="text-slate-100">RFC 1493 / 4188 (Bridge MIB)</strong>
-                        <p class="text-slate-400 mt-1">Extracts the Forwarding Database (FDB: <code>dot1dTpFdbTable</code>), revealing which MAC addresses were learned on which physical switch port.</p>
+                    <p>
+                        This allows identical IP addresses to coexist cleanly across independent skids. Furthermore, the engine cross-checks functional OT Systems to identify <strong>Shared Trunk Switch Exposures</strong>—alerting when two isolated process lines route traffic across the same unsegmented switch trunk.
+                    </p>
+                </div>
+            </section>
+
+            <!-- WP CH 7: FLOW TELEMETRY & SANKEY -->
+            <section id="wp-ch7" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 7 // Behavioral Profiling</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Sampled Flow Telemetry & Dynamic Sankey Matrices</h2>
+                    <p class="text-xs text-slate-400 mt-1">NetFlow v5/v9 & sFlow (1:128) Zero-Overhead Ingestion</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        Rather than requiring expensive 10Gbps optical TAPs, SHANK ingests sampled NetFlow v5/v9 and sFlow (1:128 sampling rate) directly from core and distribution switches:
+                    </p>
+                    <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300">
+                        <li>Generates interactive <strong>Sankey flow volume matrices</strong> depicting inter-zone data movement.</li>
+                        <li>Profiles communication baselines per asset across CIP, Modbus, S7, and OPC UA.</li>
+                        <li>Detects unauthorized cross-zone conduit breaches (e.g., an Engineering Workstation in Level 3 directly programming a Level 1 PLC bypassing supervisory firewalls).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- WP CH 8: LANGNER CONTEXTUAL RISK -->
+            <section id="wp-ch8" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 8 // Cybersecurity Risk Mathematics</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Ralph Langner Contextual OT Risk Formula</h2>
+                    <p class="text-xs text-slate-400 mt-1">Hardware Write-Protect Key Switch Discounts & Compensating Defenses</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        In industrial operations, raw CVSS scores cause alarm fatigue. SHANK applies Ralph Langner's contextual risk formula:
+                    </p>
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded font-mono text-xs text-amber-300">
+                        OT Risk Score = min(10.0, [Base CVSS * F_Purdue * F_Criticality * F_KeySwitch] / product(1 - D_k))
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1 text-xs text-slate-300 mt-2">
+                        <li><strong>Physical Key Switch Discount</strong>: Rotating the controller key switch to <code>RUN</code> hardware write-protects memory, discounting vulnerability exploitability by <strong>30% (Factor: 0.70)</strong>.</li>
+                        <li><strong>Purdue Factor</strong>: Level 1 (0.80) vs Level 3.5 (1.20).</li>
+                        <li><strong>Process Criticality</strong>: Safety Critical SIS (1.30) vs Low Non-essential (0.80).</li>
+                        <li><strong>Compensating Controls</strong>: Applying inline DPI firewalls, unidirectional diodes, or read-only gateways discounts exposure without requiring plant shutdowns.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- WP CH 9: ARMIS FUSION & RECONCILIATION -->
+            <section id="wp-ch9" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 9 // Passive DPI Fusion</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Armis Centrix Integration & Ground-Truth Reconciliation</h2>
+                    <p class="text-xs text-slate-400 mt-1">Fusing Continuous Passive Sightings with Physical Hardware Verification</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <p>
+                        SHANK integrates with **Armis Centrix for OT/IoT** via REST API token authentication and AQL queries. The <code>ReconciliationEngine</code> cross-checks passive sightings against physical chassis and switch ground truth:
+                    </p>
+                    <div class="grid sm:grid-cols-2 gap-4 text-xs my-4">
+                        <div class="p-3 bg-red-950/30 border border-red-500/30 rounded">
+                            <strong class="text-red-400">ROGUE_ASSET (CRITICAL)</strong><br>
+                            Unregistered devices active in Armis but absent from engineering project baselines (e.g. rogue Wi-Fi tablet).
+                        </div>
+                        <div class="p-3 bg-amber-950/30 border border-amber-500/30 rounded">
+                            <strong class="text-amber-400">FIRMWARE_MISMATCH (HIGH)</strong><br>
+                            Differences between Armis inferred OS versions and confirmed physical backplane firmware.
+                        </div>
+                        <div class="p-3 bg-sky-950/30 border border-sky-500/30 rounded">
+                            <strong class="text-sky-400">PORT_MISMATCH (MEDIUM)</strong><br>
+                            Discrepancies between Armis reported port attachments and SNMP Bridge MIB FDB ground truth.
+                        </div>
+                        <div class="p-3 bg-purple-950/30 border border-purple-500/30 rounded">
+                            <strong class="text-purple-400">DORMANT_ASSET (MEDIUM)</strong><br>
+                            Physical assets cataloged in engineering designs observed transmitting 0 packets by Armis taps.
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- ================================================================= -->
-        <!-- SECTION 3: INSIDE THE PLC RACK                                    -->
-        <!-- ================================================================= -->
-        <section id="sec-chassis" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chassis Architecture</span>
-                <h2 class="text-2xl font-bold text-white mt-1">The Signature Feature: Peering Inside the PLC Chassis</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Most cybersecurity tools think a PLC is just one box with one IP address. In real life, a PLC is a <strong>chassis rack containing 4 to 17 modular cards</strong> slid into physical slots.
-                </p>
-            </div>
-
-            <!-- Visual Rack Graphic -->
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
-                <div class="text-xs text-slate-400 uppercase tracking-wider mb-3">Live Simulation: Rockwell ControlLogix 1756 10-Slot Chassis</div>
-                <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 text-center text-xs">
-                    <div class="bg-slate-800 border-2 border-emerald-500/60 p-3 rounded">
-                        <div class="font-bold text-emerald-400">Slot 0</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-L83E</div>
-                        <div class="text-[10px] text-slate-400">Main CPU</div>
-                        <div class="mt-2 text-[10px] text-emerald-400 font-bold">[RUN]</div>
-                    </div>
-                    <div class="bg-slate-800 border-2 border-sky-500/60 p-3 rounded">
-                        <div class="font-bold text-sky-400">Slot 1</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-EN2T</div>
-                        <div class="text-[10px] text-slate-400">Ethernet</div>
-                        <div class="mt-2 text-[10px] text-sky-400 font-bold">[NET]</div>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700 p-3 rounded">
-                        <div class="font-bold text-slate-300">Slot 2</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-IB16</div>
-                        <div class="text-[10px] text-slate-400">24V Input</div>
-                        <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700 p-3 rounded">
-                        <div class="font-bold text-slate-300">Slot 3</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-OB16</div>
-                        <div class="text-[10px] text-slate-400">24V Output</div>
-                        <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700 p-3 rounded">
-                        <div class="font-bold text-slate-300">Slot 4</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-IF8</div>
-                        <div class="text-[10px] text-slate-400">Analog In</div>
-                        <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700 p-3 rounded">
-                        <div class="font-bold text-slate-300">Slot 5</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-OF4</div>
-                        <div class="text-[10px] text-slate-400">Analog Out</div>
-                        <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700 p-3 rounded">
-                        <div class="font-bold text-slate-300">Slot 6</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-TIME</div>
-                        <div class="text-[10px] text-slate-400">Sync Clock</div>
-                        <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700 p-3 rounded">
-                        <div class="font-bold text-slate-300">Slot 7</div>
-                        <div class="text-[11px] text-slate-200 mt-1 font-mono">1756-HYD</div>
-                        <div class="text-[10px] text-slate-400">Hydraulics</div>
-                        <div class="mt-2 text-[10px] text-slate-500">[OK]</div>
-                    </div>
-                    <div class="bg-slate-900 border border-dashed border-slate-700 p-3 rounded text-slate-600">
-                        <div>Slot 8</div>
-                        <div class="mt-1">Empty</div>
-                    </div>
-                    <div class="bg-slate-900 border border-dashed border-slate-700 p-3 rounded text-slate-600">
-                        <div>Slot 9</div>
-                        <div class="mt-1">Empty</div>
+            <!-- WP CH 10: ENTERPRISE CONNECTORS -->
+            <section id="wp-ch10" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 10 // Enterprise Integration</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Enterprise Connectors: ServiceNow, Splunk & Firewalls</h2>
+                    <p class="text-xs text-slate-400 mt-1">ISA-95 Equipment Model, Common Event Format (CEF), and Firewall ACL Synthesis</p>
+                </div>
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <div class="grid sm:grid-cols-3 gap-4 text-xs">
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-sky-400 block mb-1">ServiceNow CMDB</strong>
+                            Service Graph Connector payloads mapped to ISA-95 equipment entities: <code>cmdb_ci_industrial_plc</code>, <code>cmdb_ci_hmi</code>, <code>cmdb_ci_ot_network_interface</code>.
+                        </div>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-emerald-400 block mb-1">Splunk Industrial TA</strong>
+                            Streams Common Event Format (CEF) syslog feeds capturing asset discovery, key switch position toggles, and switch port state changes.
+                        </div>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <strong class="text-purple-400 block mb-1">Firewall Rule Synthesis</strong>
+                            Compiles approved Purdue conduits directly into Fortinet FortiOS CLI and Palo Alto PAN-OS ACL policies.
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Analogy Callout -->
-            <div class="analogy-box p-6 rounded-xl mb-8">
-                <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
-                    <span>💡</span> Real-World Analogy: The Desktop PC vs. Graphics Card
+            <!-- WP CH 11: BENCHMARKS -->
+            <section id="wp-ch11" class="wp-content-section hidden">
+                <div class="mb-6 border-b border-slate-800 pb-4">
+                    <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Chapter 11 // Verification & Benchmarks</span>
+                    <h2 class="text-2xl font-bold text-white mt-1">Empirical Test Verification & Scalability Benchmarks</h2>
+                    <p class="text-xs text-slate-400 mt-1">100% Pass Rate Across 34 Automated Unit and Integration Tests</p>
                 </div>
-                <p class="text-sm text-slate-200 leading-relaxed">
-                    Saying "this PLC has a vulnerability" is like saying "your computer is broken" when only your graphics card driver crashed. In a ControlLogix rack, the CPU runs the program, but the Ethernet card handles the network. If a hacker exploits a flaw in the Ethernet card, the CPU might still be safely running the pumps! SHANK identifies exactly <em>which card</em> has the problem.
-                </p>
-            </div>
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- SECTION 4: FINDING THE PHYSICAL WIRE                              -->
-        <!-- ================================================================= -->
-        <section id="sec-layer1" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Deterministic Resolution</span>
-                <h2 class="text-2xl font-bold text-white mt-1">Deterministic Layer 1 Link Resolution: No Guessing</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    When an alarm goes off, an automation technician shouldn't have to trace a cable through 200 feet of dusty cable tray. SHANK deterministically proves which physical switch port each device is plugged into.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                    <div class="text-sky-400 font-bold text-sm mb-1">Step 1: Interrogate Switch</div>
-                    <p class="text-xs text-slate-400">SHANK asks the managed switch for its learned MAC address table across all ports.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                    <div class="text-sky-400 font-bold text-sm mb-1">Step 2: Filter Uplinks</div>
-                    <p class="text-xs text-slate-400">Using LLDP and CDP, SHANK ignores ports connecting switch-to-switch (trunks).</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-                    <div class="text-emerald-400 font-bold text-sm mb-1">Step 3: Pin the Asset</div>
-                    <p class="text-xs text-slate-400">If port <code>Fa1/1</code> only sees MAC <code>00:1D:9C...</code>, that port is mathematically bound to <code>PLC-01-MAIN</code>.</p>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h3 class="text-base font-bold text-slate-100 mb-2">What happens when someone plugs in a cheap $30 unmanaged switch?</h3>
-                <p class="text-sm text-slate-300 mb-4">
-                    In factories, technicians often plug in an unmanaged 5-port hub (like a Moxa or Stratix 2000) inside a machine skid. These hubs have no IP address and no SNMP.
-                </p>
-                <div class="p-4 rounded-lg bg-sky-950/30 border border-sky-500/30 text-xs text-slate-300">
-                    <strong>SHANK's Hybrid Detection:</strong> When SHANK sees 4 different MAC addresses appearing on a single managed port (and it's not a trunk), it detects that an unmanaged switch is hidden there. It automatically creates a <em>"Virtual Hub"</em> and renders the connections with dashed audit lines so engineers know a shadow device exists.
-                </div>
-            </div>
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- SECTION 5: THE DUPLICATE IP PROBLEM                               -->
-        <!-- ================================================================= -->
-        <section id="sec-clones" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Multi-Dimensional Context</span>
-                <h2 class="text-2xl font-bold text-white mt-1">The "Clone Machine" Problem: Duplicate IP Addresses</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    In corporate IT, every device has a unique IP address. In factories, OEMs build identical machine skids with identical IP addresses (e.g. <code>192.168.1.50</code>).
-                </p>
-            </div>
-
-            <!-- Analogy Callout -->
-            <div class="analogy-box p-6 rounded-xl mb-8">
-                <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
-                    <span>💡</span> Real-World Analogy: Apartment 4B
-                </div>
-                <p class="text-sm text-slate-200 leading-relaxed">
-                    If you mail a letter addressed simply to "Apartment 4B", the post office cannot deliver it. Millions of buildings have an "Apartment 4B". You need the full address: Country, City, Street, Building Number, and Apartment Number. That is exactly what SHANK's <strong>5-Tier Location Tree</strong> does for industrial assets.
-                </p>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h3 class="text-base font-bold text-slate-100 mb-4">How SHANK Solves the Conflict</h3>
-                <div class="grid sm:grid-cols-2 gap-4 text-xs font-mono">
-                    <div class="bg-slate-950 p-4 rounded border border-slate-800">
-                        <span class="text-sky-400 font-bold">Skid 1: Filtration Machine</span><br>
-                        Location: Plant-North / Building-A / Room-1 / Cabinet-CP01<br>
-                        IP Address: <span class="text-amber-400 font-bold">192.168.1.50</span><br>
-                        Switch Port: SW-01 Port Fa1/1
+                <div class="space-y-4 text-sm text-slate-300 leading-relaxed">
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded font-mono text-xs text-emerald-400">
+                        ======================== 34 passed, 1 warning in 0.90s ========================
                     </div>
-                    <div class="bg-slate-950 p-4 rounded border border-slate-800">
-                        <span class="text-emerald-400 font-bold">Skid 2: Chemical Dosing Machine</span><br>
-                        Location: Plant-North / Building-B / Room-4 / Cabinet-CP02<br>
-                        IP Address: <span class="text-amber-400 font-bold">192.168.1.50</span><br>
-                        Switch Port: SW-02 Port Fa1/1
+                    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-center text-xs mt-4">
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <div class="text-xl font-bold text-sky-400">0.90s</div>
+                            <div class="text-slate-400 mt-1">Test Suite Execution</div>
+                        </div>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <div class="text-xl font-bold text-emerald-400">&lt; 45ms</div>
+                            <div class="text-slate-400 mt-1">Kandinsky Planarization</div>
+                        </div>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <div class="text-xl font-bold text-purple-400">&lt; 12ms</div>
+                            <div class="text-slate-400 mt-1">L1 Link Resolution</div>
+                        </div>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded">
+                            <div class="text-xl font-bold text-amber-400">&lt; 85MB</div>
+                            <div class="text-slate-400 mt-1">RAM Working Set</div>
+                        </div>
                     </div>
                 </div>
-                <p class="text-xs text-slate-400 mt-4">
-                    In standard IT databases, Skid 2 would overwrite Skid 1. In SHANK, both assets live happily side-by-side because they are anchored by their location path and physical switch port.
-                </p>
-            </div>
-        </section>
+            </section>
 
-        <!-- ================================================================= -->
-        <!-- SECTION 6: CLEAN 90° MAPS                                         -->
-        <!-- ================================================================= -->
-        <section id="sec-kandinsky" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Kandinsky Engine</span>
-                <h2 class="text-2xl font-bold text-white mt-1">Clean 90° Maps: Why Straight Lines Matter</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Most IT network mapping software produces "hairball" diagrams: thousands of diagonal bouncy lines that look like a spiderweb. Plant operators hate this.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                    <h3 class="text-base font-bold text-red-400 mb-2">❌ Traditional IT: The Hairball</h3>
-                    <p class="text-xs text-slate-400 mb-4">Force-directed spring layout. Nodes float randomly, wires cross diagonally across zones.</p>
-                    <div class="h-36 bg-slate-950 rounded flex items-center justify-center text-slate-500 font-mono text-xs border border-slate-800">
-                        [Diagonal crossing spaghetti lines - unreadable]
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 border border-sky-500/30 rounded-xl p-6">
-                    <h3 class="text-base font-bold text-sky-400 mb-2">✓ SHANK: Kandinsky Orthogonal 90°</h3>
-                    <p class="text-xs text-slate-400 mb-4">Strict horizontal and vertical lines. Clean corners, organized like electrical schematics.</p>
-                    <div class="h-36 bg-slate-950 rounded flex items-center justify-center text-sky-400 font-mono text-xs border border-slate-800">
-                        +---[Switch]----+---->---[HMI]<br>
-                        |                 |<br>
-                        +--->---[PLC-01]--+
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h4 class="text-sm font-bold text-slate-100 mb-2">The 5 Operational Perspectives</h4>
-                <p class="text-xs text-slate-400 mb-4">Different people need to see the plant differently:</p>
-                <div class="grid sm:grid-cols-3 gap-3 text-xs">
-                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
-                        <strong class="text-sky-400">1. Connections:</strong> Shows exact switch ports and physical cables.
-                    </div>
-                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
-                        <strong class="text-emerald-400">2. Locations:</strong> Groups assets by Building, Room, and Cabinet.
-                    </div>
-                    <div class="bg-slate-950 p-3 rounded border border-slate-800">
-                        <strong class="text-purple-400">3. Purdue Hierarchy:</strong> Ranks assets from Field Sensors (Level 0) to IDMZ (Level 3.5).
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- SECTION 7: THE PHYSICAL KEY SWITCH                                -->
-        <!-- ================================================================= -->
-        <section id="sec-keyswitch" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Ralph Langner Risk Math</span>
-                <h2 class="text-2xl font-bold text-white mt-1">The Physical Key Switch: Hardware-Locked Security</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Most industrial PLCs have a physical metal keyhole on the front bezel. Turning this physical key changes the physics of the controller!
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 mb-8 text-xs">
-                <div class="bg-slate-900 border border-emerald-500/40 p-5 rounded-xl">
-                    <div class="text-emerald-400 font-bold text-sm mb-1">🔑 Position: RUN</div>
-                    <p class="text-slate-300 mt-1">The memory is <strong>hardware write-protected</strong>. Even if a remote hacker has an administrator password, the physical circuit prevents modifying the logic!</p>
-                    <div class="mt-3 px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">30% Risk Discount Applied</div>
-                </div>
-
-                <div class="bg-slate-900 border border-amber-500/40 p-5 rounded-xl">
-                    <div class="text-amber-400 font-bold text-sm mb-1">🔑 Position: REMOTE RUN</div>
-                    <p class="text-slate-300 mt-1">Normal operating mode. Engineers can download program changes across the network without leaving the control room.</p>
-                    <div class="mt-3 px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-bold">Standard Risk Calculation</div>
-                </div>
-
-                <div class="bg-slate-900 border border-red-500/40 p-5 rounded-xl">
-                    <div class="text-red-400 font-bold text-sm mb-1">🔑 Position: PROG</div>
-                    <p class="text-slate-300 mt-1">The CPU is halted. Used for major program overhauls during scheduled plant turnarounds.</p>
-                    <div class="mt-3 px-2 py-1 rounded bg-red-500/20 text-red-300 font-bold">High Vulnerability Factor</div>
-                </div>
-            </div>
-
-            <!-- Analogy Callout -->
-            <div class="analogy-box p-6 rounded-xl">
-                <div class="flex items-center gap-2 text-sky-400 font-bold mb-2">
-                    <span>💡</span> Real-World Analogy: The Safe Deposit Box
-                </div>
-                <p class="text-sm text-slate-200 leading-relaxed">
-                    Software firewalls and passwords can have bugs. But a physical switch that physically disconnects the write-line in silicon cannot be bypassed by software packets. Ralph Langner’s formula rewards plant managers who physically lock their controllers into <code>RUN</code> by discounting their vulnerability risk score.
-                </p>
-            </div>
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- SECTION 8: FUSING WITH ARMIS                                      -->
-        <!-- ================================================================= -->
-        <section id="sec-armis" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Reconciliation Engine</span>
-                <h2 class="text-2xl font-bold text-white mt-1">Fusing Armis Passive Radar with OTbase Ground Truth</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Armis is an incredible platform that listens passively to network traffic. But what happens when passive listening disagrees with physical reality?
-                </p>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
-                <h3 class="text-base font-bold text-slate-100 mb-4">The 4 Discrepancy Audits Performed Automatically</h3>
-                <div class="grid sm:grid-cols-2 gap-4 text-xs">
-                    <div class="p-4 rounded bg-red-950/30 border border-red-500/30">
-                        <strong class="text-red-400 text-sm">1. Rogue Assets (CRITICAL)</strong>
-                        <p class="text-slate-300 mt-1">Armis detects a Wi-Fi maintenance tablet communicating with a PLC over port 44818. It is NOT in the authorized engineering baseline. <em>Immediate quarantine!</em></p>
-                    </div>
-                    <div class="p-4 rounded bg-amber-950/30 border border-amber-500/30">
-                        <strong class="text-amber-400 text-sm">2. Firmware Drift (HIGH)</strong>
-                        <p class="text-slate-300 mt-1">Armis inferred firmware "v32" based on packet headers. But our CIP backplane crawler confirmed the physical card is running "v33.011".</p>
-                    </div>
-                    <div class="p-4 rounded bg-sky-950/30 border border-sky-500/30">
-                        <strong class="text-sky-400 text-sm">3. Port Conflicts (MEDIUM)</strong>
-                        <p class="text-slate-300 mt-1">Armis thought the device was on Port 9, but switch SNMP Bridge MIB proves it is on Port 4. Flags where patches were moved.</p>
-                    </div>
-                    <div class="p-4 rounded bg-purple-950/30 border border-purple-500/30">
-                        <strong class="text-purple-400 text-sm">4. Dormant Assets (MEDIUM)</strong>
-                        <p class="text-slate-300 mt-1">A safety flowmeter exists in the engineering blueprints, but Armis saw 0 packets. Proves a device is offline or unmonitored.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================================================================= -->
-        <!-- SECTION 9: ENTERPRISE CONNECTORS                                  -->
-        <!-- ================================================================= -->
-        <section id="sec-enterprise" class="content-section hidden">
-            <div class="mb-8">
-                <span class="text-xs uppercase tracking-widest text-sky-400 font-semibold">Ecosystem Integration</span>
-                <h2 class="text-2xl font-bold text-white mt-1">Connecting the Factory Floor to the Boardroom</h2>
-                <p class="text-slate-300 mt-2 text-base leading-relaxed">
-                    Plant floor data is useless if it stays locked in the substation. SHANK translates factory ground truth into the enterprise tools your corporate teams already use.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 mb-8 text-xs">
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <div class="text-sky-400 font-bold text-sm mb-1">ServiceNow CMDB</div>
-                    <p class="text-slate-300 mt-1">Exports complete Service Graph Connector payloads mapped to the ISA-95 standard (<code>cmdb_ci_industrial_plc</code>) so IT asset managers have exact models and serials.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <div class="text-emerald-400 font-bold text-sm mb-1">Splunk SIEM</div>
-                    <p class="text-slate-300 mt-1">Generates Common Event Format (CEF) syslog feeds whenever a key switch is toggled, a port status changes, or a new card is plugged in.</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-xl">
-                    <div class="text-purple-400 font-bold text-sm mb-1">Fortinet & Palo Alto</div>
-                    <p class="text-slate-300 mt-1">Automatically synthesizes firewall ACL rules based strictly on approved conduits. No more manual typo errors when securing zones!</p>
-                </div>
-            </div>
-        </section>
+        </div>
 
     </main>
 
-    <!-- Interactive Script -->
+    <!-- Interactive Navigation Script -->
     <script>
-        function switchSection(secId) {
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden'));
-            document.querySelectorAll('.nav-btn').forEach(btn => {
+        let currentMode = 'guide';
+
+        function switchMainMode(mode) {
+            currentMode = mode;
+            const btnGuide = document.getElementById('mode-btn-guide');
+            const btnWp = document.getElementById('mode-btn-whitepaper');
+            const navGuide = document.getElementById('nav-guide-tabs');
+            const navWp = document.getElementById('nav-whitepaper-tabs');
+            const contGuide = document.getElementById('container-guide');
+            const contWp = document.getElementById('container-whitepaper');
+
+            if (mode === 'guide') {
+                btnGuide.classList.add('mode-active');
+                btnWp.classList.remove('mode-active');
+                btnWp.classList.add('text-slate-400');
+                navGuide.classList.remove('hidden');
+                navWp.classList.add('hidden');
+                contGuide.classList.remove('hidden');
+                contWp.classList.add('hidden');
+            } else {
+                btnWp.classList.add('mode-active');
+                btnGuide.classList.remove('mode-active');
+                btnGuide.classList.add('text-slate-400');
+                navWp.classList.remove('hidden');
+                navGuide.classList.add('hidden');
+                contWp.classList.remove('hidden');
+                contGuide.classList.add('hidden');
+            }
+        }
+
+        function switchGuideSection(secId) {
+            document.querySelectorAll('.guide-content-section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.guide-nav-btn').forEach(btn => {
                 btn.classList.remove('tab-active');
                 btn.classList.add('text-slate-400');
             });
 
             const target = document.getElementById(secId);
             const btn = document.getElementById('btn-' + secId);
+            if (target) target.classList.remove('hidden');
+            if (btn) {
+                btn.classList.add('tab-active');
+                btn.classList.remove('text-slate-400');
+            }
+        }
+
+        function switchWpSection(chId) {
+            document.querySelectorAll('.wp-content-section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.wp-nav-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('text-slate-400');
+            });
+
+            const target = document.getElementById(chId);
+            const btn = document.getElementById('btn-' + chId);
             if (target) target.classList.remove('hidden');
             if (btn) {
                 btn.classList.add('tab-active');
