@@ -268,5 +268,110 @@ class SwitchInterrogator:
                 ]
             ))
 
+        elif "walmart" in facility.lower() or "cold chain" in facility.lower():
+            # Cisco Catalyst IE-3300 Rugged Industrial Ethernet Switch (SW-COLD-01)
+            # Port Fa1/1 -> PLC-NH3-COMP-01 (Frick Quantum HD Compressor 1)
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=1,
+                if_name="FastEthernet1/1",
+                if_descr="IE-3300 10/100Base-TX Engine Room Port",
+                if_speed_bps=100000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=False,
+                vlan_ids=[10],
+                learned_macs=[SwitchPortLearnedMac(mac_address="00:0E:8C:11:22:01", vlan_id=10)]
+            ))
+            # Port Fa1/2 -> PLC-NH3-COMP-02 (Frick Quantum HD Compressor 2)
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=2,
+                if_name="FastEthernet1/2",
+                if_descr="IE-3300 10/100Base-TX Engine Room Port",
+                if_speed_bps=100000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=False,
+                vlan_ids=[10],
+                learned_macs=[SwitchPortLearnedMac(mac_address="00:0E:8C:11:22:02", vlan_id=10)]
+            ))
+            # Port Fa1/3 -> HMI-COLD-DOCK (Rockwell PanelView Plus 7)
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=3,
+                if_name="FastEthernet1/3",
+                if_descr="IE-3300 10/100Base-TX Supervisory HMI Port",
+                if_speed_bps=100000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=False,
+                vlan_ids=[20],
+                learned_macs=[SwitchPortLearnedMac(mac_address="00:50:56:B2:3C:44", vlan_id=20)]
+            ))
+            # Port Fa1/4 -> RACK-E3-GROCERY (Emerson Copeland E3 Rack Controller)
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=4,
+                if_name="FastEthernet1/4",
+                if_descr="IE-3300 10/100Base-TX Refrigeration Rack Port",
+                if_speed_bps=100000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=False,
+                vlan_ids=[10],
+                learned_macs=[SwitchPortLearnedMac(mac_address="00:08:E1:44:55:12", vlan_id=10)]
+            ))
+            # Port Fa1/5 -> NH3-GAS-SAFETY-01 (Det-Tronics Eagle Quantum Premier)
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=5,
+                if_name="FastEthernet1/5",
+                if_descr="IE-3300 10/100Base-TX Gas Detection Life Safety Port",
+                if_speed_bps=100000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=False,
+                vlan_ids=[10],
+                learned_macs=[SwitchPortLearnedMac(mac_address="00:1B:4F:99:88:01", vlan_id=10)]
+            ))
+            # Port Fa1/6 -> SCADA-IGNITION-HIST (Inductive Automation Ignition Server)
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=6,
+                if_name="FastEthernet1/6",
+                if_descr="IE-3300 10/100Base-TX FSMA Logging Server Port",
+                if_speed_bps=100000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=False,
+                vlan_ids=[30],
+                learned_macs=[SwitchPortLearnedMac(mac_address="00:50:56:99:11:A3", vlan_id=30)]
+            ))
+            # Port Gi1/1 -> Uplink Trunk to Azure IoT Edge Gateway
+            telemetry.append(SwitchPortDiscovery(
+                switch_ip="192.168.20.2",
+                switch_name="SW-COLD-01",
+                if_index=9,
+                if_name="GigabitEthernet1/1",
+                if_descr="Uplink Trunk to Azure IoT Edge Gateway",
+                if_speed_bps=1000000000,
+                if_oper_status="up",
+                duplex="full",
+                is_trunk=True,
+                vlan_ids=[10, 20, 30, 35],
+                neighbor_system_name="IOT-AZURE-COLDGW",
+                neighbor_port_id="eth0",
+                learned_macs=[
+                    SwitchPortLearnedMac(mac_address="00:D0:C9:AA:BB:01", vlan_id=35)
+                ]
+            ))
+
         return telemetry
 

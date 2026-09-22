@@ -124,3 +124,65 @@ def test_api_network_context_and_enterprise_connectors():
     res_svg = client.get("/api/export/topology-svg?mode=connections")
     assert res_svg.status_code == 200
     assert "<svg" in res_svg.text
+
+def test_api_walmart_cold_chain_scenario():
+    # 1. Switch scenario to Walmart Cold Chain
+    res_switch = client.post("/api/scenarios/walmart_cold_chain")
+    assert res_switch.status_code == 200
+    data_switch = res_switch.json()
+    assert "walmart_cold_chain" in data_switch["message"].lower()
+    assert "Walmart" in data_switch["facility"]
+
+    # 2. Verify assets list
+    res_assets = client.get("/api/assets")
+    assert res_assets.status_code == 200
+    assets = res_assets.json()
+    assert len(assets) == 11
+
+    tags = [a["tag_name"] for a in assets]
+    assert "PLC-NH3-COMP-01" in tags
+    assert "PLC-NH3-COMP-02" in tags
+    assert "RACK-E3-GROCERY" in tags
+    assert "NH3-GAS-SAFETY-01" in tags
+    assert "HMI-COLD-DOCK" in tags
+    assert "TAB-DOCK-TECH" in tags
+    assert "SCADA-COLD-SRV01" in tags
+    assert "SW-COLD-01" in tags
+    assert "IOT-AZURE-COLDGW" in tags
+    assert "PLC-BLAST-FREEZE-B" in tags
+    assert "PUMP-NH3-PURGE-STBY" in tags
+
+    # 3. Verify Frick Quantum HD Chassis
+    res_chassis = client.get("/api/chassis/wm-plc-nh3-01")
+    assert res_chassis.status_code == 200
+    chassis_data = res_chassis.json()
+    assert chassis_data["asset_tag"] == "PLC-NH3-COMP-01"
+    assert chassis_data["chassis"]["total_slots"] == 6
+    assert len(chassis_data["chassis"]["modules"]) == 6
+
+    # 4. Verify Duplicate IP disambiguation (192.168.10.11 on Compressor 1 and Blast Freezer Skid)
+    res_dup = client.get("/api/locations/duplicate-ips")
+    assert res_dup.status_code == 200
+    dup_data = res_dup.json()
+    assert dup_data["total_duplicate_ips_tracked"] >= 1
+    dup_cluster = next((c for c in dup_data["duplicate_subnets"] if c["ip_address"] == "192.168.10.11"), None)
+    assert dup_cluster is not None
+    assert dup_cluster["collision_count"] == 2
+
+    # 5. Verify Topology & Violations (Dual-homed dock tablet + remote keyswitch)
+    res_topo = client.get("/api/topology")
+    assert res_topo.status_code == 200
+    topo_data = res_topo.json()
+    assert len(topo_data["zones"]) == 5
+    assert len(topo_data["conduits"]) == 4
+    assert len(topo_data["violations"]) >= 2
+
+    # 6. Verify Key Switch Toggle on Compressor 2
+    res_key = client.put("/api/assets/wm-plc-nh3-02/keyswitch?mode=RUN")
+    assert res_key.status_code == 200
+    assert "RUN" in res_key.json()["message"]
+
+    # 7. Switch back to water treatment for test isolation
+    res_reset = client.post("/api/scenarios/water_treatment")
+    assert res_reset.status_code == 200
+

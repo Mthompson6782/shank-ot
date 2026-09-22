@@ -15,6 +15,7 @@ from otbase.models.vulnerability import (
 from otbase.models.lifecycle import LifecycleMilestone, ObsolescenceRisk
 from otbase.db.seed_data import (
     get_water_treatment_assets, get_substation_assets, get_refinery_assets,
+    get_walmart_cold_chain_assets,
     get_purdue_zones, get_conduits, get_security_violations,
     get_ics_advisories, get_lifecycle_milestones
 )
@@ -83,6 +84,9 @@ class OTBaseRepository:
         elif scenario == "refinery":
             self.current_facility = "Petrochemical Continuous Refinery"
             asset_list = get_refinery_assets()
+        elif scenario in ("walmart_cold_chain", "walmart", "cold_chain"):
+            self.current_facility = "Walmart Distribution Center 6094 (Perishable Grocery & Cold Chain)"
+            asset_list = get_walmart_cold_chain_assets()
         else:
             self.current_facility = "Municipal Water Treatment Facility"
             asset_list = get_water_treatment_assets()

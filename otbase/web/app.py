@@ -155,12 +155,18 @@ def get_scenarios():
             "name": "Petrochemical Continuous Refinery (Crude Unit)",
             "description": "Yokogawa Centum VP DCS, Triconex SIS Safety Controller (SIL 3), legacy Siemens S7-400H.",
             "device_count": 5
+        },
+        {
+            "id": "walmart_cold_chain",
+            "name": "Walmart DC 6094 (Perishable Grocery & Cold Chain)",
+            "description": "Johnson Controls Frick Quantum HD screw compressors, Emerson Copeland E3, Det-Tronics NH3 life safety, Inductive Automation Ignition SCADA.",
+            "device_count": 11
         }
     ]
 
 @app.post("/api/scenarios/{scenario_name}")
 def switch_scenario(scenario_name: str):
-    if scenario_name not in ("water_treatment", "substation", "refinery"):
+    if scenario_name not in ("water_treatment", "substation", "refinery", "walmart_cold_chain", "walmart", "cold_chain"):
         raise HTTPException(status_code=400, detail="Unknown scenario.")
     repo.load_scenario(scenario_name)
     refresh_analytics()
@@ -493,6 +499,10 @@ def get_locations_and_duplicate_ips():
         "location_tree": repo.location_tree,
         "duplicate_ip_report": repo.get_duplicate_ips()
     }
+
+@app.get("/api/locations/duplicate-ips")
+def get_duplicate_ips():
+    return repo.get_duplicate_ips()
 
 @app.get("/api/systems")
 def get_systems():

@@ -15,6 +15,84 @@ class LocationEngine:
     @classmethod
     def get_seed_location_tree(cls, facility: str) -> List[LocationNode]:
         """Generates default 5-tier location tree for the active facility."""
+        if "Walmart" in facility or "Cold Chain" in facility:
+            return [
+                LocationNode(
+                    id="loc-wm-ent-01",
+                    name="Walmart Inc. Global Supply Chain",
+                    tier=LocationTier.ENTERPRISE,
+                    facility=facility,
+                    description="Enterprise Cold Chain Logistics"
+                ),
+                LocationNode(
+                    id="loc-wm-site-01",
+                    name="Distribution Center 6094 (Perishable)",
+                    tier=LocationTier.SITE,
+                    parent_id="loc-wm-ent-01",
+                    facility=facility,
+                    description="Regional Perishable Grocery Distribution Center"
+                ),
+                LocationNode(
+                    id="loc-wm-bld-01",
+                    name="Perishable Food Distribution Warehouse",
+                    tier=LocationTier.BUILDING,
+                    parent_id="loc-wm-site-01",
+                    facility=facility
+                ),
+                LocationNode(
+                    id="loc-wm-room-engine",
+                    name="Ammonia Compressor Engine Room",
+                    tier=LocationTier.CONTROL_ROOM,
+                    parent_id="loc-wm-bld-01",
+                    facility=facility
+                ),
+                LocationNode(
+                    id="loc-wm-skid-nh3-01",
+                    name="Ammonia Screw Compressor Skid 1",
+                    tier=LocationTier.CABINET_SKID,
+                    parent_id="loc-wm-room-engine",
+                    facility=facility,
+                    metadata={"duplicate_subnet_enabled": True, "subnet": "192.168.10.0/24"}
+                ),
+                LocationNode(
+                    id="loc-wm-skid-nh3-02",
+                    name="Ammonia Screw Compressor Skid 2",
+                    tier=LocationTier.CABINET_SKID,
+                    parent_id="loc-wm-room-engine",
+                    facility=facility,
+                    metadata={"duplicate_subnet_enabled": False, "subnet": "192.168.10.0/24"}
+                ),
+                LocationNode(
+                    id="loc-wm-skid-freezer-b",
+                    name="Modular Blast Freezer Bay 4 Skid (OEM Duplicate Subnet)",
+                    tier=LocationTier.CABINET_SKID,
+                    parent_id="loc-wm-bld-01",
+                    facility=facility,
+                    metadata={"duplicate_subnet_enabled": True, "subnet": "192.168.10.0/24"}
+                ),
+                LocationNode(
+                    id="loc-wm-server-room",
+                    name="Operations Server Room Rack 2",
+                    tier=LocationTier.CABINET_SKID,
+                    parent_id="loc-wm-bld-01",
+                    facility=facility
+                ),
+                LocationNode(
+                    id="loc-wm-idmz-room",
+                    name="Industrial DMZ Security Cabinet",
+                    tier=LocationTier.CABINET_SKID,
+                    parent_id="loc-wm-bld-01",
+                    facility=facility
+                ),
+                LocationNode(
+                    id="loc-wm-roof-deck",
+                    name="Engine Room Roof Deck Purge Enclosure",
+                    tier=LocationTier.CABINET_SKID,
+                    parent_id="loc-wm-bld-01",
+                    facility=facility
+                )
+            ]
+
         nodes: List[LocationNode] = [
             LocationNode(
                 id="loc-ent-01",
@@ -109,6 +187,43 @@ class LocationEngine:
         """
         Defines functional OT Systems grouping controllers, HMIs, drives, and network switches.
         """
+        if "Walmart" in facility or "Cold Chain" in facility:
+            return [
+                OTSystem(
+                    id="sys-wm-nh3",
+                    name="High/Low-Stage Ammonia Refrigeration Loop",
+                    description="Dual Frick screw compressors regulating -20°F blast freezing and holding rooms.",
+                    facility=facility,
+                    primary_controller_id="PLC-NH3-COMP-01",
+                    asset_ids=["PLC-NH3-COMP-01", "PLC-NH3-COMP-02", "HMI-COLD-DOCK", "SW-COLD-01", "NH3-GAS-SAFETY-01"],
+                    shared_switch_ids=["SW-COLD-01"],
+                    process_criticality="Safety-Critical",
+                    total_bandwidth_kbps=24500.0
+                ),
+                OTSystem(
+                    id="sys-wm-grocery",
+                    name="Supercenter Cold-Holding Perishable System",
+                    description="Copeland E3 rack controller and modular blast freezer bays.",
+                    facility=facility,
+                    primary_controller_id="RACK-E3-GROCERY",
+                    asset_ids=["RACK-E3-GROCERY", "PLC-BLAST-FREEZE-B", "SW-COLD-01", "SCADA-COLD-SRV01"],
+                    shared_switch_ids=["SW-COLD-01"],
+                    process_criticality="High",
+                    total_bandwidth_kbps=14200.0
+                ),
+                OTSystem(
+                    id="sys-wm-telemetry",
+                    name="FDA FSMA Compliance & Azure Cloud Telemetry",
+                    description="Ignition historical logging and Advantech IoT Edge gateway pushing pallet temps to Azure.",
+                    facility=facility,
+                    primary_controller_id="SCADA-COLD-SRV01",
+                    asset_ids=["SCADA-COLD-SRV01", "IOT-AZURE-COLDGW"],
+                    shared_switch_ids=["SW-COLD-01"],
+                    process_criticality="Medium",
+                    total_bandwidth_kbps=8500.0
+                )
+            ]
+
         systems = [
             OTSystem(
                 id="sys-coag-01",

@@ -34,7 +34,7 @@ def main():
     seed_parser = subparsers.add_parser("seed", help="Reset and load an industrial plant scenario")
     seed_parser.add_argument(
         "--scenario",
-        choices=["water_treatment", "substation", "refinery"],
+        choices=["water_treatment", "substation", "refinery", "walmart_cold_chain"],
         default="water_treatment",
         help="Scenario to load"
     )

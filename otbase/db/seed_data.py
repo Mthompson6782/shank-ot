@@ -258,6 +258,106 @@ def get_siemens_s71500_chassis() -> Chassis:
         modules=modules
     )
 
+def get_frick_quantum_chassis() -> Chassis:
+    """Johnson Controls / Frick Quantum HD Industrial Refrigeration Controller Chassis."""
+    modules = [
+        RackModule(
+            slot=0,
+            name="Frick 24VDC Industrial Power Module",
+            catalog_number="QHD-PWR-24V",
+            serial_number="JCI-PWR-88219",
+            hardware_revision="C",
+            firmware_version="N/A",
+            vendor="Johnson Controls / Frick",
+            module_type=ModuleType.POWER_SUPPLY,
+            status_leds=[
+                LEDStatus(name="DC_OK", state=LEDColor.GREEN),
+                LEDStatus(name="FAULT", state=LEDColor.OFF)
+            ],
+            description="Isolated 24VDC heavy-duty compressor panel power supply",
+            cve_count=0
+        ),
+        RackModule(
+            slot=1,
+            name="Quantum HD Master Processor & Touch Display",
+            catalog_number="QHD-CPU-V10",
+            serial_number="FRICK-QHD-4410",
+            hardware_revision="E",
+            firmware_version="10.42.01",
+            vendor="Johnson Controls / Frick",
+            module_type=ModuleType.CONTROLLER,
+            status_leds=[
+                LEDStatus(name="RUN", state=LEDColor.GREEN),
+                LEDStatus(name="COMM", state=LEDColor.GREEN),
+                LEDStatus(name="ALARM", state=LEDColor.OFF)
+            ],
+            description="Quantum HD Screw Compressor Controller with real-time suction/discharge pressure calculations",
+            cve_count=1,
+            cves=["CVE-2022-30512"]
+        ),
+        RackModule(
+            slot=2,
+            name="Dual-Port EtherNet/IP & Modbus/TCP Comm Module",
+            catalog_number="QHD-COM-ETH",
+            serial_number="FRICK-ETH-9921",
+            hardware_revision="B",
+            firmware_version="4.012",
+            vendor="Johnson Controls / Frick",
+            module_type=ModuleType.COMM_ADAPTER,
+            status_leds=[
+                LEDStatus(name="LINK1", state=LEDColor.GREEN),
+                LEDStatus(name="NET", state=LEDColor.GREEN)
+            ],
+            description="Industrial dual-port Ethernet bridge communicating with SCADA and Ammonia Safety Network",
+            cve_count=0
+        ),
+        RackModule(
+            slot=3,
+            name="Precision RTD Temperature Input Module (Ammonia Suction/Discharge)",
+            catalog_number="QHD-RTD-8",
+            serial_number="FRICK-RTD-3301",
+            hardware_revision="A",
+            firmware_version="1.004",
+            vendor="Johnson Controls / Frick",
+            module_type=ModuleType.ANALOG_INPUT,
+            status_leds=[LEDStatus(name="SCAN", state=LEDColor.GREEN)],
+            description="8-Channel 4-wire RTD input measuring oil temp, suction temp, and condenser return",
+            cve_count=0
+        ),
+        RackModule(
+            slot=4,
+            name="Compressor Slide Valve & Motor VFD Digital Control Module",
+            catalog_number="QHD-OUT-RELAY",
+            serial_number="FRICK-RLY-7712",
+            hardware_revision="B",
+            firmware_version="2.001",
+            vendor="Johnson Controls / Frick",
+            module_type=ModuleType.DIGITAL_OUTPUT,
+            status_leds=[LEDStatus(name="OUT_EN", state=LEDColor.GREEN)],
+            description="High-voltage relay outputs commanding 500HP compressor motor starter and capacity slide valves",
+            cve_count=0
+        ),
+        RackModule(
+            slot=5,
+            name="VFD Speed Reference & Economizer Analog Output Module",
+            catalog_number="QHD-AO-4",
+            serial_number="FRICK-AO-9182",
+            hardware_revision="A",
+            firmware_version="1.002",
+            vendor="Johnson Controls / Frick",
+            module_type=ModuleType.ANALOG_OUTPUT,
+            status_leds=[LEDStatus(name="OK", state=LEDColor.GREEN)],
+            description="4-channel 4-20mA output commanding variable frequency drive motor speed and economizer backpressure",
+            cve_count=0
+        )
+    ]
+    return Chassis(
+        model="Frick Quantum HD 6-Slot Refrigeration Chassis",
+        serial_number="FRICK-CHAS-6094",
+        total_slots=6,
+        modules=modules
+    )
+
 def get_water_treatment_assets() -> List[Asset]:
     """Municipal Water Treatment Facility Asset Baseline."""
     return [
@@ -1000,6 +1100,453 @@ def get_refinery_assets() -> List[Asset]:
         )
     ]
 
+def get_walmart_cold_chain_assets() -> List[Asset]:
+    """Walmart Distribution Center 6094 (Perishable Food & Cold Chain) Asset Baseline."""
+    facility = "Walmart Distribution Center 6094 (Perishable Grocery & Cold Chain)"
+    return [
+        Asset(
+            id="wm-plc-nh3-01",
+            tag_name="PLC-NH3-COMP-01",
+            display_name="Ammonia Compressor Skid #1 - Frick Screw Compressor Controller",
+            vendor="Johnson Controls / Frick",
+            model="Quantum HD",
+            catalog_number="QHD-CPU-V10",
+            serial_number="SN-FRICK-COMP1-6094",
+            hardware_revision="E",
+            firmware_version="10.42.01",
+            os_name="Frick Real-Time OS",
+            os_version="10.42",
+            device_type=DeviceType.PLC,
+            purdue_level=PurdueLevel.LEVEL_1,
+            facility=facility,
+            area="Compressor Engine Room",
+            production_line="High-Stage Ammonia Loop",
+            workcell="Compressor Bay 1",
+            criticality=Criticality.SAFETY_CRITICAL,
+            key_switch=KeySwitchMode.RUN,  # Hardware write-protected
+            chassis=get_frick_quantum_chassis(),
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0",
+                    mac_address="00:0E:8C:11:22:01",
+                    ip_address="192.168.10.11",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-skid-nh3-01",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Engine Room / CP-NH3-01",
+            cpe_string="cpe:2.3:h:johnsoncontrols:frick_quantum_hd:10.42:*:*:*:*:*:*:*",
+            active_cves=["CVE-2022-30512"],
+            ot_risk_score=6.8,
+            lifecycle_state="Active",
+            notes="Controls 500HP screw compressor maintaining -20°F blast freezer refrigerant loop."
+        ),
+        Asset(
+            id="wm-plc-nh3-02",
+            tag_name="PLC-NH3-COMP-02",
+            display_name="Ammonia Compressor Skid #2 - Frick Screw Compressor Controller",
+            vendor="Johnson Controls / Frick",
+            model="Quantum HD",
+            catalog_number="QHD-CPU-V10",
+            serial_number="SN-FRICK-COMP2-6094",
+            hardware_revision="E",
+            firmware_version="10.42.01",
+            os_name="Frick Real-Time OS",
+            os_version="10.42",
+            device_type=DeviceType.PLC,
+            purdue_level=PurdueLevel.LEVEL_1,
+            facility=facility,
+            area="Compressor Engine Room",
+            production_line="Low-Stage Ammonia Loop",
+            workcell="Compressor Bay 2",
+            criticality=Criticality.SAFETY_CRITICAL,
+            key_switch=KeySwitchMode.REMOTE_RUN,  # Remote Run leaves it open to network modification
+            chassis=get_frick_quantum_chassis(),
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0",
+                    mac_address="00:0E:8C:11:22:02",
+                    ip_address="192.168.10.12",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-skid-nh3-02",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Engine Room / CP-NH3-02",
+            cpe_string="cpe:2.3:h:johnsoncontrols:frick_quantum_hd:10.42:*:*:*:*:*:*:*",
+            active_cves=["CVE-2022-30512"],
+            ot_risk_score=9.8,
+            lifecycle_state="Active",
+            notes="Secondary lead/lag ammonia compressor for perishable meat & dairy cooling."
+        ),
+        Asset(
+            id="wm-rack-copeland",
+            tag_name="RACK-E3-GROCERY",
+            display_name="Emerson Copeland E3 Refrigeration Controller (Meat/Dairy Vaults 34°F)",
+            vendor="Emerson Climate Technologies",
+            model="Copeland E3",
+            catalog_number="E3-SUPERMARKET-RACK",
+            serial_number="SN-EMERSON-E3-10499",
+            hardware_revision="Rev 3",
+            firmware_version="3.10.2",
+            os_name="Emerson E3 Linux",
+            os_version="3.10",
+            device_type=DeviceType.RTU,
+            purdue_level=PurdueLevel.LEVEL_1,
+            facility=facility,
+            area="Perishable Storage Vaults",
+            production_line="Medium-Temp Refrigeration",
+            workcell="Meat & Produce Storage",
+            criticality=Criticality.HIGH,
+            key_switch=KeySwitchMode.RUN,
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0",
+                    mac_address="00:08:E1:44:55:12",
+                    ip_address="192.168.10.25",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[
+                SerialPort(port_name="RS485-COM1", protocol="Modbus RTU", baud_rate=19200, parity="None", data_bits=8, stop_bits=1)
+            ],
+            location_id="loc-wm-vault-dairy",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Dairy Vaults / CP-E3-01",
+            cpe_string="cpe:2.3:h:emerson:copeland_e3:3.10:*:*:*:*:*:*:*",
+            active_cves=[],
+            ot_risk_score=2.2,
+            lifecycle_state="Active",
+            notes="Controls 32 electronic expansion valves (EEVs) regulating constant 34°F cold chain holding."
+        ),
+        Asset(
+            id="wm-safety-nh3",
+            tag_name="NH3-GAS-SAFETY-01",
+            display_name="Det-Tronics Eagle Quantum Premier Ammonia (NH3) Gas Safety System (SIL 2)",
+            vendor="Detector Electronics Corp (Det-Tronics)",
+            model="Eagle Quantum Premier (EQP)",
+            catalog_number="EQP-24VDC-SAFETY",
+            serial_number="SN-DETTRONICS-9082A",
+            hardware_revision="D",
+            firmware_version="5.04.1",
+            os_name="Det-Tronics Safety Kernel",
+            os_version="5.04",
+            device_type=DeviceType.SIS_CONTROLLER,
+            purdue_level=PurdueLevel.LEVEL_1,
+            facility=facility,
+            area="Engine Room Life Safety",
+            production_line="Toxic Vapor Containment",
+            workcell="Ammonia Sensor Grid",
+            criticality=Criticality.SAFETY_CRITICAL,
+            key_switch=KeySwitchMode.RUN,
+            network_interfaces=[
+                NetworkInterface(
+                    name="eqp-net",
+                    mac_address="00:1B:4F:99:88:01",
+                    ip_address="192.168.10.50",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-life-safety",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Life Safety / CP-GAS-01",
+            cpe_string="cpe:2.3:h:det-tronics:eagle_quantum_premier:5.04:*:*:*:*:*:*:*",
+            active_cves=[],
+            ot_risk_score=1.4,
+            lifecycle_state="Active",
+            notes="Life safety instrumented system (SIS). Automatically activates roof louvers and 50,000 CFM exhaust fans if NH3 > 25 PPM."
+        ),
+        Asset(
+            id="wm-hmi-dock",
+            tag_name="HMI-COLD-DOCK",
+            display_name="Refrigerated Loading Dock Operator Panel & Inbound Pallet Inspector",
+            vendor="Rockwell Automation",
+            model="PanelView Plus 7 Performance",
+            catalog_number="2711P-T15C22D9P",
+            serial_number="SN-PV7-DOCK-1928",
+            hardware_revision="C",
+            firmware_version="12.001",
+            os_name="Windows 10 IoT Enterprise",
+            os_version="1809 LTSC",
+            device_type=DeviceType.HMI,
+            purdue_level=PurdueLevel.LEVEL_2,
+            facility=facility,
+            area="Refrigerated Shipping/Receiving Dock (38°F)",
+            production_line="Outbound Cross-Dock",
+            workcell="Dock Door 1-20",
+            criticality=Criticality.MEDIUM,
+            key_switch=KeySwitchMode.NOT_APPLICABLE,
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0",
+                    mac_address="00:50:56:B2:3C:44",
+                    ip_address="192.168.20.15",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.20.1",
+                    vlan=20
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-dock-room",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Shipping Dock / PNL-DOCK-01",
+            cpe_string="cpe:2.3:h:rockwellautomation:panelview_plus_7:12.001:*:*:*:*:*:*:*",
+            active_cves=["CVE-2020-6967"],
+            ot_risk_score=3.8,
+            lifecycle_state="Active",
+            notes="Operator touch terminal displaying trailer core temps, door seals, and blast freezer staging status."
+        ),
+        Asset(
+            id="wm-tablet-dock",
+            tag_name="TAB-DOCK-TECH",
+            display_name="Inbound Receiving Dock Field Maintenance Tablet (Dual-Homed Wi-Fi/OT)",
+            vendor="Getac / Zebra",
+            model="Getac F110 Fully Rugged Tablet",
+            catalog_number="F110-G6",
+            serial_number="SN-GETAC-DOCK-6094",
+            hardware_revision="G6",
+            firmware_version="N/A",
+            os_name="Windows 11 Pro",
+            os_version="22H2",
+            device_type=DeviceType.ENGINEERING_WORKSTATION,
+            purdue_level=PurdueLevel.LEVEL_3,
+            facility=facility,
+            area="Dock Maintenance Office",
+            production_line="Mobile Workstation",
+            workcell="Dock Tech Bench",
+            criticality=Criticality.HIGH,
+            key_switch=KeySwitchMode.NOT_APPLICABLE,
+            network_interfaces=[
+                NetworkInterface(
+                    name="Wi-Fi 6E (Corporate)",
+                    mac_address="00:15:5D:88:12:01",
+                    ip_address="10.240.50.88",
+                    subnet_mask="255.255.255.0",
+                    gateway="10.240.50.1",
+                    vlan=50
+                ),
+                NetworkInterface(
+                    name="USB-C Ethernet (Ammonia Skid Pivot)",
+                    mac_address="00:E0:4C:68:01:23",
+                    ip_address="192.168.10.77",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-dock-room",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Shipping Dock / TECH-BENCH",
+            cpe_string="cpe:2.3:o:microsoft:windows_11_22h2:*:*:*:*:*:*:*:*",
+            active_cves=["CVE-2023-38146"],
+            ot_risk_score=9.6,  # Dual-homed cross-zone pivot into Level 1
+            lifecycle_state="Active",
+            notes="Maintenance tablet bridging corporate dock Wi-Fi directly into Ammonia Engine Room Subnet without firewall inspection."
+        ),
+        Asset(
+            id="wm-scada-ignition",
+            tag_name="SCADA-COLD-SRV01",
+            display_name="Inductive Automation Ignition SCADA & FDA FSMA Cold Chain Compliance Server",
+            vendor="Inductive Automation",
+            model="Ignition Enterprise Gateway",
+            catalog_number="IGN-GW-ENTERPRISE",
+            serial_number="SN-IGNITION-WM-6094",
+            hardware_revision="Rack 2U",
+            firmware_version="8.1.28",
+            os_name="Ubuntu Linux Server",
+            os_version="22.04 LTS",
+            device_type=DeviceType.SCADA_SERVER,
+            purdue_level=PurdueLevel.LEVEL_3,
+            facility=facility,
+            area="Data Center & Operations Control",
+            production_line="Cold Chain Telemetry",
+            workcell="Central SCADA",
+            criticality=Criticality.HIGH,
+            key_switch=KeySwitchMode.NOT_APPLICABLE,
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0",
+                    mac_address="00:50:56:99:11:A3",
+                    ip_address="192.168.30.20",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.30.1",
+                    vlan=30
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-server-room",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Data Center / RACK-SRV-02",
+            cpe_string="cpe:2.3:a:inductiveautomation:ignition:8.1.28:*:*:*:*:*:*:*",
+            active_cves=[],
+            ot_risk_score=1.8,
+            lifecycle_state="Active",
+            notes="Logs unalterable historical temperature records for FDA Food Safety Modernization Act (FSMA) compliance."
+        ),
+        Asset(
+            id="wm-switch-cold",
+            tag_name="SW-COLD-01",
+            display_name="Cisco Catalyst IE-3300 Rugged Industrial Ethernet Switch",
+            vendor="Cisco Systems",
+            model="Catalyst IE-3300-8T2S-E",
+            catalog_number="IE-3300-8T2S-E",
+            serial_number="FOC241998A1",
+            hardware_revision="V02",
+            firmware_version="17.09.04",
+            os_name="Cisco IOS-XE",
+            os_version="17.9.4",
+            device_type=DeviceType.INDUSTRIAL_SWITCH,
+            purdue_level=PurdueLevel.LEVEL_2,
+            facility=facility,
+            area="Compressor Engine Room MCC",
+            production_line="Refrigeration Network Core",
+            workcell="Motor Control Center",
+            criticality=Criticality.HIGH,
+            key_switch=KeySwitchMode.NOT_APPLICABLE,
+            network_interfaces=[
+                NetworkInterface(
+                    name="Vlan1",
+                    mac_address="00:2A:6A:12:34:56",
+                    ip_address="192.168.20.2",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.20.1",
+                    vlan=20
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-skid-nh3-01",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Engine Room / MCC-01",
+            cpe_string="cpe:2.3:o:cisco:ios_xe:17.9.4:*:*:*:*:*:*:*",
+            active_cves=[],
+            ot_risk_score=1.9,
+            lifecycle_state="Active",
+            notes="Harsh-environment switch rated for -40°C to +75°C engine room operation."
+        ),
+        Asset(
+            id="wm-gw-telemetry",
+            tag_name="IOT-AZURE-COLDGW",
+            display_name="Walmart Enterprise Cold Chain Azure IoT Edge Telemetry Gateway",
+            vendor="Advantech",
+            model="UNO-2271G Industrial IoT Edge Computer",
+            catalog_number="UNO-2271G-E21AE",
+            serial_number="SN-ADVAN-AZURE-6094",
+            hardware_revision="A1",
+            firmware_version="3.2.0",
+            os_name="Yocto Linux / Azure IoT Edge Runtime",
+            os_version="2.4",
+            device_type=DeviceType.INDUSTRIAL_FIREWALL,
+            purdue_level=PurdueLevel.LEVEL_3_5,
+            facility=facility,
+            area="Industrial DMZ (IDMZ)",
+            production_line="Enterprise Cloud Reporting",
+            workcell="IDMZ Security Cabinet",
+            criticality=Criticality.MEDIUM,
+            key_switch=KeySwitchMode.NOT_APPLICABLE,
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0 (IDMZ)",
+                    mac_address="00:D0:C9:AA:BB:01",
+                    ip_address="10.240.12.5",
+                    subnet_mask="255.255.255.0",
+                    gateway="10.240.12.1",
+                    vlan=35
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-idmz-room",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / IDMZ / SEC-RACK-01",
+            cpe_string="cpe:2.3:h:advantech:uno-2271g:*:*:*:*:*:*:*:*",
+            active_cves=[],
+            ot_risk_score=2.0,
+            lifecycle_state="Active",
+            notes="Secure MQTT publisher transmitting cold-chain pallet temps and ammonia safety telemetry to Walmart Azure Cloud."
+        ),
+        Asset(
+            id="wm-skid-duplicate",
+            tag_name="PLC-BLAST-FREEZE-B",
+            display_name="Modular Blast Freezer Skid B Controller (OEM Reused Subnet)",
+            vendor="Rockwell Automation",
+            model="CompactLogix 5380",
+            catalog_number="5069-L320ER",
+            serial_number="SN-CMPX-FREEZER-881",
+            hardware_revision="B",
+            firmware_version="33.011",
+            os_name="Rockwell Firmware OS",
+            os_version="33.011",
+            device_type=DeviceType.PLC,
+            purdue_level=PurdueLevel.LEVEL_1,
+            facility=facility,
+            area="Blast Freezer Bay 4 (-20°F)",
+            production_line="Blast Freezer Line B",
+            workcell="Bay 4 Evaporators",
+            criticality=Criticality.HIGH,
+            key_switch=KeySwitchMode.RUN,
+            network_interfaces=[
+                NetworkInterface(
+                    name="5069-ENET",
+                    mac_address="00:1D:9C:FE:DC:01",
+                    ip_address="192.168.10.11",  # Reused IP demonstrating duplicate IP disambiguation
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-skid-freezer-b",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Blast Freezers / SKID-BAY-04",
+            cpe_string="cpe:2.3:h:rockwellautomation:compactlogix_5380:33.011:*:*:*:*:*:*:*",
+            active_cves=["CVE-2021-22681"],
+            ot_risk_score=7.1,
+            lifecycle_state="Active",
+            notes="Demonstrates SHANK duplicate IP disambiguation. Reused 192.168.10.11 subnet coexists cleanly via unique Location ID."
+        ),
+        Asset(
+            id="wm-pump-standby",
+            tag_name="PUMP-NH3-PURGE-STBY",
+            display_name="Emergency Cold-Standby Ammonia Roof Vent Purge Fan (Dormant Asset)",
+            vendor="Greenheck / Square D",
+            model="Altivar 630 Ammonia Vent VFD",
+            catalog_number="ATV630D37N4",
+            serial_number="SN-SQD-VENT-7719",
+            hardware_revision="A",
+            firmware_version="2.1.0",
+            os_name="Schneider Embedded Firmware",
+            os_version="2.1",
+            device_type=DeviceType.FIELD_DEVICE,
+            purdue_level=PurdueLevel.LEVEL_0,
+            facility=facility,
+            area="Engine Room Roof Deck",
+            production_line="Emergency Exhaust",
+            workcell="Roof Fan 4",
+            criticality=Criticality.HIGH,
+            key_switch=KeySwitchMode.NOT_APPLICABLE,
+            network_interfaces=[
+                NetworkInterface(
+                    name="eth0",
+                    mac_address="00:80:F4:55:10:99",
+                    ip_address="192.168.10.188",
+                    subnet_mask="255.255.255.0",
+                    gateway="192.168.10.1",
+                    vlan=10
+                )
+            ],
+            serial_ports=[],
+            location_id="loc-wm-roof-deck",
+            location_path="Walmart Supply Chain / DC-6094 Perishable / Roof Deck / FAN-PUMP-04",
+            cpe_string="cpe:2.3:h:schneider-electric:altivar_process_atv630:*:*:*:*:*:*:*:*",
+            active_cves=[],
+            ot_risk_score=1.5,
+            lifecycle_state="Active",
+            notes="Cold-standby safety asset. Unseen by passive network TAPs (0 packets transmitted) until emergency test run."
+        )
+    ]
+
 def get_purdue_zones(facility: str) -> List[PurdueZone]:
     """Returns ISA/IEC 62443 security zones based on the selected facility."""
     if "Water" in facility:
@@ -1078,6 +1625,54 @@ def get_purdue_zones(facility: str) -> List[PurdueZone]:
                 description="Ruggedcom RX1500 NERC CIP boundary gateway",
                 color="#dc2626",
                 asset_ids=["sub-sec-gw"]
+            )
+        ]
+    elif "Walmart" in facility or "Cold Chain" in facility:
+        return [
+            PurdueZone(
+                id="zone-wm-l0",
+                name="Zone 0: Ammonia Field Actuators & Cold-Standby Fans",
+                purdue_level="Level 0 - Process / Field",
+                facility=facility,
+                description="Cold-standby purge fan VFDs, solenoid valves, suction pressure sensors",
+                color="#64748b",
+                asset_ids=["wm-pump-standby"]
+            ),
+            PurdueZone(
+                id="zone-wm-l1",
+                name="Zone 1: Refrigeration & Life Safety Control Loop",
+                purdue_level="Level 1 - Basic Control (PLCs/RTUs)",
+                facility=facility,
+                description="Frick Quantum HD ammonia controllers, Copeland E3 rack controllers, Det-Tronics NH3 gas safety",
+                color="#0284c7",
+                asset_ids=["wm-plc-nh3-01", "wm-plc-nh3-02", "wm-rack-copeland", "wm-safety-nh3", "wm-skid-duplicate"]
+            ),
+            PurdueZone(
+                id="zone-wm-l2",
+                name="Zone 2: Cold Storage Supervisory & Engine Room HMI",
+                purdue_level="Level 2 - Supervisory / HMIs",
+                facility=facility,
+                description="Engine room PanelView Plus 7 display and Cisco IE-3300 industrial core switch",
+                color="#059669",
+                asset_ids=["wm-hmi-dock", "wm-switch-cold"]
+            ),
+            PurdueZone(
+                id="zone-wm-l3",
+                name="Zone 3: Distribution Center Operations & FSMA Compliance",
+                purdue_level="Level 3 - Operations & Historians",
+                facility=facility,
+                description="Inductive Automation Ignition SCADA/Historian server logging FDA food safety compliance",
+                color="#d97706",
+                asset_ids=["wm-scada-ignition", "wm-tablet-dock"]
+            ),
+            PurdueZone(
+                id="zone-wm-l35",
+                name="Zone 3.5: Cold Chain Telemetry IDMZ",
+                purdue_level="Level 3.5 - Industrial DMZ (IDMZ)",
+                facility=facility,
+                description="Advantech Azure IoT Edge computer transmitting pallet telemetry to cloud analytics",
+                color="#dc2626",
+                asset_ids=["wm-gw-telemetry"]
             )
         ]
     else:  # Refinery
@@ -1212,6 +1807,57 @@ def get_conduits(facility: str) -> List[Conduit]:
                 status="Active"
             )
         ]
+    elif "Walmart" in facility or "Cold Chain" in facility:
+        return [
+            Conduit(
+                id="cnd-wm-01",
+                name="Conduit W1: Supervisory CIP & Gas Status (Level 2 -> Level 1)",
+                from_zone_id="zone-wm-l2",
+                to_zone_id="zone-wm-l1",
+                allowed_protocols=["EtherNet/IP (CIP)", "Modbus TCP"],
+                ports=[44818, 502],
+                is_inspected=True,
+                inspection_device="Cisco IE-3300 Port Security & Hardware ACLs",
+                is_encrypted=False,
+                status="Active"
+            ),
+            Conduit(
+                id="cnd-wm-02",
+                name="Conduit W2: SCADA Ingestion & FSMA Temperature Logging (Level 3 -> Level 1)",
+                from_zone_id="zone-wm-l3",
+                to_zone_id="zone-wm-l1",
+                allowed_protocols=["Modbus TCP", "OPC UA"],
+                ports=[502, 4840],
+                is_inspected=True,
+                inspection_device="Engine Room Distribution Switch ACL",
+                is_encrypted=False,
+                status="Active"
+            ),
+            Conduit(
+                id="cnd-wm-03",
+                name="Conduit W3: Cloud Edge Telemetry Feed (Level 3 -> Level 3.5)",
+                from_zone_id="zone-wm-l3",
+                to_zone_id="zone-wm-l35",
+                allowed_protocols=["MQTT over TLS", "HTTPS"],
+                ports=[8883, 443],
+                is_inspected=True,
+                inspection_device="IDMZ Edge Firewall",
+                is_encrypted=True,
+                status="Active"
+            ),
+            Conduit(
+                id="cnd-wm-04",
+                name="Conduit W4: Technician Tablet Wireless Maintenance (UNINSPECTED DUAL-HOMED VIOLATION)",
+                from_zone_id="zone-wm-l3",
+                to_zone_id="zone-wm-l1",
+                allowed_protocols=["Rockwell FactoryTalk View", "VNC", "HTTP"],
+                ports=[44818, 5900, 80],
+                is_inspected=False,
+                inspection_device=None,
+                is_encrypted=False,
+                status="Active"
+            )
+        ]
     else:  # Refinery
         return [
             Conduit(
@@ -1299,6 +1945,41 @@ def get_security_violations(facility: str) -> List[SecurityViolation]:
                 affected_asset_ids=["sub-rtu-01"],
                 standard_reference="NERC CIP-007-6 R2 (Cyber Security - Systems Security Management)",
                 remediation="Schedule maintenance outage to upgrade RTAC firmware to R151 or newer; apply compensating control by restricting port 20000 access exclusively to authenticated control center IP addresses."
+            )
+        ]
+    elif "Walmart" in facility or "Cold Chain" in facility:
+        return [
+            SecurityViolation(
+                id="viol-wm-01",
+                violation_type=SecurityViolationType.DUAL_HOMED_BRIDGE,
+                severity=ViolationSeverity.CRITICAL,
+                title="Dual-Homed Maintenance Tablet Bridging Dock Wi-Fi to Ammonia PLC Subnet",
+                description="Dock Technician Maintenance Tablet (TAB-DOCK-TECH) is connected simultaneously to the facility corporate Wi-Fi (10.240.50.88) and physically tethered via USB-Ethernet adapter directly into Ammonia Engine Room Subnet (192.168.10.77), establishing an uninspected pivot route into life-critical refrigeration controllers.",
+                affected_asset_ids=["wm-tablet-dock", "wm-plc-nh3-01"],
+                affected_conduit_id="cnd-wm-04",
+                standard_reference="ISA/IEC 62443-3-3 SR 5.2 / NIST SP 800-82r3 Section 5.3",
+                remediation="Disable multi-homed network adapter bridging on technician field tablets. Restrict dock tablets to dedicated management VLAN with 802.1X enterprise authentication."
+            ),
+            SecurityViolation(
+                id="viol-wm-02",
+                violation_type=SecurityViolationType.WEAK_KEYSWITCH_REMOTE,
+                severity=ViolationSeverity.HIGH,
+                title="Ammonia Screw Compressor Controller Key Switch Left in REMOTE Mode",
+                description="Frick Quantum HD Screw Compressor #2 (PLC-NH3-COMP-02) key switch is set to REMOTE RUN rather than RUN. This permits remote firmware modification and parameter overrides over network ports without physical verification.",
+                affected_asset_ids=["wm-plc-nh3-02"],
+                standard_reference="CISA Cross-Sector CPG 2.I / IEC 62443-4-2 CR 1.1",
+                remediation="Rotate Frick controller key switch to RUN position (hardware write protection). Mandate physical lock-out/tag-out (LOTO) procedure during logic revisions."
+            ),
+            SecurityViolation(
+                id="viol-wm-03",
+                violation_type=SecurityViolationType.UNINSPECTED_CROSS_ZONE,
+                severity=ViolationSeverity.HIGH,
+                title="Uninspected Direct Wi-Fi Maintenance Conduit Bypassing Security Filtering",
+                description="Conduit W4 connects Level 3 Maintenance Tablet directly to Level 1 Ammonia controllers without stateful inspection, DPI firewall, or MFA jump host.",
+                affected_asset_ids=["wm-tablet-dock", "wm-plc-nh3-02"],
+                affected_conduit_id="cnd-wm-04",
+                standard_reference="ISA/IEC 62443-3-3 SR 3.1 & SR 5.1",
+                remediation="Terminate wireless maintenance sessions at an IDMZ jump proxy with session recording and multi-factor authentication before granting OT access."
             )
         ]
     else:  # Refinery
@@ -1431,6 +2112,25 @@ def get_ics_advisories() -> List[ICSAdvisory]:
                 CompensatingControlType.DPI_INDUSTRIAL_FIREWALL
             ],
             published_date="2020-02-11"
+        ),
+        ICSAdvisory(
+            advisory_id="ICSA-22-263-02",
+            cve_id="CVE-2022-30512",
+            title="Johnson Controls Frick Quantum HD Unity Memory Corruption & Denial of Service",
+            vendor="Johnson Controls / Frick",
+            affected_models=["Quantum HD", "Quantum HD Unity"],
+            affected_firmware_pattern=r"^(10\.[0-4][0-9].*)$",
+            cvss_base_score=7.8,
+            severity=CVSSSeverity.HIGH,
+            cvss_vector="CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:H",
+            cwe_id="CWE-119 (Improper Restriction of Operations within the Bounds of a Memory Buffer)",
+            description="A buffer error vulnerability allows remote unauthenticated attackers to send crafted TCP packets to the Frick Quantum HD web and communications server, causing controller crash, loss of screw compressor regulation, or arbitrary memory corruption.",
+            remediation="Upgrade Frick Quantum HD firmware to version 10.50.00 or higher. Place the physical key switch in RUN mode and restrict TCP port 80/44818 at the industrial firewall.",
+            recommended_compensating_controls=[
+                CompensatingControlType.PHYSICAL_KEY_SWITCH,
+                CompensatingControlType.DPI_INDUSTRIAL_FIREWALL
+            ],
+            published_date="2022-09-20"
         )
     ]
 
@@ -1496,5 +2196,25 @@ def get_lifecycle_milestones() -> List[LifecycleMilestone]:
             state=LifecycleState.ACTIVE,
             replacement_model="SEL-3555 / SEL-3560",
             description="Supported automation controller with regular ROX/RTOS firmware security updates."
+        ),
+        LifecycleMilestone(
+            model="Frick Quantum HD",
+            vendor="Johnson Controls / Frick",
+            release_year=2012,
+            eol_year=2030,
+            eos_year=2035,
+            state=LifecycleState.ACTIVE,
+            replacement_model="Quantum HD Gen 2",
+            description="Mainstream refrigeration screw compressor automation platform widely deployed in cold storage and food processing facilities."
+        ),
+        LifecycleMilestone(
+            model="Copeland E3 Supervisory Controller",
+            vendor="Emerson / Copeland",
+            release_year=2021,
+            eol_year=2038,
+            eos_year=2042,
+            state=LifecycleState.ACTIVE,
+            replacement_model="Current Standard",
+            description="Modern rack and facility management controller for grocery and temperature-controlled logistics."
         )
     ]

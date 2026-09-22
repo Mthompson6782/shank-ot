@@ -98,7 +98,7 @@ pip install -r requirements.txt
 ```
 
 ### 2. Run Test Suite
-Run the automated pytest test suite (30 passing tests):
+Run the automated pytest test suite (35 passing tests across all engines):
 ```powershell
 python -m pytest tests/ -v
 ```
@@ -112,17 +112,46 @@ Open your browser to: **`http://localhost:8000`**
 
 ---
 
+## Built-In Industrial Demonstration Scenarios
+
+SHANK includes 4 full-fidelity industrial operational scenarios showcasing distinct vertical architectures:
+
+1. **Municipal Water Treatment Facility (`water_treatment`)**:
+   - Rockwell ControlLogix 5580, CompactLogix 5380, AVEVA InTouch HMI, FactoryTalk Historian SE, Cisco IE-3400, Phoenix Contact FL mGuard IDMZ firewall.
+   - Dual-homed engineering workstation bridging Level 3 into Level 1 control.
+2. **500kV Electric Substation Alpha (`substation`)**:
+   - Schweitzer Engineering Laboratories SEL-3530 RTAC, SEL-421 protection relay, Siemens SIPROTEC 5, SEL-3355 Tough Server local HMI, Ruggedcom RX1500 NERC CIP Electronic Security Perimeter gateway.
+   - Treck Ripple20 TCP/IP stack vulnerability correlation on protection relays.
+3. **Petrochemical Continuous Refinery (`refinery`)**:
+   - Yokogawa CENTUM VP DCS Field Control Station, Schneider Electric Triconex Tricon SIL 3 Safety Instrumented System (SIS), legacy Siemens SIMATIC S7-400H boiler controller, OSIsoft PI System enterprise historian.
+   - Hardware-locked SIS keyswitch and legacy end-of-support S7comm cleartext exposure.
+4. **Walmart Distribution Center 6094 - Perishable Grocery & Cold Chain (`walmart_cold_chain`)**:
+   - **Johnson Controls / Frick Quantum HD** ammonia screw compressor controllers regulating -20°F blast freezers with 6-slot modular chassis modeling.
+   - **Emerson Copeland E3** grocery refrigeration rack controller maintaining 34°F dairy/produce holding vaults.
+   - **Det-Tronics Eagle Quantum Premier (EQP)** toxic ammonia ($NH_3$) gas detection life safety system.
+   - **Inductive Automation Ignition SCADA & Enterprise Historian** logging tamper-proof cold-chain temperature records for FDA Food Safety Modernization Act (FSMA) compliance.
+   - **Cisco Catalyst IE-3300** rugged industrial switch and **Advantech UNO-2271G** Azure IoT Edge telemetry gateway.
+   - **Duplicate IP Disambiguation Case Study**: Reused OEM skid IP `192.168.10.11` disambiguated cleanly across independent 5-tier location tree namespaces without database key collision.
+   - **Dormant Asset Detection**: Emergency cold-standby ammonia roof vent purge fan (`192.168.10.188`) undetectable by passive network sniffers.
+   - **Dual-Homed Mobile Breach**: Receiving dock technician maintenance tablet bridging corporate Wi-Fi directly into the ammonia refrigeration control subnet.
+
+---
+
 ## CLI Usage Guide
 
 ```powershell
 # Start the web server and REST API
 python -m otbase.cli start --host 127.0.0.1 --port 8000
 
+# Seed and switch scenarios
+python -m otbase.cli seed --scenario walmart_cold_chain
+python -m otbase.cli seed --scenario water_treatment
+
 # Inspect active inventory
 python -m otbase.cli inspect
 
 # Deep inspect a specific PLC rack chassis
-python -m otbase.cli inspect PLC-01-MAIN
+python -m otbase.cli inspect PLC-NH3-COMP-01
 
 # Run ISA/IEC 62443 compliance audit in terminal
 python -m otbase.cli audit
@@ -149,7 +178,8 @@ python -m otbase.cli export --format svg
 | :--- | :--- | :--- | :--- |
 | **System** | `GET` | `/api/status` | System health, version, active scenario |
 | **Dashboard** | `GET` | `/api/dashboard` | Executive KPIs, risk heatmaps, top riskiest assets |
-| **Scenarios** | `POST` | `/api/scenarios/{name}` | Switch industrial scenarios (`water_treatment`, `substation`, `refinery`) |
+| **Scenarios** | `GET` | `/api/scenarios` | List available plant scenarios |
+| **Scenarios** | `POST` | `/api/scenarios/{name}` | Switch industrial scenarios (`water_treatment`, `substation`, `refinery`, `walmart_cold_chain`) |
 | **Assets** | `GET` | `/api/assets` | Query inventory with filtering (Purdue, vendor, tag) |
 | **Assets** | `PUT` | `/api/assets/{id}/keyswitch` | Toggle physical key switch (`RUN`, `REMOTE_RUN`, `PROG`) |
 | **Chassis** | `GET` | `/api/chassis/{id}` | Slot-by-slot chassis hardware & active LEDs |
@@ -160,6 +190,7 @@ python -m otbase.cli export --format svg
 | **Telemetry** | `GET` | `/api/telemetry/sankey` | Sankey node/link flow volume matrix |
 | **Telemetry** | `GET` | `/api/telemetry/profile/{ip}` | Detailed asset traffic path profiler |
 | **Context** | `GET` | `/api/locations` | 5-tier location trees & duplicate IP report |
+| **Context** | `GET` | `/api/locations/duplicate-ips` | Dedicated duplicate IP disambiguation report |
 | **Context** | `GET` | `/api/systems` | Functional OT Systems & shared switch risk |
 | **PID Ingest** | `POST` | `/api/ingest/pid` | Ingest Portable Inventory Data from discovery node |
 | **Enterprise** | `GET` | `/api/export/servicenow` | ServiceNow CMDB Service Graph payload (ISA-95) |

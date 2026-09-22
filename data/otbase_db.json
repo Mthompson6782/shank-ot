@@ -24,7 +24,7 @@
       "system_id": null,
       "system_name": null,
       "criticality": "High (Process Trip Risk)",
-      "key_switch": "RUN (Hardware Memory Protected)",
+      "key_switch": "REM (Remote Run - Network Modifiable)",
       "chassis": {
         "model": "1756-A10 10-Slot ControlLogix Chassis",
         "serial_number": "CH-NA-902188",
@@ -267,15 +267,15 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-22T01:45:29.993964Z",
-      "last_seen": "2026-09-22T01:45:29.993968Z",
+      "first_discovered": "2026-09-22T02:25:05.890884Z",
+      "last_seen": "2026-09-22T02:25:05.890888Z",
       "configuration_hash": null,
       "active_cves": [
-        "CVE-2020-6967",
+        "CVE-2022-1159",
         "CVE-2021-22681",
-        "CVE-2022-1159"
+        "CVE-2020-6967"
       ],
-      "ot_risk_score": 6.8,
+      "ot_risk_score": 10.0,
       "lifecycle_state": "Active",
       "is_compromised_simulated": false,
       "notes": "Controls primary flocculation and rapid sand filter backwash cycles."
@@ -334,12 +334,12 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-22T01:45:29.993989Z",
-      "last_seen": "2026-09-22T01:45:29.993990Z",
+      "first_discovered": "2026-09-22T02:25:05.890914Z",
+      "last_seen": "2026-09-22T02:25:05.890914Z",
       "configuration_hash": null,
       "active_cves": [
-        "CVE-2021-22681",
-        "CVE-2022-1159"
+        "CVE-2022-1159",
+        "CVE-2021-22681"
       ],
       "ot_risk_score": 10.0,
       "lifecycle_state": "Active",
@@ -391,8 +391,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-22T01:45:29.994003Z",
-      "last_seen": "2026-09-22T01:45:29.994004Z",
+      "first_discovered": "2026-09-22T02:25:05.890928Z",
+      "last_seen": "2026-09-22T02:25:05.890929Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.9,
@@ -455,8 +455,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-22T01:45:29.994017Z",
-      "last_seen": "2026-09-22T01:45:29.994017Z",
+      "first_discovered": "2026-09-22T02:25:05.890942Z",
+      "last_seen": "2026-09-22T02:25:05.890943Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.1,
@@ -509,8 +509,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-22T01:45:29.994029Z",
-      "last_seen": "2026-09-22T01:45:29.994029Z",
+      "first_discovered": "2026-09-22T02:25:05.890954Z",
+      "last_seen": "2026-09-22T02:25:05.890954Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.7,
@@ -566,8 +566,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-22T01:45:29.994042Z",
-      "last_seen": "2026-09-22T01:45:29.994042Z",
+      "first_discovered": "2026-09-22T02:25:05.890967Z",
+      "last_seen": "2026-09-22T02:25:05.890967Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.3,
@@ -622,8 +622,8 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-22T01:45:29.994056Z",
-      "last_seen": "2026-09-22T01:45:29.994057Z",
+      "first_discovered": "2026-09-22T02:25:05.890981Z",
+      "last_seen": "2026-09-22T02:25:05.890982Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 1.9,
@@ -678,8 +678,8 @@
           "stop_bits": 1
         }
       ],
-      "first_discovered": "2026-09-22T01:45:29.994070Z",
-      "last_seen": "2026-09-22T01:45:29.994070Z",
+      "first_discovered": "2026-09-22T02:25:05.890993Z",
+      "last_seen": "2026-09-22T02:25:05.890994Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 2.0,
@@ -688,7 +688,7 @@
       "notes": "Transmits real-time mega-gallons/day (MGD) influent flow to PLC-01-MAIN."
     },
     {
-      "id": "AST-PID-813625",
+      "id": "AST-PID-45424D",
       "tag_name": "REMOTE-PANEL-01",
       "display_name": "Discovered Rockwell Automation Device",
       "vendor": "Rockwell Automation",
@@ -732,8 +732,8 @@
         }
       ],
       "serial_ports": [],
-      "first_discovered": "2026-09-22T01:45:30.236074Z",
-      "last_seen": "2026-09-22T01:45:30.236076Z",
+      "first_discovered": "2026-09-22T02:25:06.012489Z",
+      "last_seen": "2026-09-22T02:25:06.012489Z",
       "configuration_hash": null,
       "active_cves": [],
       "ot_risk_score": 0.0,
@@ -1054,21 +1054,31 @@
         "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter"
       ],
       "published_date": "2020-02-11"
+    },
+    {
+      "advisory_id": "ICSA-22-263-02",
+      "cve_id": "CVE-2022-30512",
+      "title": "Johnson Controls Frick Quantum HD Unity Memory Corruption & Denial of Service",
+      "vendor": "Johnson Controls / Frick",
+      "affected_models": [
+        "Quantum HD",
+        "Quantum HD Unity"
+      ],
+      "affected_firmware_pattern": "^(10\\.[0-4][0-9].*)$",
+      "cvss_base_score": 7.8,
+      "severity": "High",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:H",
+      "cwe_id": "CWE-119 (Improper Restriction of Operations within the Bounds of a Memory Buffer)",
+      "description": "A buffer error vulnerability allows remote unauthenticated attackers to send crafted TCP packets to the Frick Quantum HD web and communications server, causing controller crash, loss of screw compressor regulation, or arbitrary memory corruption.",
+      "remediation": "Upgrade Frick Quantum HD firmware to version 10.50.00 or higher. Place the physical key switch in RUN mode and restrict TCP port 80/44818 at the industrial firewall.",
+      "recommended_compensating_controls": [
+        "Physical Key Switch Locked to RUN",
+        "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter"
+      ],
+      "published_date": "2022-09-20"
     }
   ],
-  "applied_compensating_controls": {
-    "wt-plc-01": [
-      {
-        "id": "ctrl-81795f",
-        "control_type": "Deep Packet Inspection (DPI) Firewall / Zone Conduit Filter",
-        "name": "DPI Firewall Filter",
-        "description": "Block unauthorized CIP memory writes",
-        "risk_reduction_pct": 35.0,
-        "is_active": true,
-        "justification": "Testing compensating control via API"
-      }
-    ]
-  },
+  "applied_compensating_controls": {},
   "location_tree": [
     {
       "id": "loc-ent-01",
@@ -1820,12 +1830,12 @@
     }
   ],
   "latest_reconciliation": {
-    "generated_at": "2026-09-22T01:45:34.374803+00:00",
+    "generated_at": "2026-09-22T02:25:05.937263+00:00",
     "total_armis_devices": 8,
-    "total_otbase_assets": 9,
+    "total_otbase_assets": 8,
     "correlated_assets_count": 6,
     "rogue_assets_count": 2,
-    "dormant_assets_count": 3,
+    "dormant_assets_count": 2,
     "discrepancies": [
       {
         "discrepancy_type": "FIRMWARE_MISMATCH",
@@ -1838,7 +1848,7 @@
         "ground_truth_value": "33.011",
         "description": "Firmware drift: Armis observed 'v32' but physical ground truth reports '33.011'.",
         "remediation_recommendation": "Recalculate vulnerability exposure based on confirmed chassis hardware catalog revision.",
-        "detected_at": "2026-09-22T01:45:34.374880+00:00"
+        "detected_at": "2026-09-22T02:25:05.937310+00:00"
       },
       {
         "discrepancy_type": "FIRMWARE_MISMATCH",
@@ -1851,7 +1861,7 @@
         "ground_truth_value": "1809 (Build 17763)",
         "description": "Operating System drift: Armis observed '21H2' but physical ground truth reports '1809 (Build 17763)'.",
         "remediation_recommendation": "Recalculate vulnerability exposure based on confirmed chassis hardware catalog revision.",
-        "detected_at": "2026-09-22T01:45:34.374909+00:00"
+        "detected_at": "2026-09-22T02:25:05.937338+00:00"
       },
       {
         "discrepancy_type": "FIRMWARE_MISMATCH",
@@ -1864,7 +1874,7 @@
         "ground_truth_value": "21H2",
         "description": "Operating System drift: Armis observed '22H2' but physical ground truth reports '21H2'.",
         "remediation_recommendation": "Recalculate vulnerability exposure based on confirmed chassis hardware catalog revision.",
-        "detected_at": "2026-09-22T01:45:34.374924+00:00"
+        "detected_at": "2026-09-22T02:25:05.937351+00:00"
       },
       {
         "discrepancy_type": "PORT_MISMATCH",
@@ -1877,7 +1887,7 @@
         "ground_truth_value": "FastEthernet1/4",
         "description": "Switch port conflict: Armis reported 'FastEthernet1/9' while SNMP Bridge MIB dot1dTpFdbTable resolved 'FastEthernet1/4'.",
         "remediation_recommendation": "Interrogate switch LLDP/CDP forwarding table to verify if an intermediate unmanaged hub or patch was moved.",
-        "detected_at": "2026-09-22T01:45:34.374941+00:00"
+        "detected_at": "2026-09-22T02:25:05.937361+00:00"
       },
       {
         "discrepancy_type": "ROGUE_ASSET",
@@ -1890,7 +1900,7 @@
         "ground_truth_value": "NOT_FOUND_IN_BASELINE",
         "description": "Device 'ROGUE-TABLET-MAINT' (192.168.20.88) observed by Armis is NOT in the authorized baseline inventory.",
         "remediation_recommendation": "Quarantine switch port immediately and verify with automation lead whether this is an authorized maintenance device.",
-        "detected_at": "2026-09-22T01:45:34.374972+00:00"
+        "detected_at": "2026-09-22T02:25:05.937383+00:00"
       },
       {
         "discrepancy_type": "ROGUE_ASSET",
@@ -1903,7 +1913,7 @@
         "ground_truth_value": "NOT_FOUND_IN_BASELINE",
         "description": "Device 'CAM-01-INSPECTION' (192.168.20.90) observed by Armis is NOT in the authorized baseline inventory.",
         "remediation_recommendation": "Quarantine switch port immediately and verify with automation lead whether this is an authorized maintenance device.",
-        "detected_at": "2026-09-22T01:45:34.374987+00:00"
+        "detected_at": "2026-09-22T02:25:05.937393+00:00"
       },
       {
         "discrepancy_type": "DORMANT_ASSET",
@@ -1916,7 +1926,7 @@
         "ground_truth_value": "Phoenix Contact FL mGuard RS4000 TX/TX (Purdue Level 3.5 - Industrial DMZ (IDMZ))",
         "description": "Authorized asset 'IDMZ-SEC-GW01' exists in engineering ground truth but was never seen transmitting by Armis.",
         "remediation_recommendation": "Verify if asset is a cold standby, powered down, or located on a fieldbus isolated from Armis SPAN/TAP ports.",
-        "detected_at": "2026-09-22T01:45:34.375006+00:00"
+        "detected_at": "2026-09-22T02:25:05.937409+00:00"
       },
       {
         "discrepancy_type": "DORMANT_ASSET",
@@ -1929,27 +1939,14 @@
         "ground_truth_value": "Endress+Hauser Proline Promag W 400 (Purdue Level 0 - Process / Field)",
         "description": "Authorized asset 'FIT-101-RAW' exists in engineering ground truth but was never seen transmitting by Armis.",
         "remediation_recommendation": "Verify if asset is a cold standby, powered down, or located on a fieldbus isolated from Armis SPAN/TAP ports.",
-        "detected_at": "2026-09-22T01:45:34.375016+00:00"
-      },
-      {
-        "discrepancy_type": "DORMANT_ASSET",
-        "severity": "MEDIUM",
-        "asset_id": "AST-PID-813625",
-        "asset_tag": "REMOTE-PANEL-01",
-        "ip_address": "192.168.10.180",
-        "mac_address": "00:1D:9C:AA:BB:CC",
-        "armis_value": "UNSEEN_BY_PASSIVE_DPI",
-        "ground_truth_value": "Rockwell Automation Ethernet Field Device (Purdue Level 1 - Basic Control (PLCs/RTUs))",
-        "description": "Authorized asset 'REMOTE-PANEL-01' exists in engineering ground truth but was never seen transmitting by Armis.",
-        "remediation_recommendation": "Verify if asset is a cold standby, powered down, or located on a fieldbus isolated from Armis SPAN/TAP ports.",
-        "detected_at": "2026-09-22T01:45:34.375023+00:00"
+        "detected_at": "2026-09-22T02:25:05.937419+00:00"
       }
     ],
     "summary_by_type": {
       "FIRMWARE_MISMATCH": 3,
       "PORT_MISMATCH": 1,
       "ROGUE_ASSET": 2,
-      "DORMANT_ASSET": 3
+      "DORMANT_ASSET": 2
     }
   }
 }

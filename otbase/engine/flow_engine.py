@@ -236,4 +236,72 @@ class FlowEngine:
                 sampling_ratio=128
             ))
 
+        elif "walmart" in facility.lower() or "cold chain" in facility.lower():
+            # PanelView Plus HMI (192.168.20.15) polling Frick Quantum HD PLC-01 (192.168.10.11) via CIP / EtherNet/IP
+            flows.append(FlowTelemetryRecord(
+                src_ip="192.168.20.15",
+                dst_ip="192.168.10.11",
+                src_port=49201,
+                dst_port=44818,
+                protocol="TCP",
+                byte_count=98200000,
+                packet_count=145000,
+                sampling_ratio=128
+            ))
+            # PanelView Plus HMI (192.168.20.15) polling Frick Quantum HD PLC-02 (192.168.10.12) via CIP / EtherNet/IP
+            flows.append(FlowTelemetryRecord(
+                src_ip="192.168.20.15",
+                dst_ip="192.168.10.12",
+                src_port=49202,
+                dst_port=44818,
+                protocol="TCP",
+                byte_count=95400000,
+                packet_count=141000,
+                sampling_ratio=128
+            ))
+            # Ignition SCADA Historian (192.168.30.20) polling Copeland E3 Rack Controller (192.168.10.30) via Modbus TCP 502
+            flows.append(FlowTelemetryRecord(
+                src_ip="192.168.30.20",
+                dst_ip="192.168.10.30",
+                src_port=52110,
+                dst_port=502,
+                protocol="TCP",
+                byte_count=45100000,
+                packet_count=82000,
+                sampling_ratio=128
+            ))
+            # Ignition SCADA Historian (192.168.30.20) polling Det-Tronics NH3 Gas Safety Controller (192.168.10.50) via Modbus TCP 502
+            flows.append(FlowTelemetryRecord(
+                src_ip="192.168.30.20",
+                dst_ip="192.168.10.50",
+                src_port=52111,
+                dst_port=502,
+                protocol="TCP",
+                byte_count=18900000,
+                packet_count=35000,
+                sampling_ratio=128
+            ))
+            # Ignition SCADA (192.168.30.20) publishing food safety telemetry to Azure IoT Gateway (10.240.12.5) via MQTT TLS 8883
+            flows.append(FlowTelemetryRecord(
+                src_ip="192.168.30.20",
+                dst_ip="10.240.12.5",
+                src_port=53001,
+                dst_port=8883,
+                protocol="TCP",
+                byte_count=112000000,
+                packet_count=168000,
+                sampling_ratio=128
+            ))
+            # Dual-Homed Tablet direct maintenance breach (192.168.10.77 -> 192.168.10.12)
+            flows.append(FlowTelemetryRecord(
+                src_ip="192.168.10.77",
+                dst_ip="192.168.10.12",
+                src_port=49880,
+                dst_port=44818,
+                protocol="TCP",
+                byte_count=8400000,
+                packet_count=11200,
+                sampling_ratio=128
+            ))
+
         return flows
